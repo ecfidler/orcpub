@@ -31,6 +31,9 @@ your own schedule, without a big-bang risk).
 
 ## Plan documents
 
+See also `docs/ts-rewrite-plan/` (Plan Set 2): a from-scratch rewrite with
+content compatibility, which references these documents where they apply.
+
 | Doc | Phase | Summary |
 |-----|-------|---------|
 | [01-reference-app.md](01-reference-app.md) | 0 | Run the existing app; capture reference behavior to test against |
