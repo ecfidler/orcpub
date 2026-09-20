@@ -1,5 +1,8 @@
 # New App on the cljc Engine Library, with User-Level Content Compatibility — Plan Set 2
 
+> **Status: active.** This is the plan being seriously considered for
+> implementation. "The plan", unqualified, refers to this plan set.
+
 A plan for building a **new web application** — new TypeScript/React UI and,
 in time, its own backend — whose rules engine is the **existing Clojure(Script)
 core compiled to JavaScript and used as a library** ("Option 2A"). A user of

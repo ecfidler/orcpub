@@ -22,21 +22,24 @@ TypeScript frontend. They are grounded in an investigation of this codebase
 and cite file and line numbers; prefer them over re-deriving the
 architecture.
 
-- **`docs/ts-frontend-plan/`** (Plan Set 1) — replace the ClojureScript UI
-  with TypeScript/React while **reusing the compiled `.cljc` engine as an
-  npm library** and keeping this backend unchanged. Start at its `README.md`.
-  Key docs: `02-api-surface.md` (every backend endpoint, Transit wire format,
-  JWT auth) and `03-engine-package.md` (shadow-cljs facade design).
-- **`docs/ts-rewrite-plan/`** (Plan Set 2) — a **new application** built on
-  that same compiled engine, with its own backend and **user-level
-  compatibility**: users import `.orcbrew` homebrew files and characters
-  exported from this app. Start at its `README.md`. Key docs:
-  `01-compatibility-contract.md` (what must import/export, with the legacy
-  data quirks) and `02-engine-library.md` (facade surface, engine wrinkles,
-  the few upstream patches needed).
+**Status: `docs/ts-rewrite-plan/` (Plan Set 2) is the plan being seriously
+considered for implementation.** When the user says "the plan" without
+qualification, they mean Plan Set 2. Plan Set 1 remains as reference
+material that Plan Set 2 builds on.
 
-Plan Set 2 references Plan Set 1 where the work is identical; read Plan
-Set 1 first if you're new to either.
+- **`docs/ts-rewrite-plan/`** (Plan Set 2, **active**) — a **new
+  application** built on the compiled `.cljc` engine as an npm library, with
+  its own backend and **user-level compatibility**: users import `.orcbrew`
+  homebrew files and characters exported from this app. Start at its
+  `README.md`. Key docs: `01-compatibility-contract.md` (what must
+  import/export, with the legacy data quirks) and `02-engine-library.md`
+  (facade surface, engine wrinkles, the few upstream patches needed).
+- **`docs/ts-frontend-plan/`** (Plan Set 1, reference) — replace the
+  ClojureScript UI with TypeScript/React while reusing the compiled engine
+  and keeping this backend unchanged. Plan Set 2 references it where the
+  work is identical (engine facade, app scaffold, page order). Key docs:
+  `02-api-surface.md` (every backend endpoint, Transit wire format, JWT
+  auth) and `03-engine-package.md` (shadow-cljs facade design).
 
 ## Facts the plans depend on (don't contradict them without checking)
 
