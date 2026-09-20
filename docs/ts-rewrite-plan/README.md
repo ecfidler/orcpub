@@ -1,85 +1,81 @@
-# Complete Rewrite with Content Compatibility — Plan (Plan Set 2)
+# New App on the cljc Engine Library, with User-Level Content Compatibility — Plan Set 2
 
-A plan for building a **new web application from scratch** — TypeScript rules
-engine, TypeScript/React UI, and (eventually) its own backend — that stays
-**cross-compatible** with the existing Dungeon Master's Vault / orcpub app:
-characters, homebrew content, and printed sheets move between the two apps in
-both directions.
+A plan for building a **new web application** — new TypeScript/React UI and,
+in time, its own backend — whose rules engine is the **existing Clojure(Script)
+core compiled to JavaScript and used as a library** ("Option 2A"). A user of
+the old Dungeon Master's Vault / orcpub app can carry their own data into the
+new one with files they export themselves.
 
-This plan set is independent of Plan Set 1 (`docs/ts-frontend-plan/`, which
-reuses the compiled Clojure engine). Where Plan Set 1's documents still apply
-verbatim (API surface, app scaffold, page rebuild order), this set references
-them instead of repeating them.
+This plan set builds on Plan Set 1 (`docs/ts-frontend-plan/`), which describes
+the compiled-engine facade and the UI scaffold. Where a Plan Set 1 document
+applies verbatim it is referenced, not repeated. The difference between the
+two sets: Plan Set 1 is a *frontend swap* on the existing backend; this set is
+a *new product* that reuses only the engine.
 
-## What "cross-compatible" means here
+## Premises
 
-Five concrete contracts, fully specified in
-[01-compatibility-contract.md](01-compatibility-contract.md):
+- **Engine = the `.cljc` core as a library.** `entity.cljc`, `template.cljc`,
+  `modifiers.cljc`, `template_base.cljc`, and the `dnd/e5/*` content
+  namespaces are compiled with shadow-cljs into an npm package behind a typed
+  facade (Plan Set 1 doc 03). Nothing in the rules is rewritten. This is what
+  makes content identity automatic: the same code produces the same keys,
+  selections, and computed values.
+- **Compatibility is for the user, not the operator.** The new app never
+  talks to an old server, and its backend is designed on its own terms — it
+  does not mirror orcpub's API, Transit wire format, or Datomic schema.
+  Compatibility means: export `all-content.orcbrew` from the old app, import
+  it here; get your characters out of an old instance, import them here.
+- **No PDF export.** Dropped as a feature; `pdf_spec.cljc` and `pdf.clj` are
+  not carried over.
+- **SRD only**, as today: the compiled bundle contains only SRD 5.1 content
+  (everything non-SRD in the source is reader-discarded or unreferenced);
+  non-SRD content enters through homebrew files.
 
-1. **Characters** — the new app reads every character the old app ever saved
-   (the *strict entity* choice tree, including legacy quirks) and writes
-   characters the old app can load.
-2. **Homebrew** — `.orcbrew` files import into the new app with the same
-   leniency the old importer has, and export from it in a form the old app
-   accepts.
-3. **Content identity** — races, classes, spells, items, etc. keep the **same
-   keyword keys** as the old app, because saved characters and homebrew files
-   reference content by key.
-4. **PDF sheets** — the new app fills the same 28 fillable PDFs with the same
-   field names.
-5. **Backend** — the new app can run against an existing orcpub server
-   (Transit API, JWT auth) via an adapter, so an operator can switch frontends
-   without migrating data; a new backend, when built, imports from it.
+## What the investigation established (and why it matters here)
 
-## What the investigation established
-
-These findings, verified against the source, shape everything below:
-
-- **The rules engine is code, not data.** It is a dependency-ordered fold of
-  ~100 modifier constructors over ~110 lazily-derived attributes, with class
-  features level-gated inside Clojure macro bodies. It cannot be exported; it
-  must be re-expressed. See [04-rules-engine.md](04-rules-engine.md).
-- **Shipped content is SRD 5.1 only, and small.** 12 classes + 12 subclasses,
-  9 races (~20 subraces), 1 background, 1 feat, 6 fighting styles, 33
-  invocations, 3 pact boons. Everything non-SRD in the source is disabled and
-  is excluded here. See [03-content-extraction.md](03-content-extraction.md).
-- **~1,000 content entries are pure data** (268 spells, 317 monsters, 45
-  weapons, 14 armors, ~160 equipment items, 18 skills, 16 languages, spell
-  lists) and export to JSON mechanically. Magic items (288) are two-thirds
-  data with ~120 modifier call sites to translate.
-- **Homebrew already has a declarative mechanics vocabulary** (`:props`,
-  `:level-modifiers`, `:spellcasting`, `:traits`). The new content schema is
-  designed as a superset of it, so `.orcbrew` import becomes a mapping rather
-  than a translation. See [02-content-schema.md](02-content-schema.md).
-- **The output surface is fully enumerable**: ~100 computed attributes plus
-  a fixed PDF field catalogue. See [04](04-rules-engine.md) and
-  [07-pdf-export.md](07-pdf-export.md).
-- **Golden data already exists in the repo**: three real Datomic character
-  entities in `test/cljc/orcpub/dnd/e5/character_test.clj` and an end-to-end
-  build test in `warlock_test.clj`.
+- The old app **exports homebrew but not characters**: `.orcbrew` export is
+  built in (`events.cljs:3601-3737`), while characters live only on the
+  server, reachable per character at a public URL. Character transfer needs
+  a user-side tool; doc 03 provides one.
+- The homebrew pipeline (parse → clean → validate → convert to template
+  options) is ClojureScript that already exists (`import_validation.cljs`,
+  `spell_subs.cljs`, `content_reconciliation.cljs`) — most of it pure
+  functions, some of it re-frame subscriptions that must be lifted into
+  plain functions for the library. Doc 02 and doc 04.
+- The built-in races, backgrounds, and languages live in `spell_subs.cljs`
+  (a `.cljs` file with re-frame subscriptions), not in `src/cljc`. The
+  library must include and de-re-frame that namespace.
+- `options.cljc` requires `re-frame` and a few modifiers read the global
+  `app-db` (e.g. the Dueling fighting style, `options.cljc:1739-1758`). The
+  library bundle therefore carries re-frame as a dependency, and the facade
+  must provide whatever those reads expect. Doc 02 §"Wrinkles".
+- The engine has known quirks a facade author must respect: laziness with no
+  caching (hence the old 500 ms debounce), ordering via `array-map`,
+  `available-selections` depending on the built character, and `ref`
+  selections storing data at global paths. Doc 02 catalogs them.
+- Ten forms of legacy drift exist in real saved characters and ten in real
+  `.orcbrew` files; the old code handles most of them and the library
+  inherits that handling. Doc 01 lists the exceptions.
 
 ## Plan documents
 
 | Doc | Summary |
 |-----|---------|
-| [01-compatibility-contract.md](01-compatibility-contract.md) | The five contracts, precisely: what must round-trip and what may be dropped |
-| [02-content-schema.md](02-content-schema.md) | The new declarative content format that both SRD content and homebrew compile to |
-| [03-content-extraction.md](03-content-extraction.md) | Getting SRD content out of the Clojure source: mechanical export + hand re-authoring |
-| [04-rules-engine.md](04-rules-engine.md) | The TypeScript engine: attribute graph, modifier application, computed surface, golden tests |
-| [05-character-persistence.md](05-character-persistence.md) | Reading/writing strict entities, the API adapter to the existing backend, the future backend |
-| [06-homebrew-orcbrew.md](06-homebrew-orcbrew.md) | EDN in TypeScript; lenient import, canonical export, validation, conflicts |
-| [07-pdf-export.md](07-pdf-export.md) | Filling the existing PDFs: field map, page selection, browser-side vs server-side |
-| [08-app-and-ui.md](08-app-and-ui.md) | The application layer, by reference to Plan Set 1 plus what differs |
-| [09-milestones-and-risks.md](09-milestones-and-risks.md) | Sequencing, definitions of done, risk register |
+| [01-compatibility-contract.md](01-compatibility-contract.md) | The three user-level contracts: homebrew (both ways), characters (old → new), content identity |
+| [02-engine-library.md](02-engine-library.md) | What the compiled engine package must expose beyond Plan Set 1's facade; vendoring; wrinkles; golden tests |
+| [03-character-import-and-storage.md](03-character-import-and-storage.md) | Getting characters out of an old instance (exporter bookmarklet), importing them, the new app's native format |
+| [04-homebrew.md](04-homebrew.md) | `.orcbrew` import/export through the library; validation, conflicts, storage; old bugs to fix |
+| [05-app-and-backend.md](05-app-and-backend.md) | The application layer by reference to Plan Set 1, local-first mode, and the new backend |
+| [06-milestones-and-risks.md](06-milestones-and-risks.md) | Sequencing, definitions of done, risk register |
 
 ## Ground rules
 
-- The new app lives in its own repository (or a top-level directory such as
-  `dmv-next/`). It never imports Clojure code. This repository is used as
-  **reference and test oracle** only.
-- Content compatibility is enforced by tests, not intentions: every contract
-  in doc 01 has a fixture set and a test that runs in CI.
-- Prefer reproducing the old app's *behavior* over its *structure*. Where the
-  old app has a bug that saved data depends on, the contract says which side
-  wins (doc 01 §"Known quirks").
-- SRD only. Non-SRD content enters only through homebrew files, as today.
+- The new app is its own repository. It **vendors** the engine source it
+  needs (`src/cljc/orcpub/**` plus the handful of `src/cljs` namespaces named
+  in doc 02) under `engine/src/`, keeps the EPL-2.0 license notice, and
+  tracks any patch against upstream as a reviewable diff. Patches are
+  allowed but minimal and listed in doc 02.
+- This repository is the **reference and test oracle**: run it to capture
+  fixtures and expected values (Plan Set 1 doc 01).
+- Compatibility is enforced by tests, not intentions: every contract in
+  doc 01 has a fixture set and a CI test.

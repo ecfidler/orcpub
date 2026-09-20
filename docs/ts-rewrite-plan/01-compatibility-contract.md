@@ -1,180 +1,106 @@
 # 01 — The Compatibility Contract
 
-This document is the specification the rest of the plan implements. Each
-section defines one contract: the data that must round-trip, the tolerance
-required on read, the canonical form required on write, and the fixture set
-that proves it.
+Three user-level contracts. Each states what must be accepted on import,
+what must be produced on export, and the fixtures that prove it. Because the
+rules engine is the same compiled code, most of the hard parts of these
+contracts are inherited rather than reimplemented; this document is mostly
+about the edges where the old code does *not* already do the right thing.
 
-Source-of-truth references are into this repository (the old app).
+## C1. Homebrew — `.orcbrew` files, both directions
 
-## C1. Characters — the strict entity format
+**Import.** The user exports `all-content.orcbrew` (multi-plugin) or a single
+pack (`<pack>.orcbrew`, single-plugin) from the old app and imports it into
+the new one. The new app must accept every file the old importer accepts,
+including the ten de-facto drift forms it auto-cleans:
 
-### The format
+1. spurious `nil nil,` pairs; 2. `:disabled? nil`; 3. empty or nil
+`:option-pack` and empty top-level pack name; 4. trailing commas;
+5. smart quotes / dashes / NBSP / zero-width and other Unicode;
+6. traits and selection options missing `:name`; 7. entries missing
+`:name` / `:level` / `:school`; 8. single- vs multi-plugin top level;
+9. `:size` as `"Medium"` or `:medium`; 10. ability keys as `:con` or
+`:orcpub.dnd.e5.character/con`.
 
-Characters are stored and exchanged as a **strict entity**
-(`src/cljc/orcpub/entity/strict.cljc`): a tree of selections and options plus
-a values map. Shape, with `::se` = `orcpub.entity.strict`:
+The old pipeline (`import_validation.cljs:1266-1376`) handles all ten and is
+compiled into the library (doc 04), so the contract here is: **call it, don't
+bypass it**, and cover each form with a fixture so a library upgrade can't
+regress it.
 
-```clojure
-{:db/id          17592186045432                 ; present on saved characters
- ::se/owner      "username"
- ::se/type       :character  ::se/game :dnd  ::se/game-version :e5
- ::se/selections [{::se/key :race
-                   ::se/option {::se/key :elf
-                                ::se/selections [{::se/key :subrace
-                                                  ::se/option {::se/key :high-elf}}]}}
-                  {::se/key :class
-                   ::se/options [{::se/key :wizard
-                                  ::se/selections [{::se/key :levels
-                                                    ::se/options [{::se/key :level-1 ...}]}]}]}
-                  {::se/key :ability-scores
-                   ::se/option {::se/key :standard-roll
-                                ::se/map-value {:orcpub.dnd.e5.character/str 15 ...}}}]
- ::se/values     {:orcpub.dnd.e5.character/character-name "Fizban"
-                  :orcpub.dnd.e5.character/xps 6500
-                  :orcpub.dnd.e5.character/custom-equipment [...]
-                  ...}
- ::se/homebrew-paths {...}}                      ; which option paths came from homebrew
-```
+**Mechanics fidelity.** A homebrew race/class/feat/subclass evaluates to the
+same character in both apps. Inherited: the conversion from orcbrew records
+to template options is the same code (`opt5e/race-option`, `class-option`,
+`plugin-modifiers`, `level-modifier`, …). Proved by golden characters that
+use homebrew content (doc 02 §"Golden tests").
 
-Rules (from `strict.cljc` and `entity.cljc:82-221`):
+**Export.** Per-pack and all-content export produce EDN the old app's
+`::e5/plugins` spec accepts: `:key` present and equal to the map key,
+non-empty `:option-pack`, no `nil` in numeric fields. Inherited from
+`::e5/export-plugin` / `export-all-plugins` logic if the facade exposes it
+(`pr-str` of the plugin map). Proved by feeding exports to the old validator
+in a REPL (one-off CI job in this repo).
 
-- A selection has `::se/key` and exactly one of `::se/option` (single) or
-  `::se/options` (multi). An option has `::se/key` and optionally
-  `::se/int-value`, `::se/string-value`, `::se/map-value`, `::se/selections`.
-- Keys are unqualified keywords that don't start with a digit.
-- Selection **order is significant** — the old engine folds modifiers in
-  traversal order and uses `array-map` specifically to preserve it
-  (`entity.cljc:168-171`).
-- The old server validates against the generic `::se/entity` spec only — it
-  never checks that keys refer to real content. So the *server* accepts any
-  well-formed tree; it's the *client engine* that must interpret the keys.
+**Not covered by the format**: magic items are not an orcbrew content type
+in the old app (they live server-side, per user). Doc 03 §"Magic items"
+covers how a user brings those across.
 
-### Read tolerance (must accept)
+Fixtures: `test/duplicate-external-{a,b}.orcbrew`; community packs
+gathered in Phase 0; one synthetic file per drift form.
 
-Every quirk below exists in real saved data. Sources: `character.cljc`
-`from-strict`/`to-strict` (lines 254-332), `routes.clj:930-938`,
-`entity.cljc:151-180`.
+## C2. Characters — old → new
 
-| # | Quirk | Required behavior |
-|---|-------|-------------------|
-| R1 | Equipment stored as a **map** `{item-kw value}` in old saves, as a **vector** of `{key value}` in new ones, under all seven equipment keys (`:equipment :weapons :armor :treasure :other-magic-items :magic-weapons :magic-armor`) | Accept both; normalize to vector (`vectorize-equipment`, `character.cljc:274`) |
-| R2 | `::char5e/prepared-spells-by-class` stored as a **seq of records** `[{::class-name ".." ::prepared-spells [...]}]` | Convert to `{class-name #{spell-keys}}` |
-| R3 | `::spells/slots-used` and `::features-used` values stored as vectors; `::features-used` may carry a stray `:db/id` | Convert values to sets; drop `:db/id` |
-| R4 | Option `::se/int-value` of `0` and `::se/string-value` of `""` round-trip to **nil** in the old code (`(or int-value map-value string-value)`) | Treat missing and zero/empty as equivalent where the old app did |
-| R5 | `::char5e/xps` may arrive as a **string** (server coerces on save; old records may predate that) | Parse; blank/invalid → 0 |
-| R6 | `::equip/quantity` may be a string (`"2"`) | Parse; non-`\d+` → 0 |
-| R7 | Very old saves use **unqualified** keys (`:str`, `:quantity`) instead of `::char5e/str`, `::equip/quantity` | Detect (`character.cljc:47-94` specs) and namespace them — the old app's migration is disabled, so a rewrite that wants to read these must re-enable the logic |
-| R8 | Selection keys that no longer resolve (content from a homebrew pack that isn't loaded) | Keep the choices; surface as "missing content" (`content_reconciliation.cljs` behavior) — never silently drop |
-| R9 | Multi-select options carry no index in their path; **duplicates by key** can occur (`has-duplicate-selections?`) | Tolerate on read; never produce on write |
-| R10 | `::char5e/share?` is exposed as `public?` in the old accessor layer | Name mismatch only; preserve the stored key |
+The old app has no character export. The transfer path (doc 03): the user
+obtains each character's **strict entity** from their old instance — via the
+public URL `https://<old>/dnd/5e/characters/<id>` (Transit text, no login
+needed for a shared character) or via an exporter bookmarklet run while
+logged in — and imports the file into the new app.
 
-### Write canonical form
+**Import tolerance.** Every quirk found in real saved characters:
 
-- Always the vector form for equipment (R1), record form for prepared spells
-  (R2) — i.e. exactly what the old `to-strict` emits, since the old server
-  and old client both expect it.
-- Strip `::image-url-failed` / `::faction-image-url-failed` (transient UI
-  state) and NaN numerics, as `clean-values` does (`character.cljc:254`).
-- Preserve `:db/id` on the root **and on nested option/selection nodes**
-  where present — the old server upserts by them; losing them creates
-  duplicate rows on save.
-- Never emit an option key that isn't in the new app's content registry —
-  the write side is strict even though the read side is lenient.
+| # | Quirk | Handled by |
+|---|---|---|
+| R1 | Equipment as a map `{item-kw value}` (old) vs vector of `{key value}` (new), under all seven equipment keys | Inherited: `vectorize-equipment` (`character.cljc:274`) |
+| R2 | `prepared-spells-by-class` stored as a seq of records | Inherited: `update-values-from-strict` (`:294`) |
+| R3 | `slots-used` / `features-used` values as vectors; stray `:db/id` in `features-used` | Inherited (same function) |
+| R4 | Option `int-value 0` / `string-value ""` read back as nil | Inherited (`entity.cljc:151`); note only |
+| R5 | `xps` as a string | **Not inherited** — the old *server* coerces it (`routes.clj:930`). The importer must parse; blank/invalid → 0 |
+| R6 | `equip/quantity` as a string | Inherited on save path (`fix-quantities`); apply on import too |
+| R7 | Unqualified legacy keys (`:str`, `:quantity`) | **Not inherited** — detection specs exist (`character.cljc:47-94`) but the migration is `#_`-disabled. Re-enable in the facade's `importCharacter` (a listed patch, doc 02) |
+| R8 | Selection keys that don't resolve (homebrew not loaded) | Inherited: `content_reconciliation.cljs` detection; UI in the new app |
+| R9 | Duplicate multi-select options by key | Inherited: `has-duplicate-selections?` — tolerate on read |
+| R10 | Transit wire format with namespaced keywords | Decode with `transit-js` or, simpler, let the library decode it (`cognitect.transit` is already a cljs dependency of the old client) |
 
-### Fixtures
+**Direction.** One way. The old app cannot import a character file, so the
+new app has no obligation to write characters the old app can read.
 
-- `test/cljc/orcpub/dnd/e5/character_test.clj:100-113` — three real Datomic
-  entities (barbarian; large multiclass fighter/eldritch-knight with feats,
-  magic items, treasure; warlock/druid). Round-trip `read → write` must be
-  structurally identical.
-- Phase-0 captures of `GET /dnd/5e/characters/:id` from a running old
-  instance (see Plan Set 1 doc 01) for each golden character.
-- Synthetic fixtures for R1–R9, one per quirk.
+Fixtures: the three real Datomic entities in
+`test/cljc/orcpub/dnd/e5/character_test.clj:100-113`; Phase-0 captures of
+`GET /dnd/5e/characters/:id` for every golden character; a synthetic
+fixture per R1–R9.
 
-## C2. Content identity — the key namespace
+## C3. Content identity — the key namespace
 
-Saved characters reference content only by keyword key
-(`:elf`, `:wizard`, `:acid-arrow`, `:longsword`, `:champion`). The new app's
-content registry must use **identical keys** for every SRD entity, and the
-new engine's **selection structure** (which selections exist, what their keys
-are, how they nest) must match the old template closely enough that old
-option paths resolve.
+Imported characters and homebrew files reference content by keyword key
+(`:elf`, `:wizard`, `:acid-arrow`, `:champion`, selection keys like
+`:martial-archetype`). Because the library *is* the old engine, keys and
+selection structure are identical by construction. The contract is
+therefore about **not breaking it**:
 
-The key-derivation rule is `common/name-to-kw` (`src/cljc/orcpub/common.cljc`):
-lowercase, non-alphanumerics to `-`, collapsed. The 16 spells with explicit
-overriding keys (`spells.cljc:82,271,300,...` — e.g. `:hideous-laughter`,
-`:tiny-hut`, `:arcane-sword`) must be carried as explicit keys, not derived.
-
-Selection keys that must be preserved (non-exhaustive; the full list is
-extracted in doc 03): `:race`, `:subrace`, `:class`, `:levels`, `:level-N`,
-`:background`, `:ability-scores`, `:feats`, `:languages`, `:skill-profs`,
-`:tool-profs`, `:fighting-style`, `:eldritch-invocations`, `:pact-boon`, the
-subclass selection whose key is `(name-to-kw subclass-title)` (e.g.
-`:martial-archetype`, `:arcane-tradition`, `:otherworldly-patron`), equipment
-selections (`:weapons`, `:armor`, `:equipment`, `:treasure`, `:magic-weapons`,
-`:magic-armor`, `:other-magic-items`), spell selections keyed per class.
-
-**Ref selections** (`::t/ref`) store their data at a global path rather than
-their tree position — `[:languages]`, `[:class :warlock :eldritch-invocations]`
-etc. (`options.cljc:809, 3091`). The new engine must read/write these paths,
-not the tree path. Doc 04 covers the mechanism.
-
-## C3. Homebrew — `.orcbrew` files
-
-Full spec in doc 06. Contract summary:
-
-- **Read**: plain EDN, two accepted top-level shapes (single-plugin keyed by
-  content-type keyword; multi-plugin keyed by pack-name string), 13 content
-  types, and the ten de-facto drift forms the old importer auto-cleans
-  (spurious `nil nil` pairs, `:disabled? nil`, empty option-pack, trailing
-  commas, smart quotes, missing names, string vs keyword `:size`, short vs
-  namespaced ability keys, …). The new importer must accept every file the
-  old one accepts.
-- **Write**: EDN (not JSON), canonical strict form: multi-plugin for
-  "export all", single-plugin for one pack; `:key` present and equal to the
-  map key; non-empty `:option-pack`; ASCII-normalized strings; no `nil` in
-  numeric fields. Output must pass the old app's `::e5/plugins` spec.
-- **Mechanics fidelity**: a homebrew class/race/feat must produce the same
-  computed character in both apps. The `:props`, `:level-modifiers`,
-  `:level-selections`, `:spellcasting`, `:traits` vocabularies are the
-  contract.
-- **Not covered**: magic items are *not* an orcbrew content type (they live
-  server-side); `:boons` are half-supported in the old importer. Doc 06 lists
-  the old bugs the new app should fix rather than replicate.
-
-Fixtures: `test/duplicate-external-{a,b}.orcbrew`, plus community packs
-gathered during Phase 0, plus one synthetic file per drift form.
-
-## C4. PDF sheets
-
-Full spec in doc 07. Contract: the new app fills the same
-`resources/fillable-char-sheetstyle-<1..4>-<0..6>-spells.pdf` templates with
-the same AcroForm field names (`str-mod`, `acrobatics-check`,
-`spells-3-7-2`, …), so a sheet printed by either app is visually identical
-for the same character. Fixture: golden-character PDFs captured from the old
-app in Phase 0, compared field-by-field (not byte-by-byte — PDFBox and a JS
-PDF library differ in byte layout).
-
-## C5. Backend interoperability
-
-Full spec in doc 05. Contract: the new app has an **API adapter** that speaks
-the old backend's Transit/JWT API (Plan Set 1 doc 02 is the endpoint map), so
-an operator can point the new frontend at an existing server and users see
-their existing characters, parties, folders, and magic items. When the new
-backend exists, it imports from an old server through the same adapter.
+- Never re-derive keys in TypeScript; read them from the engine.
+- Any patch to vendored engine source (doc 02) must not touch key
+  derivation (`common/name-to-kw`), the 16 explicit spell keys
+  (`spells.cljc:82, 271, 300, …`), subclass selection keys
+  (`name-to-kw subclass-title`), or `ref` paths.
+- Proof: a CI test that loads every golden character and every fixture
+  `.orcbrew` and asserts zero unresolved option keys.
 
 ## Known quirks — which side wins
 
-Where the old app's behavior is arguably a bug, the contract picks a side:
-
 | Old behavior | New app does | Why |
 |---|---|---|
-| `best-weapon-damage-modifier` ignores its `finesse?` argument (`character.cljc:641`) | Fix (use it) | Output value only; not persisted |
-| Weapon proficiency returns literal `[:simple :martial]` when `:martial` present (`character.cljc:443`) | Fix (return the set) | Display only |
-| `rename-key-in-plugin` only rewrites `:class`/`:race` references on homebrew rename; spells' `:spell-lists` are left stale | Fix (rewrite all references) | Strictly better; old files unaffected |
-| Multi-plugin import skips per-item validation | Fix (validate uniformly) | Lenient read is preserved by auto-clean, not by skipping validation |
-| A single invalid entry in localStorage wipes **all** homebrew on reload (`db.cljs:244-265`) | Fix (quarantine the entry) | Data-loss bug |
-| Human race weighted 3× in random names; Forgotten Realms name tables | Do not port (non-SRD); use SRD-safe or original name lists | Licensing |
-| `:boons` missing from import required-fields / names | Fix | Add to the content-type table |
-| Anything that changes what gets **written** to a character | Match old output exactly | Old app must read it back |
+| Multi-plugin import skips per-item validation (`import_validation.cljs:782-794`) | Validate uniformly, in the TS layer around the library call | Leniency comes from auto-clean, not from skipping validation |
+| A single invalid entry in localStorage wipes all homebrew on reload (`db.cljs:244-265`) | Not applicable — storage is the new app's (doc 04); quarantine invalid entries | Data-loss bug |
+| Homebrew rename only rewrites `:class` / `:race` references (`key-reference-map`, `:1382`) | Rewrite all references (spells' `:spell-lists`, `level-selections` types too) | Strictly better; old files unaffected |
+| `:boons` missing from import required-fields / content-type names | Add them | Half-supported type |
+| Background `:key` in the file is ignored (re-derived from name) | Honor it when it equals `name-to-kw(name)`, warn otherwise | Preserve keys |
+| Forgotten Realms name tables in `character/random.cljc` (non-SRD) | Exclude that namespace from the bundle; provide original name lists or none | Licensing |
+| Anything that affects **computed values** | Match the old app exactly (it's the same code) | That's the point of 2A |

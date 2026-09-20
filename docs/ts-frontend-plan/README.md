@@ -31,8 +31,10 @@ your own schedule, without a big-bang risk).
 
 ## Plan documents
 
-See also `docs/ts-rewrite-plan/` (Plan Set 2): a from-scratch rewrite with
-content compatibility, which references these documents where they apply.
+See also `docs/ts-rewrite-plan/` (Plan Set 2): a new application built on
+this same compiled-engine approach, with its own backend and user-level
+import of `.orcbrew` files and characters from the old app. It references
+these documents where they apply.
 
 | Doc | Phase | Summary |
 |-----|-------|---------|
