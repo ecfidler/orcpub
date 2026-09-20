@@ -64,8 +64,9 @@ a *new product* that reuses only the engine.
 
 | Doc | Summary |
 |-----|---------|
+| [00-repo-strategy.md](00-repo-strategy.md) | Where the work happens: engine built and published from this fork, the app in its own repository |
 | [01-compatibility-contract.md](01-compatibility-contract.md) | The three user-level contracts: homebrew (both ways), characters (old → new), content identity |
-| [02-engine-library.md](02-engine-library.md) | What the compiled engine package must expose beyond Plan Set 1's facade; vendoring; wrinkles; golden tests |
+| [02-engine-library.md](02-engine-library.md) | What the compiled engine package must expose beyond Plan Set 1's facade; build scope; wrinkles; golden tests |
 | [03-character-import-and-storage.md](03-character-import-and-storage.md) | Getting characters out of an old instance (exporter bookmarklet), importing them, the new app's native format |
 | [04-homebrew.md](04-homebrew.md) | `.orcbrew` import/export through the library; validation, conflicts, storage; old bugs to fix |
 | [05-app-and-backend.md](05-app-and-backend.md) | The application layer by reference to Plan Set 1, local-first mode, and the new backend |
@@ -73,12 +74,11 @@ a *new product* that reuses only the engine.
 
 ## Ground rules
 
-- The new app is its own repository. It **vendors** the engine source it
-  needs (`src/cljc/orcpub/**` plus the handful of `src/cljs` namespaces named
-  in doc 02) under `engine/src/`, keeps the EPL-2.0 license notice, and
-  tracks any patch against upstream as a reviewable diff. Patches are
-  allowed but minimal and listed in doc 02.
-- This repository is the **reference and test oracle**: run it to capture
-  fixtures and expected values (Plan Set 1 doc 01).
+- The work is split at the engine seam (doc 00): the engine library is
+  built and published **from this fork** (`engine-js/`), and the new app is
+  its own repository that consumes the published package and never imports
+  Clojure. Engine patches are ordinary commits here.
+- This repository is also the **reference and test oracle**: run it to
+  capture fixtures and expected values (Plan Set 1 doc 01).
 - Compatibility is enforced by tests, not intentions: every contract in
   doc 01 has a fixture set and a CI test.
