@@ -86,7 +86,7 @@ selection structure are identical by construction. The contract is
 therefore about **not breaking it**:
 
 - Never re-derive keys in TypeScript; read them from the engine.
-- Any patch to vendored engine source (doc 02) must not touch key
+- Any patch to the engine source in this fork (doc 02) must not touch key
   derivation (`common/name-to-kw`), the 16 explicit spell keys
   (`spells.cljc:82, 271, 300, …`), subclass selection keys
   (`name-to-kw subclass-title`), or `ref` paths.

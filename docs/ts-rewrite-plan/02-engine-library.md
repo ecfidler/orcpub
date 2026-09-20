@@ -5,35 +5,32 @@ the base: a shadow-cljs build of the `.cljc` core behind a small typed facade
 (`buildCharacter`, `availableSelections`, `selectOption`, `setValue`,
 `randomCharacter`, …). This document covers what a **new app** needs on top
 of that, what the engine investigation says a facade author must know, and
-how the source is vendored.
+how the build is scoped (doc 00 covers where it lives).
 
-## Vendoring
+## Where the engine is built
 
-The new repository copies, not references, the engine source:
+**Superseded by doc 00:** the engine is built and published from this fork,
+not vendored into the app repo. The build lives at `engine-js/` beside
+`src/` (the Plan Set 1 doc 03 layout) and compiles the engine namespaces in
+place:
 
-```
-engine/
-  src/orcpub/**                 ; from this repo's src/cljc/orcpub/  (all of it)
-  src/orcpub/dnd/e5/            ; plus these src/cljs files:
-    spell_subs.cljs             ;   built-in races/backgrounds/languages + homebrew → template pipeline
-    import_validation.cljs      ;   .orcbrew parse/clean/validate
-    content_reconciliation.cljs ;   missing-content detection for loaded characters
-    compute.cljs                ;   pure helpers already extracted from subs
-  src/orcpub/facade.cljs        ; NEW: the exported API
-  patches/                      ; one .md per upstream patch: what, why, upstream line refs
-  shadow-cljs.edn  package.json  types/index.d.ts  test/
-  LICENSE                       ; EPL-2.0 notice carried over
-```
+- all of `src/cljc/orcpub/**`;
+- from `src/cljs/orcpub/dnd/e5/`: `spell_subs.cljs` (built-in
+  races/backgrounds/languages + the homebrew → template pipeline),
+  `import_validation.cljs` (`.orcbrew` parse/clean/validate),
+  `content_reconciliation.cljs` (missing-content detection).
+  (`compute.cljc`, the pure helpers already extracted from subs, is under
+  `src/cljc` and comes in with the rest of it.)
+- `engine-js/src/orcpub/facade.cljs` — the exported API.
 
-Excluded on purpose: `pdf_spec.cljc` (no PDF feature), `character/random.cljc`
-(non-SRD name tables — see doc 01), `char_decision_tree.cljc` (depends on
-random names; the "newb" builder is out of scope), everything under
-`templates/` (unreferenced, non-SRD), all `src/clj`.
+Excluded from the build on purpose: `pdf_spec.cljc` (no PDF feature),
+`character/random.cljc` (non-SRD name tables — see doc 01),
+`char_decision_tree.cljc` (depends on random names; the "newb" builder is
+out of scope), everything under `templates/` (unreferenced, non-SRD), all
+of `src/clj`.
 
-Why vendor rather than depend on this repo: the new app must be able to make
-the small patches below, and it should not carry Leiningen, `project.clj`,
-or the re-frame UI. Keep a script that re-syncs from a pinned upstream
-commit and re-applies `patches/` so upstream fixes can be pulled in.
+The four patches below are ordinary commits to this fork's source. The app
+repo consumes the published `@dmv/pubdoor` package and never sees Clojure.
 
 ## Facade surface (beyond Plan Set 1 doc 03)
 
@@ -59,7 +56,7 @@ The homebrew → template conversion is a chain of `reg-sub`s
 Each sub's handler is a pure function of its inputs; the facade re-expresses
 the chain as ordinary function calls with the same bodies. This is the
 largest piece of Clojure glue in the plan (a few hundred lines, mechanical),
-and `compute.cljs` shows the pattern — it was extracted for exactly this
+and `dnd/e5/compute.cljc` shows the pattern — it was extracted for exactly this
 reason. Do it once, test it by comparing `buildTemplate(fixtures)` to what
 the old app's subscriptions produce in a REPL.
 
@@ -74,7 +71,7 @@ file (`spell_subs.cljs:514-928`) — they're plain `def`s and need no change.
    (small); the facade must either seed `app-db` with the keys those reads
    expect or patch the reads to take their input from the entity. Audit every
    `@re-frame.db/app-db` / `subscribe` / `dispatch` in `src/cljc` first —
-   there are few. Patch (listed in `patches/`).
+   there are few. Patch it (D2 in the patch list below).
 2. **No caching, lazy attributes.** Every attribute read re-runs its closure
    chain (`entity_spec.cljc:5-10`); the old UI debounces builds by 500 ms.
    The facade memoizes `evaluate` per entity value and converts the built
@@ -108,7 +105,9 @@ file (`spell_subs.cljs:514-928`) — they're plain `def`s and need no change.
    (monsters are never used by the character build — serve them as JSON for
    the browse page) helps.
 
-## Patches to upstream source (the complete list, keep it short)
+## Patches to the engine source (the complete list, keep it short)
+
+Commits to this fork (doc 00); each bumps the published package version.
 
 | Patch | Why |
 |---|---|
@@ -134,8 +133,8 @@ Same strategy as Plan Set 1 doc 03, extended for the new scope:
 
 ## Deliverables
 
-- [ ] `engine/` vendored with the file list above, `patches/` documented,
-      resync script
+- [ ] `engine-js/` in this fork with the build configuration above; the
+      four patches committed; package published as `@dmv/pubdoor`
 - [ ] shadow-cljs `:esm` build, `^:export`ed facade, hand-written `.d.ts`
 - [ ] De-re-framed `buildTemplate`; `evaluate` memoized with one-pass
       extraction

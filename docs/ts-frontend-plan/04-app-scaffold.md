@@ -14,7 +14,7 @@ against the real backend.
 | Server state | TanStack Query | caching/retries for the API endpoints; replaces the ad-hoc ajax in `events.cljs` |
 | Client state | Zustand (or Redux Toolkit) | one store: current entity, auth token, UI state |
 | Wire | transit-js codec (doc 02) | |
-| Rules | `@dmv/engine` (doc 03) | async-loaded chunk |
+| Rules | `@dmv/pubdoor` (doc 03) | async-loaded chunk |
 | Tests | vitest + Playwright | golden files + a few E2E flows |
 
 Redux Toolkit is conceptually closest to re-frame if you ever need to
@@ -28,7 +28,7 @@ works.
 web-ts/
   src/
     api/          # transit codec + typed endpoint functions (doc 02)
-    engine/       # thin wrapper around @dmv/engine: async load, debounced build
+    engine/       # thin wrapper around @dmv/pubdoor: async load, debounced build
     state/        # store: auth slice, character slice, homebrew slice
     routes/       # route table; one dir per page (doc 05)
     components/   # shared UI (option cards, ability blocks, modals)
