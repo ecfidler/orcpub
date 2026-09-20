@@ -1,5 +1,9 @@
 # TypeScript Frontend Rewrite — Plan (Option A)
 
+> **Status: reference.** The plan under active consideration is
+> `docs/ts-rewrite-plan/` (Plan Set 2), which builds on this one. Read this
+> set for the engine facade, app scaffold, and API details it references.
+
 A plan for replacing the ClojureScript/re-frame frontend with a modern
 TypeScript + React frontend, while **reusing the existing Clojure(Script) rules
 engine as a compiled npm library** and **keeping the existing Clojure backend
@@ -30,6 +34,11 @@ the same TypeScript interface (this converts Option A into a full rewrite on
 your own schedule, without a big-bang risk).
 
 ## Plan documents
+
+See also `docs/ts-rewrite-plan/` (Plan Set 2): a new application built on
+this same compiled-engine approach, with its own backend and user-level
+import of `.orcbrew` files and characters from the old app. It references
+these documents where they apply.
 
 | Doc | Phase | Summary |
 |-----|-------|---------|
