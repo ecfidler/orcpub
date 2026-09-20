@@ -1,0 +1,18 @@
+{:orcpub.dnd.e5/races
+ {:emberkin
+  {:key :emberkin
+   :name "Emberkin"
+   :option-pack "Drift 02"
+   :disabled? nil
+   :speed 30
+   :size :medium
+   :abilities {:orcpub.dnd.e5.character/cha 2 :orcpub.dnd.e5.character/con 1}
+   :props {:damage-resistance {:fire true}}
+   :traits [{:name "Ember Heart" :description "You have resistance to fire damage."}]}}
+ :orcpub.dnd.e5/feats
+ {:cinder-touched
+  {:key :cinder-touched
+   :name "Cinder Touched"
+   :option-pack "Drift 02"
+   :disabled? nil
+   :description "Once per long rest you can ignite a flammable object you touch."}}}

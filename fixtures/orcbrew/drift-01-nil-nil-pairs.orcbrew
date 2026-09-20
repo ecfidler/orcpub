@@ -1,0 +1,16 @@
+{:orcpub.dnd.e5/races
+ {:mossfolk
+  {nil nil, :key :mossfolk
+   :name "Mossfolk"
+   :option-pack "Drift 01"
+   :speed 25
+   :size :small
+   :abilities {:orcpub.dnd.e5.character/wis 2}
+   :traits [{nil nil, :name "Damp Hide"
+             :description "You have advantage on saving throws against fire damage."}]}}
+ :orcpub.dnd.e5/feats
+ {:moss-walker
+  {nil nil, :key :moss-walker
+   :name "Moss Walker"
+   :option-pack "Drift 01"
+   :description "Moving through nonmagical difficult terrain costs you no extra movement."}}}

@@ -1,0 +1,19 @@
+{:orcpub.dnd.e5/races
+ {:stoneborn
+  {:key :stoneborn,
+   :name "Stoneborn",
+   :option-pack "Drift 04",
+   :speed 25,
+   :size :medium,
+   :abilities {:orcpub.dnd.e5.character/con 2, :orcpub.dnd.e5.character/str 1,},
+   :traits [{:name "Stone Skin", :description "Your AC is 13 + your Dexterity modifier while unarmored.",},],
+  },
+ },
+ :orcpub.dnd.e5/languages
+ {:deep-stone
+  {:key :deep-stone,
+   :name "Deep Stone",
+   :option-pack "Drift 04",
+  },
+ },
+}

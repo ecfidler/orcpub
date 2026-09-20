@@ -1,0 +1,18 @@
+{:orcpub.dnd.e5/races
+ {:hollowkin
+  {:key :hollowkin
+   :name "Hollowkin"
+   :option-pack "Drift 06"
+   :speed 30
+   :size :medium
+   :abilities {:orcpub.dnd.e5.character/int 2}
+   :traits [{:description "This trait has no name; the importer fills in a placeholder."}
+            {:name "Hollow Mind" :description "You are immune to being charmed."}]}}
+ :orcpub.dnd.e5/selections
+ {:hollow-gift
+  {:key :hollow-gift
+   :name "Hollow Gift"
+   :option-pack "Drift 06"
+   :options [{:description "An option without a name."}
+             {:name "Whispering Gift" :description "You can communicate telepathically with any creature within 30 feet."}
+             {:name "Whispering Gift" :description "You can communicate telepathically with any creature within 30 feet."}]}}}
