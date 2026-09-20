@@ -19,8 +19,8 @@ So the split is:
 
 | Phase | Where | What |
 |---|---|---|
-| **A** | **This fork** (`ecfidler/orcpub`), on a branch from `planning` | M0 fixtures and the built-value dump script; the engine library at `engine-js/` (shadow-cljs build, facade, `.d.ts`, golden tests); the engine patches as ordinary commits; publishing `@dmv/engine` |
-| **B** | **A new repository** (working name `dmv-next`) | Everything from M2 onward: the app, local-first storage, homebrew UI, import tooling, backend. Consumes `@dmv/engine` from a package registry. **No Clojure toolchain, ever.** |
+| **A** | **This fork** (`ecfidler/orcpub`), on a branch from `planning` | M0 fixtures and the built-value dump script; the engine library at `engine-js/` (shadow-cljs build, facade, `.d.ts`, golden tests); the engine patches as ordinary commits; publishing `@dmv/pubdoor` |
+| **B** | **A new repository** (working name `dmv-next`) | Everything from M2 onward: the app, local-first storage, homebrew UI, import tooling, backend. Consumes `@dmv/pubdoor` from a package registry. **No Clojure toolchain, ever.** |
 
 The engine package is the seam because it is a build artifact with a typed
 interface: the app repo depends on it exactly as it would on any npm
@@ -50,7 +50,7 @@ Branch: `engine` (from `planning`). Contents added to the repo:
 engine-js/
   shadow-cljs.edn          ; :esm target, :advanced; source-paths ["src" "../src/cljc" "../src/cljs"]
   src/orcpub/facade.cljs   ; the exported API (doc 02)
-  package.json             ; name @dmv/engine; publishes dist/ + types/
+  package.json             ; name @dmv/pubdoor; publishes dist/ + types/
   types/index.d.ts         ; hand-written
   test/                    ; golden tests (vitest) against fixtures/
 fixtures/
@@ -61,6 +61,9 @@ scripts/
   dump-built-character.clj ; REPL script: strict entity → accessor values (doc 04 of Plan Set 1 §golden tests)
   dump-template.clj        ; plugins → template shape, for the de-re-framing comparison
 ```
+
+Package name: `@dmv/pubdoor` (chosen at the Phase A decision review, 2026-09-20,
+where all 24 Phase A decisions were approved).
 
 Publishing: GitHub Packages under the fork's owner is the least setup
 (`npm publish` with a `publishConfig.registry`); public npm is fine too.
@@ -76,7 +79,7 @@ note of which fork commit produced it.
 
 ## Phase B — the app repository
 
-Created once `@dmv/engine@0.1.x` exists with `evaluate`, the mutations,
+Created once `@dmv/pubdoor@0.1.x` exists with `evaluate`, the mutations,
 `importCharacter`, and `parseOrcbrew` (i.e. after M1 and the engine half of
 M3). Initial contents:
 
@@ -91,7 +94,7 @@ dmv-next/
 ```
 
 `CLAUDE.md` in the app repo states: the plan is `docs/plan/` (Plan Set 2 is
-active); the engine comes from `@dmv/engine`, built in the `ecfidler/orcpub`
+active); the engine comes from `@dmv/pubdoor`, built in the `ecfidler/orcpub`
 fork under `engine-js/`, which is also the test oracle; the current
 milestone; and that the app never imports Clojure or the engine source.
 Update the current-milestone line as work progresses — "implement the

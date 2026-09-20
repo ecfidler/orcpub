@@ -29,7 +29,7 @@ out of scope), everything under `templates/` (unreferenced, non-SRD), all
 of `src/clj`.
 
 The four patches below are ordinary commits to this fork's source. The app
-repo consumes the published `@dmv/engine` package and never sees Clojure.
+repo consumes the published `@dmv/pubdoor` package and never sees Clojure.
 
 ## Facade surface (beyond Plan Set 1 doc 03)
 
@@ -70,7 +70,7 @@ file (`spell_subs.cljs:514-928`) — they're plain `def`s and need no change.
    (small); the facade must either seed `app-db` with the keys those reads
    expect or patch the reads to take their input from the entity. Audit every
    `@re-frame.db/app-db` / `subscribe` / `dispatch` in `src/cljc` first —
-   there are few. Patch (listed in `patches/`).
+   there are few. Patch it (D2 in the patch list below).
 2. **No caching, lazy attributes.** Every attribute read re-runs its closure
    chain (`entity_spec.cljc:5-10`); the old UI debounces builds by 500 ms.
    The facade memoizes `evaluate` per entity value and converts the built
@@ -133,7 +133,7 @@ Same strategy as Plan Set 1 doc 03, extended for the new scope:
 ## Deliverables
 
 - [ ] `engine-js/` in this fork with the build configuration above; the
-      four patches committed; package published as `@dmv/engine`
+      four patches committed; package published as `@dmv/pubdoor`
 - [ ] shadow-cljs `:esm` build, `^:export`ed facade, hand-written `.d.ts`
 - [ ] De-re-framed `buildTemplate`; `evaluate` memoized with one-pass
       extraction

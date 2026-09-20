@@ -9,7 +9,7 @@ the critical path is now facade glue, then UI.
 | # | Milestone | Contents | Proof | Size |
 |---|-----------|----------|-------|------|
 | M0 | Reference & fixtures | *In this fork.* Old app running (Plan Set 1 doc 01); golden characters incl. homebrew and legacy cases; captured `GET /dnd/5e/characters/:id` payloads; community `.orcbrew` packs; built-value dumps | Fixture set committed under `fixtures/` | ~1 week |
-| M1 | Engine library | *In this fork.* `engine-js/` shadow-cljs build; base facade (`evaluate`, mutations, `importCharacter`); `warlock_test` + `character_test` round-trips ported; `@dmv/engine` published | Golden characters evaluate identically in TS tests; package installable | ~2–3 weeks |
+| M1 | Engine library | *In this fork.* `engine-js/` shadow-cljs build; base facade (`evaluate`, mutations, `importCharacter`); `warlock_test` + `character_test` round-trips ported; `@dmv/pubdoor` published | Golden characters evaluate identically in TS tests; package installable | ~2–3 weeks |
 | M2 | Local-first viewer | *App repo created.* App scaffold; import a captured character; read-only sheet from `evaluate`; IndexedDB storage; native export | First visible proof; Playwright smoke test | ~2 weeks |
 | M3 | Homebrew engine path | *Engine half in the fork, UI in the app repo.* De-re-framed `buildTemplate`; `parseOrcbrew`/export via facade; both fixtures + community packs import; homebrew golden character matches | Lossless and old-spec-acceptance tests green | ~2–3 weeks |
 | M4 | Builder | Full character builder (Plan Set 1 doc 05 §4.3 slices 1–6) | Golden characters rebuilt from scratch round-trip identically | ~6–8 weeks |
@@ -51,7 +51,7 @@ from files); user migration is complete after **M5**; multi-device after
 | Boundary conversion cost (`clj->js` of a built character on every keystroke) | Medium | One-pass extraction of the accessor list, memoized per entity value; opaque entity handle |
 | Ordering loss when entities pass through JS objects | Medium | Selections as arrays everywhere; a test that a reordered entity builds differently (proving the test can catch it) |
 | Legacy character quirks R5/R7 are *not* inherited | Certain | Implemented in `importCharacter`; fixtures per quirk; ask users for anonymized exports |
-| Engine package and app drift apart (a facade change ships without the app pinning it, or fixtures in the app repo go stale) | Medium | Semver on `@dmv/engine`, exact pins in the app repo; fixtures snapshot records the fork commit; golden tests run in both repos |
+| Engine package and app drift apart (a facade change ships without the app pinning it, or fixtures in the app repo go stale) | Medium | Semver on `@dmv/pubdoor`, exact pins in the app repo; fixtures snapshot records the fork commit; golden tests run in both repos |
 | Bundle size (~2 MB of content source) | Certain | `:advanced`; async chunk; exclude `random.cljc`, `templates/`, and serve monsters as JSON |
 | Non-SRD leakage (name tables) into the published package | Low | Excluded from the shadow-cljs build by configuration |
 | Scope creep into features the old app has but users don't need (Orcacle, combat tracker, newb builder) | Medium | Out of scope until M7 |
