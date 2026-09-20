@@ -5,7 +5,7 @@ the base: a shadow-cljs build of the `.cljc` core behind a small typed facade
 (`buildCharacter`, `availableSelections`, `selectOption`, `setValue`,
 `randomCharacter`, …). This document covers what a **new app** needs on top
 of that, what the engine investigation says a facade author must know, and
-how the source is vendored.
+how the build is scoped (doc 00 covers where it lives).
 
 ## Where the engine is built
 
