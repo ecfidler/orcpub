@@ -1,0 +1,236 @@
+{
+  "abilities": {
+    "orcpub.dnd.e5.character/cha": 8,
+    "orcpub.dnd.e5.character/con": 13,
+    "orcpub.dnd.e5.character/dex": 14,
+    "orcpub.dnd.e5.character/int": 12,
+    "orcpub.dnd.e5.character/str": 15,
+    "orcpub.dnd.e5.character/wis": 10
+  },
+  "ability-bonuses": {
+    "orcpub.dnd.e5.character/cha": -1,
+    "orcpub.dnd.e5.character/con": 1,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 2,
+    "orcpub.dnd.e5.character/wis": 0
+  },
+  "ability-increases": null,
+  "actions": [],
+  "age": null,
+  "al-illegal-reasons": null,
+  "alignment": null,
+  "all-armor-inventory": null,
+  "armor": null,
+  "armor-class": 12,
+  "armor-class-with-armor": [
+    {
+      "ac": 13,
+      "armor": null,
+      "shield": null
+    }
+  ],
+  "armor-profs": [
+    "light",
+    "medium",
+    "shields"
+  ],
+  "attacks": null,
+  "attuned-magic-items": null,
+  "background": null,
+  "base-flying-speed": 0,
+  "base-land-speed": 0,
+  "base-swimming-speed": 0,
+  "bonds": null,
+  "bonus-actions": [
+    {
+      "duration": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/minute"
+      },
+      "frequency": {
+        "amount": 2,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "name": "Rage",
+      "page": 48,
+      "summary": "Advantage on Strength checks and saves; melee damage bonus +2; resistance to bludgeoning, piercing, and slashing damage"
+    }
+  ],
+  "character-name": null,
+  "class-hit-point-level-bonus": {},
+  "class-level": {
+    "barbarian": 1
+  },
+  "classes": [
+    "barbarian"
+  ],
+  "condition-immunities": [],
+  "crit-values-str": 20,
+  "critical-hit-values": [
+    20
+  ],
+  "current-hit-points": null,
+  "custom-equipment": null,
+  "custom-treasure": null,
+  "damage-immunities": [],
+  "damage-vulnerabilities": null,
+  "darkvision": 0,
+  "description": null,
+  "equipment": {
+    "explorers-pack": {
+      "db/id": 17592186056165,
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "eyes": null,
+  "faction-image-url": null,
+  "faction-image-url-failed": null,
+  "faction-name": null,
+  "feats": null,
+  "features-used": {},
+  "flaws": null,
+  "hair": null,
+  "height": null,
+  "hit-point-level-bonus": 1,
+  "ideals": null,
+  "image-url": null,
+  "image-url-failed": null,
+  "immunities": [],
+  "initiative": 2,
+  "languages": null,
+  "levels": {
+    "barbarian": {
+      "class-level": 1,
+      "class-name": "Barbarian",
+      "hit-die": 12
+    }
+  },
+  "magic-armor": null,
+  "magic-items": null,
+  "magic-weapons": null,
+  "main-hand-weapon": null,
+  "max-hit-points": 13,
+  "notes": null,
+  "number-of-attacks": 1,
+  "off-hand-weapon": null,
+  "option-sources": null,
+  "pact-magic?": null,
+  "passive-perception": 10,
+  "personality-trait-1": null,
+  "personality-trait-2": null,
+  "player-name": null,
+  "prepare-spell-count": {},
+  "prepares-spells": null,
+  "proficiency-bonus": 2,
+  "public?": null,
+  "race": null,
+  "race-ability-increases": null,
+  "reactions": [],
+  "resistances": [],
+  "save-bonuses": {
+    "orcpub.dnd.e5.character/cha": -1,
+    "orcpub.dnd.e5.character/con": 3,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 4,
+    "orcpub.dnd.e5.character/wis": 0
+  },
+  "saving-throws": [
+    "orcpub.dnd.e5.character/con",
+    "orcpub.dnd.e5.character/str"
+  ],
+  "sex": null,
+  "skill-bonuses": {
+    "acrobatics": 2,
+    "animal-handling": 0,
+    "arcana": 1,
+    "athletics": 2,
+    "deception": -1,
+    "history": 1,
+    "insight": 0,
+    "intimidation": -1,
+    "investigation": 1,
+    "medicine": 0,
+    "nature": 1,
+    "perception": 0,
+    "performance": -1,
+    "persuasion": -1,
+    "religion": 1,
+    "sleight-of-hand": 2,
+    "stealth": 2,
+    "survival": 0
+  },
+  "skill-expertise": null,
+  "skill-profs": null,
+  "skin": null,
+  "speed-with-armor": null,
+  "spell-attack-modifier": {
+    "orcpub.dnd.e5.character/cha": 1,
+    "orcpub.dnd.e5.character/con": 3,
+    "orcpub.dnd.e5.character/dex": 4,
+    "orcpub.dnd.e5.character/int": 3,
+    "orcpub.dnd.e5.character/str": 4,
+    "orcpub.dnd.e5.character/wis": 2
+  },
+  "spell-modifiers": {},
+  "spell-save-dc": {
+    "orcpub.dnd.e5.character/cha": 9,
+    "orcpub.dnd.e5.character/con": 11,
+    "orcpub.dnd.e5.character/dex": 12,
+    "orcpub.dnd.e5.character/int": 11,
+    "orcpub.dnd.e5.character/str": 12,
+    "orcpub.dnd.e5.character/wis": 10
+  },
+  "spell-slot-factors": null,
+  "spell-slots": {},
+  "spells-known": {},
+  "spells-known-modes": null,
+  "subrace": null,
+  "subrace-ability-increases": null,
+  "tool-bonus": {},
+  "tool-expertise": [],
+  "tool-profs": {},
+  "total-levels": 1,
+  "total-spellcaster-levels": 0,
+  "traits": [],
+  "treasure": null,
+  "unarmored-speed-bonus": null,
+  "used-resources": null,
+  "weapon-modifiers": {
+    "javelin": {
+      "attack": {
+        "finesse": 4,
+        "standard": 4
+      },
+      "best-attack": 4,
+      "best-damage": 2,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 2,
+        "off-hand": 0,
+        "standard": 2
+      },
+      "dual-wield?": false,
+      "has-prof?": true
+    }
+  },
+  "weapon-profs": [
+    "simple",
+    "martial"
+  ],
+  "weapons": {
+    "javelin": {
+      "db/id": 17592186056162,
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 4
+    }
+  },
+  "weight": null,
+  "wielded-shield": null,
+  "worn-armor": null,
+  "xps": null
+}

@@ -1,0 +1,70 @@
+{
+  "checks": [
+    {
+      "actual": 10,
+      "expected": 10,
+      "pass": true
+    },
+    {
+      "actual": {
+        "orcpub.dnd.e5.character/cha": 16,
+        "orcpub.dnd.e5.character/con": 11,
+        "orcpub.dnd.e5.character/dex": 13,
+        "orcpub.dnd.e5.character/int": 16,
+        "orcpub.dnd.e5.character/str": 10,
+        "orcpub.dnd.e5.character/wis": 14
+      },
+      "expected": {
+        "orcpub.dnd.e5.character/cha": 16,
+        "orcpub.dnd.e5.character/con": 11,
+        "orcpub.dnd.e5.character/dex": 13,
+        "orcpub.dnd.e5.character/int": 16,
+        "orcpub.dnd.e5.character/str": 10,
+        "orcpub.dnd.e5.character/wis": 14
+      },
+      "pass": true
+    },
+    {
+      "actual": "Elf",
+      "expected": "Elf",
+      "pass": true
+    },
+    {
+      "actual": "Dark Elf (Drow)",
+      "expected": "Dark Elf (Drow)",
+      "pass": true
+    },
+    {
+      "actual": 5,
+      "expected": 5,
+      "pass": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "actual": 30,
+      "expected": 30,
+      "pass": true
+    }
+  ],
+  "description": "The warlock_test.clj entity: level 10 Dark Elf (Drow) warlock of the Archfey, Spy background, Keen Mind feat, Pact of the Tome, five invocations. Needs warlock-test-content.orcbrew for the Drow subrace, Spy and Keen Mind.",
+  "name": "warlock-10-drow",
+  "orcbrew": [
+    "warlock-test-content.orcbrew"
+  ],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

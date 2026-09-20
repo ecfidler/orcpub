@@ -1,0 +1,32 @@
+{
+  "checks": [
+    {
+      "actual": 5,
+      "expected": 5,
+      "pass": true
+    },
+    {
+      "actual": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "expected": {
+        "1": 4,
+        "2": 3,
+        "3": 2
+      },
+      "pass": true
+    },
+    {
+      "actual": 19,
+      "expected": 19,
+      "pass": true
+    }
+  ],
+  "description": "Level 5 rock gnome wizard (Evocation), ASI at 4 (INT+2), 3rd-level slots, fourteen spells known.",
+  "name": "wizard-5",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

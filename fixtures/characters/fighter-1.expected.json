@@ -1,0 +1,398 @@
+{
+  "abilities": {
+    "orcpub.dnd.e5.character/cha": 9,
+    "orcpub.dnd.e5.character/con": 14,
+    "orcpub.dnd.e5.character/dex": 15,
+    "orcpub.dnd.e5.character/int": 13,
+    "orcpub.dnd.e5.character/str": 16,
+    "orcpub.dnd.e5.character/wis": 11
+  },
+  "ability-bonuses": {
+    "orcpub.dnd.e5.character/cha": -1,
+    "orcpub.dnd.e5.character/con": 2,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 3,
+    "orcpub.dnd.e5.character/wis": 0
+  },
+  "ability-increases": {
+    "orcpub.dnd.e5.character/cha": 1,
+    "orcpub.dnd.e5.character/con": 1,
+    "orcpub.dnd.e5.character/dex": 1,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 1,
+    "orcpub.dnd.e5.character/wis": 1
+  },
+  "actions": [],
+  "age": null,
+  "al-illegal-reasons": null,
+  "alignment": "Lawful Good",
+  "all-armor-inventory": {
+    "chain-mail": {
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "shield": {
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor": {
+    "chain-mail": {
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "shield": {
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor-class": 12,
+  "armor-class-with-armor": [
+    {
+      "ac": 19,
+      "armor": "chain-mail",
+      "shield": "shield"
+    },
+    {
+      "ac": 17,
+      "armor": "chain-mail",
+      "shield": null
+    },
+    {
+      "ac": 14,
+      "armor": null,
+      "shield": "shield"
+    },
+    {
+      "ac": 12,
+      "armor": null,
+      "shield": null
+    }
+  ],
+  "armor-profs": [
+    "heavy",
+    "light",
+    "medium",
+    "shields"
+  ],
+  "attacks": null,
+  "attuned-magic-items": null,
+  "background": "Acolyte",
+  "base-flying-speed": 0,
+  "base-land-speed": 30,
+  "base-swimming-speed": 0,
+  "bonds": null,
+  "bonus-actions": [
+    {
+      "frequency": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/rest"
+      },
+      "name": "Second Wind",
+      "page": 72,
+      "summary": "regain 1d10 +1 HPs"
+    }
+  ],
+  "character-name": "Brannor Ironfist",
+  "class-hit-point-level-bonus": {},
+  "class-level": {
+    "fighter": 1
+  },
+  "classes": [
+    "fighter"
+  ],
+  "condition-immunities": [],
+  "crit-values-str": 20,
+  "critical-hit-values": [
+    20
+  ],
+  "current-hit-points": null,
+  "custom-equipment": null,
+  "custom-treasure": null,
+  "damage-immunities": [],
+  "damage-vulnerabilities": null,
+  "darkvision": 0,
+  "description": null,
+  "equipment": {
+    "amulet": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "backpack": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "clothes-common": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "crowbar": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "hammer": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "incense": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 5
+    },
+    "piton": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 10
+    },
+    "pouch": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "prayer-book": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "rations-1-day-": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 10
+    },
+    "rope-hempen": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "tinderbox": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "torch": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 10
+    },
+    "vestements": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "waterskin": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "eyes": null,
+  "faction-image-url": null,
+  "faction-image-url-failed": null,
+  "faction-name": null,
+  "feats": null,
+  "features-used": {},
+  "flaws": null,
+  "hair": null,
+  "height": null,
+  "hit-point-level-bonus": 2,
+  "ideals": null,
+  "image-url": null,
+  "image-url-failed": null,
+  "immunities": [],
+  "initiative": 2,
+  "languages": [
+    "common",
+    "dwarvish",
+    "elvish"
+  ],
+  "levels": {
+    "fighter": {
+      "class-level": 1,
+      "class-name": "Fighter",
+      "hit-die": 10
+    }
+  },
+  "magic-armor": null,
+  "magic-items": null,
+  "magic-weapons": null,
+  "main-hand-weapon": "longsword",
+  "max-hit-points": 12,
+  "notes": null,
+  "number-of-attacks": 1,
+  "off-hand-weapon": "shield",
+  "option-sources": null,
+  "pact-magic?": null,
+  "passive-perception": 12,
+  "personality-trait-1": null,
+  "personality-trait-2": null,
+  "player-name": null,
+  "prepare-spell-count": {},
+  "prepares-spells": null,
+  "proficiency-bonus": 2,
+  "public?": null,
+  "race": "Human",
+  "race-ability-increases": {
+    "orcpub.dnd.e5.character/cha": 1,
+    "orcpub.dnd.e5.character/con": 1,
+    "orcpub.dnd.e5.character/dex": 1,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 1,
+    "orcpub.dnd.e5.character/wis": 1
+  },
+  "reactions": [],
+  "resistances": [],
+  "save-bonuses": {
+    "orcpub.dnd.e5.character/cha": -1,
+    "orcpub.dnd.e5.character/con": 4,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 5,
+    "orcpub.dnd.e5.character/wis": 0
+  },
+  "saving-throws": [
+    "orcpub.dnd.e5.character/con",
+    "orcpub.dnd.e5.character/str"
+  ],
+  "sex": null,
+  "skill-bonuses": {
+    "acrobatics": 2,
+    "animal-handling": 0,
+    "arcana": 1,
+    "athletics": 5,
+    "deception": -1,
+    "history": 1,
+    "insight": 2,
+    "intimidation": -1,
+    "investigation": 1,
+    "medicine": 0,
+    "nature": 1,
+    "perception": 2,
+    "performance": -1,
+    "persuasion": -1,
+    "religion": 3,
+    "sleight-of-hand": 2,
+    "stealth": 2,
+    "survival": 0
+  },
+  "skill-expertise": null,
+  "skill-profs": {
+    "athletics": {
+      "nil": true
+    },
+    "insight": {
+      "Acolyte": true
+    },
+    "perception": {
+      "nil": true
+    },
+    "religion": {
+      "Acolyte": true
+    }
+  },
+  "skin": null,
+  "speed-with-armor": null,
+  "spell-attack-modifier": {
+    "orcpub.dnd.e5.character/cha": 1,
+    "orcpub.dnd.e5.character/con": 4,
+    "orcpub.dnd.e5.character/dex": 4,
+    "orcpub.dnd.e5.character/int": 3,
+    "orcpub.dnd.e5.character/str": 5,
+    "orcpub.dnd.e5.character/wis": 2
+  },
+  "spell-modifiers": {},
+  "spell-save-dc": {
+    "orcpub.dnd.e5.character/cha": 9,
+    "orcpub.dnd.e5.character/con": 12,
+    "orcpub.dnd.e5.character/dex": 12,
+    "orcpub.dnd.e5.character/int": 11,
+    "orcpub.dnd.e5.character/str": 13,
+    "orcpub.dnd.e5.character/wis": 10
+  },
+  "spell-slot-factors": null,
+  "spell-slots": {},
+  "spells-known": {},
+  "spells-known-modes": null,
+  "subrace": "Damaran",
+  "subrace-ability-increases": null,
+  "tool-bonus": {},
+  "tool-expertise": [],
+  "tool-profs": {},
+  "total-levels": 1,
+  "total-spellcaster-levels": 0,
+  "traits": [
+    {
+      "class-key": null,
+      "name": "Shelter the Faithful",
+      "page": 127,
+      "source": null,
+      "summary": "You and your companions can expect free healing at an establishment of your faith."
+    },
+    {
+      "description": "While you are wearing armor, you gain a +1 bonus to AC.",
+      "name": "Defense Fighting Style",
+      "page": 72
+    }
+  ],
+  "treasure": {
+    "gp": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 15
+    }
+  },
+  "unarmored-speed-bonus": null,
+  "used-resources": null,
+  "weapon-modifiers": {
+    "handaxe": {
+      "attack": {
+        "finesse": 5,
+        "standard": 5
+      },
+      "best-attack": 5,
+      "best-damage": 3,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 3,
+        "off-hand": 0,
+        "standard": 3
+      },
+      "dual-wield?": true,
+      "has-prof?": true
+    },
+    "longsword": {
+      "attack": {
+        "finesse": 5,
+        "standard": 5
+      },
+      "best-attack": 5,
+      "best-damage": 3,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 3,
+        "off-hand": 0,
+        "standard": 3
+      },
+      "dual-wield?": false,
+      "has-prof?": true
+    }
+  },
+  "weapon-profs": [
+    "simple",
+    "martial"
+  ],
+  "weapons": {
+    "handaxe": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 2
+    },
+    "longsword": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "weight": null,
+  "wielded-shield": "shield",
+  "worn-armor": "chain-mail",
+  "xps": 0
+}

@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "slots-used values stored as vectors instead of sets, and a stray :db/id inside features-used (update-values-from-strict handles both).",
+  "name": "r3-slots-used-vectors",
+  "orcbrew": [],
+  "quirk": "R3",
+  "strictRoundTrip": false,
+  "unfilledSelections": []
+}

@@ -1,0 +1,297 @@
+[
+  {
+    "actualPath": [
+      "ability-scores"
+    ],
+    "key": "ability-scores",
+    "max": 1,
+    "min": 1,
+    "name": "Base Ability Scores",
+    "optionCount": 4,
+    "path": [
+      "ability-scores"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "standard-scores"
+    ]
+  },
+  {
+    "actualPath": [
+      "alignment"
+    ],
+    "key": "alignment",
+    "max": 1,
+    "min": 1,
+    "name": "Alignment",
+    "optionCount": 9,
+    "path": [
+      "alignment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "lawful-good"
+    ]
+  },
+  {
+    "actualPath": [
+      "race"
+    ],
+    "key": "race",
+    "max": 1,
+    "min": 1,
+    "name": "Race",
+    "optionCount": 10,
+    "path": [
+      "race"
+    ],
+    "remaining": 0,
+    "selected": [
+      "ironwrought"
+    ]
+  },
+  {
+    "actualPath": [
+      "background"
+    ],
+    "key": "background",
+    "max": 1,
+    "min": 1,
+    "name": "Background",
+    "optionCount": 2,
+    "path": [
+      "background"
+    ],
+    "remaining": 0,
+    "selected": [
+      "acolyte"
+    ]
+  },
+  {
+    "actualPath": [
+      "background",
+      "acolyte",
+      "starting-equipment-holy-symbol"
+    ],
+    "key": "starting-equipment-holy-symbol",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Holy Symbol",
+    "optionCount": 4,
+    "path": [
+      "background",
+      "acolyte",
+      "starting-equipment-holy-symbol"
+    ],
+    "remaining": 0,
+    "selected": [
+      "amulet"
+    ]
+  },
+  {
+    "actualPath": [
+      "background",
+      "acolyte",
+      "starting-equipment-prayer-book-wheel"
+    ],
+    "key": "starting-equipment-prayer-book-wheel",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Prayer Book/Wheel",
+    "optionCount": 3,
+    "path": [
+      "background",
+      "acolyte",
+      "starting-equipment-prayer-book-wheel"
+    ],
+    "remaining": 0,
+    "selected": [
+      "prayer-book"
+    ]
+  },
+  {
+    "actualPath": [
+      "languages"
+    ],
+    "key": "languages",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Languages",
+    "optionCount": 16,
+    "path": [
+      "background",
+      "acolyte",
+      "languages"
+    ],
+    "ref": [
+      "languages"
+    ],
+    "remaining": 0,
+    "selected": [
+      "common",
+      "gnomish"
+    ]
+  },
+  {
+    "actualPath": [
+      "feats"
+    ],
+    "key": "feats",
+    "max": 0,
+    "min": 0,
+    "multiselect": true,
+    "name": "Feats",
+    "optionCount": 1,
+    "path": [
+      "feats"
+    ],
+    "ref": [
+      "feats"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "class"
+    ],
+    "key": "class",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Class",
+    "optionCount": 12,
+    "path": [
+      "class"
+    ],
+    "remaining": 0,
+    "selected": [
+      "artificer"
+    ]
+  },
+  {
+    "actualPath": [
+      "treasure"
+    ],
+    "key": "treasure",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Treasure",
+    "optionCount": 11,
+    "path": [
+      "treasure"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "weapons"
+    ],
+    "key": "weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Weapons",
+    "optionCount": 40,
+    "path": [
+      "weapons"
+    ],
+    "remaining": 0,
+    "selected": [
+      "light-hammer"
+    ]
+  },
+  {
+    "actualPath": [
+      "magic-weapons"
+    ],
+    "key": "magic-weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Weapons",
+    "optionCount": 306,
+    "path": [
+      "magic-weapons"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "armor"
+    ],
+    "key": "armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Armor",
+    "optionCount": 14,
+    "path": [
+      "armor"
+    ],
+    "remaining": 0,
+    "selected": [
+      "scale-mail"
+    ]
+  },
+  {
+    "actualPath": [
+      "magic-armor"
+    ],
+    "key": "magic-armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Armor",
+    "optionCount": 252,
+    "path": [
+      "magic-armor"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "equipment"
+    ],
+    "key": "equipment",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Equipment",
+    "optionCount": 162,
+    "path": [
+      "equipment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "clothes-common",
+      "pouch",
+      "incense",
+      "vestements",
+      "amulet",
+      "prayer-book"
+    ]
+  },
+  {
+    "actualPath": [
+      "other-magic-items"
+    ],
+    "key": "other-magic-items",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Other Magic Items",
+    "optionCount": 247,
+    "path": [
+      "other-magic-items"
+    ],
+    "remaining": 0,
+    "selected": []
+  }
+]

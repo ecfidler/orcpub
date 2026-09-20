@@ -1,0 +1,40 @@
+{
+  "checks": [
+    {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "actual": "Ironwrought",
+      "expected": "Ironwrought",
+      "pass": true
+    },
+    {
+      "actual": "Envoy",
+      "expected": "Envoy",
+      "pass": true
+    },
+    {
+      "actual": {
+        "con": 2
+      },
+      "expected": {
+        "con": 2
+      },
+      "pass": true
+    },
+    {
+      "actual": 15,
+      "expected": 15,
+      "pass": true
+    }
+  ],
+  "description": "Homebrew-only character: Ironwrought (Envoy) race and Artificer (Alternate) class with the Alchemist subclass, all from duplicate-external-b.orcbrew.",
+  "name": "ironwrought-artificer-3",
+  "orcbrew": [
+    "duplicate-external-b.orcbrew"
+  ],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

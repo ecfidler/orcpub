@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "The ironwrought-artificer-3 character without its pack: race, subrace, class and subclass keys do not resolve. Built against SRD only; content_reconciliation is the new app's job.",
+  "name": "r8-unresolved-keys",
+  "orcbrew": [],
+  "quirk": "R8",
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

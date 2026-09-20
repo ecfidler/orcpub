@@ -1,0 +1,33 @@
+{
+  "checks": [],
+  "description": "Real Datomic entity from character_test.clj strict-round-trip: level 1 barbarian with class starting equipment; no race, background or alignment.",
+  "name": "character-test-1",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": [
+    [
+      "alignment"
+    ],
+    [
+      "race"
+    ],
+    [
+      "background"
+    ],
+    [
+      "class",
+      "barbarian",
+      "starting-equipment-martial-weapon"
+    ],
+    [
+      "class",
+      "barbarian",
+      "starting-equipment-simple-weapon"
+    ],
+    [
+      "class",
+      "barbarian",
+      "skill-proficiency"
+    ]
+  ]
+}

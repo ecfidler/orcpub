@@ -1,0 +1,523 @@
+{
+  "~:orcpub.entity.strict/selections": [
+    {
+      "~:orcpub.entity.strict/key": "~:weapons",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:quarterstaff",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:race",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:tiefling"
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:ability-scores",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:standard-roll",
+        "~:orcpub.entity.strict/map-value": {
+          "~:orcpub.dnd.e5.character/cha": 14,
+          "~:orcpub.dnd.e5.character/con": 14,
+          "~:orcpub.dnd.e5.character/dex": 13,
+          "~:orcpub.dnd.e5.character/int": 17,
+          "~:orcpub.dnd.e5.character/str": 9,
+          "~:orcpub.dnd.e5.character/wis": 11
+        }
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:alignment",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:lawful-neutral"
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:other-magic-items",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:cloak-of-protection",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:background",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:acolyte",
+        "~:orcpub.entity.strict/selections": [
+          {
+            "~:orcpub.entity.strict/key": "~:starting-equipment-holy-symbol",
+            "~:orcpub.entity.strict/option": {
+              "~:orcpub.entity.strict/key": "~:amulet"
+            }
+          },
+          {
+            "~:orcpub.entity.strict/key": "~:starting-equipment-prayer-book-wheel",
+            "~:orcpub.entity.strict/option": {
+              "~:orcpub.entity.strict/key": "~:prayer-book"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:equipment",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:spellbook",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:component-pouch",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:clothes-common",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:pouch",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:incense",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 5
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:vestements",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:amulet",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:prayer-book",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:treasure",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:gp",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 120
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:pp",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 4
+          }
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:class",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:wizard",
+          "~:orcpub.entity.strict/selections": [
+            {
+              "~:orcpub.entity.strict/key": "~:levels",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:level-1"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-2",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    },
+                    {
+                      "~:orcpub.entity.strict/key": "~:arcane-tradition",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:school-of-evocation"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-3",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-4",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    },
+                    {
+                      "~:orcpub.entity.strict/key": "~:asi-or-feat",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:ability-score-improvement",
+                        "~:orcpub.entity.strict/selections": [
+                          {
+                            "~:orcpub.entity.strict/key": "~:asi",
+                            "~:orcpub.entity.strict/options": [
+                              {
+                                "~:orcpub.entity.strict/key": "~:orcpub.dnd.e5.character/int"
+                              },
+                              {
+                                "~:orcpub.entity.strict/key": "~:orcpub.dnd.e5.character/int"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-5",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-6",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-7",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-8",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    },
+                    {
+                      "~:orcpub.entity.strict/key": "~:asi-or-feat",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:ability-score-improvement",
+                        "~:orcpub.entity.strict/selections": [
+                          {
+                            "~:orcpub.entity.strict/key": "~:asi",
+                            "~:orcpub.entity.strict/options": [
+                              {
+                                "~:orcpub.entity.strict/key": "~:orcpub.dnd.e5.character/int"
+                              },
+                              {
+                                "~:orcpub.entity.strict/key": "~:orcpub.dnd.e5.character/con"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-9",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-10",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-11",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 4,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:wizard-cantrips-known",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:acid-splash"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:chill-touch"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:dancing-lights"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:fire-bolt"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:light"
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:wizard-spells-known",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:alarm"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:burning-hands"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:charm-person"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:color-spray"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:comprehend-languages"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:detect-magic"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:disguise-self"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:expeditious-retreat"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:alter-self"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:arcane-lock"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:blindness-deafness"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:blur"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:animate-dead"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:bestow-curse"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:blink"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:clairvoyance"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:arcane-eye"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:banishment"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:blight"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:confusion"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:animate-objects"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:arcane-hand"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:cloudkill"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:cone-of-cold"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:chain-lightning"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:circle-of-death"
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-melee-weapon",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:quarterstaff"
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-equipment-pack",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:scholars-pack"
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-spellcasting-equipment",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:component-pouch"
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:skill-proficiency",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:arcana"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:investigation"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:armor"
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:languages",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:abyssal"
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:celestial"
+        }
+      ]
+    }
+  ],
+  "~:orcpub.entity.strict/values": {
+    "~:orcpub.dnd.e5.character/attuned-magic-items": [
+      "~:cloak-of-protection"
+    ],
+    "~:orcpub.dnd.e5.character/character-name": "Zariel Ashenwright",
+    "~:orcpub.dnd.e5.character/prepared-spells-by-class": [
+      {
+        "~:orcpub.dnd.e5.character/class-name": "Wizard",
+        "~:orcpub.dnd.e5.character/prepared-spells": {
+          "~#set": [
+            "~:animate-dead",
+            "~:alarm",
+            "~:arcane-lock",
+            "~:blink",
+            "~:detect-magic",
+            "~:blindness-deafness",
+            "~:clairvoyance",
+            "~:alter-self",
+            "~:comprehend-languages",
+            "~:disguise-self",
+            "~:blur",
+            "~:expeditious-retreat",
+            "~:charm-person",
+            "~:bestow-curse",
+            "~:burning-hands",
+            "~:color-spray"
+          ]
+        }
+      }
+    ],
+    "~:orcpub.dnd.e5.character/xps": 85000
+  }
+}

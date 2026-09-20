@@ -1,0 +1,43 @@
+{
+  "checks": [
+    {
+      "actual": 11,
+      "expected": 11,
+      "pass": true
+    },
+    {
+      "actual": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "expected": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 2,
+        "6": 1
+      },
+      "pass": true
+    },
+    {
+      "actual": 5,
+      "expected": 5,
+      "pass": true
+    },
+    {
+      "actual": 6,
+      "expected": 6,
+      "pass": true
+    }
+  ],
+  "description": "Level 11 tiefling wizard (Evocation), ASIs at 4 and 8, 6th-level slots, five cantrips.",
+  "name": "wizard-11",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

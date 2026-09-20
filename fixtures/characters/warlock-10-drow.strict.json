@@ -1,0 +1,348 @@
+{
+  "~:orcpub.entity.strict/selections": [
+    {
+      "~:orcpub.entity.strict/key": "~:race",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:elf",
+        "~:orcpub.entity.strict/selections": [
+          {
+            "~:orcpub.entity.strict/key": "~:subrace",
+            "~:orcpub.entity.strict/option": {
+              "~:orcpub.entity.strict/key": "~:dark-elf-drow-"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:ability-scores",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:standard-roll",
+        "~:orcpub.entity.strict/map-value": {
+          "~:orcpub.dnd.e5.character/cha": 15,
+          "~:orcpub.dnd.e5.character/con": 11,
+          "~:orcpub.dnd.e5.character/dex": 11,
+          "~:orcpub.dnd.e5.character/int": 15,
+          "~:orcpub.dnd.e5.character/str": 10,
+          "~:orcpub.dnd.e5.character/wis": 14
+        }
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:alignment",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:chaotic-neutral"
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:background",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:spy"
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:feats",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:keen-mind"
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:class",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:warlock",
+          "~:orcpub.entity.strict/selections": [
+            {
+              "~:orcpub.entity.strict/key": "~:skill-proficiency",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:history"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:intimidation"
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:eldritch-invocations",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:book-of-ancient-secrets",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:book-of-ancient-secrets-rituals",
+                      "~:orcpub.entity.strict/options": [
+                        {
+                          "~:orcpub.entity.strict/key": "~:detect-poison-and-disease"
+                        },
+                        {
+                          "~:orcpub.entity.strict/key": "~:illusory-script"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:agonizing-blast"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:beast-speech"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:eyes-of-the-rune-keeper"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:mire-the-mind"
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-simple-weapon",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:dagger"
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:warlock-cantrips-known",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:friends"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:minor-illusion"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:prestidigitation"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:eldritch-blast"
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:levels",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:level-1",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:otherworldly-patron",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:the-archfey"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-2",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-3",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:pact-boon",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:pact-of-the-tome",
+                        "~:orcpub.entity.strict/selections": [
+                          {
+                            "~:orcpub.entity.strict/key": "~:book-of-shadows-cantrips",
+                            "~:orcpub.entity.strict/options": [
+                              {
+                                "~:orcpub.entity.strict/key": "~:blade-ward"
+                              },
+                              {
+                                "~:orcpub.entity.strict/key": "~:spare-the-dying"
+                              },
+                              {
+                                "~:orcpub.entity.strict/key": "~:thorn-whip"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-4",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:asi-or-feat",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:feat"
+                      }
+                    },
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-5",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-6",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-7",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-8",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:asi-or-feat",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/key": "~:feat"
+                      }
+                    },
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-9",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:level-10",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:orcpub.entity.strict/int-value": 5,
+                        "~:orcpub.entity.strict/key": "~:average"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-spellcasting-equipment",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:component-pouch"
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-weapon",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:any-simple-weapon",
+                "~:orcpub.entity.strict/selections": [
+                  {
+                    "~:orcpub.entity.strict/key": "~:starting-equipment-simple-weapon",
+                    "~:orcpub.entity.strict/option": {
+                      "~:orcpub.entity.strict/key": "~:shortbow"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:starting-equipment-equipment-pack",
+              "~:orcpub.entity.strict/option": {
+                "~:orcpub.entity.strict/key": "~:dungeoneers-pack"
+              }
+            },
+            {
+              "~:orcpub.entity.strict/key": "~:warlock-spells-known",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:orcpub.entity.strict/key": "~:charm-person"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:hellish-rebuke"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:comprehend-languages"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:ray-of-enfeeblement"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:sleep"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:hold-monster"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:dominate-person"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:crown-of-madness"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:fear"
+                },
+                {
+                  "~:orcpub.entity.strict/key": "~:faerie-fire"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

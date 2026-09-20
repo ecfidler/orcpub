@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "actual": 20,
+      "expected": 20,
+      "pass": true
+    },
+    {
+      "actual": 6,
+      "expected": 6,
+      "pass": true
+    },
+    {
+      "actual": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "expected": {
+        "1": 4,
+        "2": 3,
+        "3": 3,
+        "4": 3,
+        "5": 3,
+        "6": 2,
+        "7": 2,
+        "8": 1,
+        "9": 1
+      },
+      "pass": true
+    }
+  ],
+  "description": "Level 20 human (standard) wizard (Evocation), every ASI, 9th-level slots, forty-four spells known, Spell Mastery and Signature Spells levels present.",
+  "name": "wizard-20",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

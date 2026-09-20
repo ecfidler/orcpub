@@ -1,0 +1,14 @@
+{
+  "checks": [],
+  "description": "Real Datomic entity from character_test.clj strict-round-trip-2: level 8 human (Damaran) fighter with Eldritch Knight (non-SRD, unresolved), Noble background (non-SRD, unresolved), Ritual Caster feat (unresolved), rolled hit points, magic items, custom equipment, an owner. Exercises R8 (unresolved keys) with real data.",
+  "name": "character-test-2",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": [
+    [
+      "class",
+      "fighter",
+      "skill-proficiency"
+    ]
+  ]
+}

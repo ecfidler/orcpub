@@ -1,0 +1,33 @@
+{
+  "checks": [
+    {
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "actual": 7,
+      "expected": 7,
+      "pass": true
+    },
+    {
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "actual": {
+        "1": 2
+      },
+      "expected": {
+        "1": 2
+      },
+      "pass": true
+    }
+  ],
+  "description": "Level 1 high elf wizard, Acolyte, three cantrips + the High Elf cantrip, six spells known, four prepared.",
+  "name": "wizard-1",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

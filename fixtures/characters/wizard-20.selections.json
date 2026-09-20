@@ -1,0 +1,2910 @@
+[
+  {
+    "actualPath": [
+      "ability-scores"
+    ],
+    "key": "ability-scores",
+    "max": 1,
+    "min": 1,
+    "name": "Base Ability Scores",
+    "optionCount": 4,
+    "path": [
+      "ability-scores"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "standard-scores"
+    ]
+  },
+  {
+    "actualPath": [
+      "alignment"
+    ],
+    "key": "alignment",
+    "max": 1,
+    "min": 1,
+    "name": "Alignment",
+    "optionCount": 9,
+    "path": [
+      "alignment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "neutral-good"
+    ]
+  },
+  {
+    "actualPath": [
+      "race"
+    ],
+    "key": "race",
+    "max": 1,
+    "min": 1,
+    "name": "Race",
+    "optionCount": 10,
+    "path": [
+      "race"
+    ],
+    "remaining": 0,
+    "selected": [
+      "human"
+    ]
+  },
+  {
+    "actualPath": [
+      "race",
+      "human",
+      "subrace"
+    ],
+    "key": "subrace",
+    "max": 1,
+    "min": 1,
+    "name": "Subrace",
+    "optionCount": 10,
+    "path": [
+      "race",
+      "human",
+      "subrace"
+    ],
+    "remaining": 0,
+    "selected": [
+      "chondathan"
+    ]
+  },
+  {
+    "actualPath": [
+      "languages"
+    ],
+    "key": "languages",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Languages",
+    "optionCount": 16,
+    "path": [
+      "race",
+      "human",
+      "languages"
+    ],
+    "ref": [
+      "languages"
+    ],
+    "remaining": -2,
+    "selected": [
+      "common",
+      "draconic",
+      "primordial"
+    ]
+  },
+  {
+    "actualPath": [
+      "race",
+      "human",
+      "variant"
+    ],
+    "key": "variant",
+    "max": 1,
+    "min": 1,
+    "name": "Variant",
+    "optionCount": 2,
+    "path": [
+      "race",
+      "human",
+      "variant"
+    ],
+    "remaining": 0,
+    "selected": [
+      "standard-human"
+    ]
+  },
+  {
+    "actualPath": [
+      "background"
+    ],
+    "key": "background",
+    "max": 1,
+    "min": 1,
+    "name": "Background",
+    "optionCount": 2,
+    "path": [
+      "background"
+    ],
+    "remaining": 0,
+    "selected": [
+      "acolyte"
+    ]
+  },
+  {
+    "actualPath": [
+      "background",
+      "acolyte",
+      "starting-equipment-holy-symbol"
+    ],
+    "key": "starting-equipment-holy-symbol",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Holy Symbol",
+    "optionCount": 4,
+    "path": [
+      "background",
+      "acolyte",
+      "starting-equipment-holy-symbol"
+    ],
+    "remaining": 0,
+    "selected": [
+      "amulet"
+    ]
+  },
+  {
+    "actualPath": [
+      "background",
+      "acolyte",
+      "starting-equipment-prayer-book-wheel"
+    ],
+    "key": "starting-equipment-prayer-book-wheel",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Prayer Book/Wheel",
+    "optionCount": 3,
+    "path": [
+      "background",
+      "acolyte",
+      "starting-equipment-prayer-book-wheel"
+    ],
+    "remaining": 0,
+    "selected": [
+      "prayer-book"
+    ]
+  },
+  {
+    "actualPath": [
+      "languages"
+    ],
+    "key": "languages",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Languages",
+    "optionCount": 16,
+    "path": [
+      "background",
+      "acolyte",
+      "languages"
+    ],
+    "ref": [
+      "languages"
+    ],
+    "remaining": -1,
+    "selected": [
+      "common",
+      "draconic",
+      "primordial"
+    ]
+  },
+  {
+    "actualPath": [
+      "feats"
+    ],
+    "key": "feats",
+    "max": 0,
+    "min": 0,
+    "multiselect": true,
+    "name": "Feats",
+    "optionCount": 1,
+    "path": [
+      "feats"
+    ],
+    "ref": [
+      "feats"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "class"
+    ],
+    "key": "class",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Class",
+    "optionCount": 12,
+    "path": [
+      "class"
+    ],
+    "remaining": 0,
+    "selected": [
+      "wizard"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "starting-equipment-melee-weapon"
+    ],
+    "key": "starting-equipment-melee-weapon",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Melee Weapon",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "starting-equipment-melee-weapon"
+    ],
+    "remaining": 0,
+    "selected": [
+      "quarterstaff"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "starting-equipment-equipment-pack"
+    ],
+    "key": "starting-equipment-equipment-pack",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Equipment Pack",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "starting-equipment-equipment-pack"
+    ],
+    "remaining": 0,
+    "selected": [
+      "scholars-pack"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "starting-equipment-spellcasting-equipment"
+    ],
+    "key": "starting-equipment-spellcasting-equipment",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Spellcasting Equipment",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "starting-equipment-spellcasting-equipment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "component-pouch"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "skill-proficiency"
+    ],
+    "key": "skill-proficiency",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Skill Proficiency",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "wizard",
+      "skill-proficiency"
+    ],
+    "remaining": 0,
+    "selected": [
+      "arcana",
+      "investigation"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels"
+    ],
+    "key": "levels",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Wizard Levels",
+    "optionCount": 20,
+    "path": [
+      "class",
+      "wizard",
+      "levels"
+    ],
+    "remaining": 0,
+    "selected": [
+      "level-1",
+      "level-2",
+      "level-3",
+      "level-4",
+      "level-5",
+      "level-6",
+      "level-7",
+      "level-8",
+      "level-9",
+      "level-10",
+      "level-11",
+      "level-12",
+      "level-13",
+      "level-14",
+      "level-15",
+      "level-16",
+      "level-17",
+      "level-18",
+      "level-19",
+      "level-20"
+    ],
+    "sequential": true
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "key": "wizard-cantrips-known",
+    "max": 3,
+    "min": 3,
+    "multiselect": true,
+    "name": "Wizard Cantrips Known",
+    "optionCount": 14,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-1",
+      "wizard-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "remaining": -2,
+    "selected": [
+      "acid-splash",
+      "chill-touch",
+      "dancing-lights",
+      "fire-bolt",
+      "light"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 6,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 27,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-1",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 27,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "arcane-tradition"
+    ],
+    "key": "arcane-tradition",
+    "max": 1,
+    "min": 1,
+    "name": "Arcane Tradition",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "arcane-tradition"
+    ],
+    "remaining": 0,
+    "selected": [
+      "school-of-evocation"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 2",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 58,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-3",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-3",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 3",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-3",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "key": "wizard-cantrips-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Wizard Cantrips Known",
+    "optionCount": 14,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "wizard-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "remaining": -4,
+    "selected": [
+      "acid-splash",
+      "chill-touch",
+      "dancing-lights",
+      "fire-bolt",
+      "light"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 58,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "ability-score-improvement"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "key": "asi",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Ability Score Improvement",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "remaining": 0,
+    "selected": [
+      "orcpub.dnd.e5.character/int",
+      "orcpub.dnd.e5.character/int"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 4",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-4",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 86,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-5",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-5",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 5",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-5",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 86,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-6",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-6",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 6",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-6",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 109,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-7",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-7",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 7",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-7",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 109,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "ability-score-improvement"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "key": "asi",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Ability Score Improvement",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "remaining": 0,
+    "selected": [
+      "orcpub.dnd.e5.character/int",
+      "orcpub.dnd.e5.character/int"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 8",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-8",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 132,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-9",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-9",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 9",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-9",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "key": "wizard-cantrips-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Wizard Cantrips Known",
+    "optionCount": 14,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-10",
+      "wizard-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "remaining": -4,
+    "selected": [
+      "acid-splash",
+      "chill-touch",
+      "dancing-lights",
+      "fire-bolt",
+      "light"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 132,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-10",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-10",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 10",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-10",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 151,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-11",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-11",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 11",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-11",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 151,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "ability-score-improvement"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "key": "asi",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Ability Score Improvement",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "remaining": 0,
+    "selected": [
+      "orcpub.dnd.e5.character/con",
+      "orcpub.dnd.e5.character/con"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 12",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-12",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 166,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-13",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-13",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 13",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-13",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 166,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-14",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-14",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 14",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-14",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 178,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-15",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-15",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 15",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-15",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 178,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "ability-score-improvement"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "key": "asi",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Ability Score Improvement",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "remaining": 0,
+    "selected": [
+      "orcpub.dnd.e5.character/dex",
+      "orcpub.dnd.e5.character/wis"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 16",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-16",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 190,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-17",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-17",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 17",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-17",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "spell-mastery-level-1-spell"
+    ],
+    "key": "spell-mastery-level-1-spell",
+    "max": 1,
+    "min": 1,
+    "name": "Spell Mastery Level 1 Spell",
+    "optionCount": 27,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "spell-mastery-level-1-spell"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "spell-mastery-level-2-spell"
+    ],
+    "key": "spell-mastery-level-2-spell",
+    "max": 1,
+    "min": 1,
+    "name": "Spell Mastery Level 2 Spell",
+    "optionCount": 31,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "spell-mastery-level-2-spell"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alter-self"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 190,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 18",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-18",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 190,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "ability-score-improvement"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "key": "asi",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Ability Score Improvement",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "asi-or-feat",
+      "ability-score-improvement",
+      "asi"
+    ],
+    "remaining": 0,
+    "selected": [
+      "orcpub.dnd.e5.character/wis",
+      "orcpub.dnd.e5.character/cha"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 19",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-19",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-20",
+      "signature-spells"
+    ],
+    "key": "signature-spells",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Signature Spells",
+    "optionCount": 28,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-20",
+      "signature-spells"
+    ],
+    "remaining": 0,
+    "selected": [
+      "animate-dead",
+      "bestow-curse"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 190,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-20",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat",
+      "alter-self",
+      "arcane-lock",
+      "blindness-deafness",
+      "blur",
+      "animate-dead",
+      "bestow-curse",
+      "blink",
+      "clairvoyance",
+      "arcane-eye",
+      "banishment",
+      "blight",
+      "confusion",
+      "animate-objects",
+      "arcane-hand",
+      "cloudkill",
+      "cone-of-cold",
+      "chain-lightning",
+      "circle-of-death",
+      "contingency",
+      "create-undead",
+      "delayed-blast-fireball",
+      "etherealness",
+      "finger-of-death",
+      "forcecage",
+      "antimagic-field",
+      "antipathy-sympathy",
+      "clone",
+      "control-weather",
+      "astral-projection",
+      "foresight",
+      "gate",
+      "imprisonment",
+      "meteor-swarm",
+      "power-word-kill",
+      "prismatic-wall",
+      "shapechange"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-20",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 20",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-20",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "treasure"
+    ],
+    "key": "treasure",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Treasure",
+    "optionCount": 11,
+    "path": [
+      "treasure"
+    ],
+    "remaining": 0,
+    "selected": [
+      "gp"
+    ]
+  },
+  {
+    "actualPath": [
+      "weapons"
+    ],
+    "key": "weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Weapons",
+    "optionCount": 40,
+    "path": [
+      "weapons"
+    ],
+    "remaining": 0,
+    "selected": [
+      "quarterstaff"
+    ]
+  },
+  {
+    "actualPath": [
+      "magic-weapons"
+    ],
+    "key": "magic-weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Weapons",
+    "optionCount": 306,
+    "path": [
+      "magic-weapons"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "armor"
+    ],
+    "key": "armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Armor",
+    "optionCount": 14,
+    "path": [
+      "armor"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "magic-armor"
+    ],
+    "key": "magic-armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Armor",
+    "optionCount": 252,
+    "path": [
+      "magic-armor"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "equipment"
+    ],
+    "key": "equipment",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Equipment",
+    "optionCount": 162,
+    "path": [
+      "equipment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "spellbook",
+      "component-pouch",
+      "clothes-common",
+      "pouch",
+      "incense",
+      "vestements",
+      "amulet",
+      "prayer-book"
+    ]
+  },
+  {
+    "actualPath": [
+      "other-magic-items"
+    ],
+    "key": "other-magic-items",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Other Magic Items",
+    "optionCount": 247,
+    "path": [
+      "other-magic-items"
+    ],
+    "remaining": 0,
+    "selected": []
+  }
+]
