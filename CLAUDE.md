@@ -34,6 +34,8 @@ material that Plan Set 2 builds on.
   `README.md`. Key docs: `01-compatibility-contract.md` (what must
   import/export, with the legacy data quirks) and `02-engine-library.md`
   (facade surface, engine wrinkles, the few upstream patches needed).
+  **Implementing Phase A (fixtures + engine package, in this fork)? Read
+  `docs/ts-rewrite-plan/HANDOFF-phase-a.md` first.**
 - **`docs/ts-frontend-plan/`** (Plan Set 1, reference) — replace the
   ClojureScript UI with TypeScript/React while reusing the compiled engine
   and keeping this backend unchanged. Plan Set 2 references it where the

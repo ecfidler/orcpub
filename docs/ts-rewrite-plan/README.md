@@ -64,6 +64,7 @@ a *new product* that reuses only the engine.
 
 | Doc | Summary |
 |-----|---------|
+| [HANDOFF-phase-a.md](HANDOFF-phase-a.md) | **Start here for Phase A**: environment, M0/M1 step sequence, exit criteria, rules |
 | [00-repo-strategy.md](00-repo-strategy.md) | Where the work happens: engine built and published from this fork, the app in its own repository |
 | [01-compatibility-contract.md](01-compatibility-contract.md) | The three user-level contracts: homebrew (both ways), characters (old → new), content identity |
 | [02-engine-library.md](02-engine-library.md) | What the compiled engine package must expose beyond Plan Set 1's facade; build scope; wrinkles; golden tests |

@@ -18,8 +18,9 @@ place:
 - from `src/cljs/orcpub/dnd/e5/`: `spell_subs.cljs` (built-in
   races/backgrounds/languages + the homebrew → template pipeline),
   `import_validation.cljs` (`.orcbrew` parse/clean/validate),
-  `content_reconciliation.cljs` (missing-content detection),
-  `compute.cljs` (pure helpers already extracted from subs);
+  `content_reconciliation.cljs` (missing-content detection).
+  (`compute.cljc`, the pure helpers already extracted from subs, is under
+  `src/cljc` and comes in with the rest of it.)
 - `engine-js/src/orcpub/facade.cljs` — the exported API.
 
 Excluded from the build on purpose: `pdf_spec.cljc` (no PDF feature),
@@ -55,7 +56,7 @@ The homebrew → template conversion is a chain of `reg-sub`s
 Each sub's handler is a pure function of its inputs; the facade re-expresses
 the chain as ordinary function calls with the same bodies. This is the
 largest piece of Clojure glue in the plan (a few hundred lines, mechanical),
-and `compute.cljs` shows the pattern — it was extracted for exactly this
+and `dnd/e5/compute.cljc` shows the pattern — it was extracted for exactly this
 reason. Do it once, test it by comparing `buildTemplate(fixtures)` to what
 the old app's subscriptions produce in a REPL.
 
