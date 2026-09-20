@@ -100,3 +100,6 @@ cljsjs/
 
 # Local devcontainer setup (superseded by dotfiles)
 .devcontainer/local-setup.sh
+
+# Phase A oracle: downloaded jars + cloned sources (scripts/oracle-env.sh)
+scripts/.oracle-deps/
