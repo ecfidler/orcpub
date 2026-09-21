@@ -235,6 +235,29 @@ was run through the oracle in full; see *Findings* 9. Add packs by dropping
 the `.orcbrew` into `fixtures/orcbrew/`, recording source and license in the
 table above, and running the template dump (below).
 
+## Private exports (`orcbrew/private/`)
+
+Real `all-content.orcbrew` exports cannot be committed (they are mostly
+WotC text), but their **keys-only summary** can, and it is the regression
+target for the M3/M5 criterion "a real user's `all-content.orcbrew` imports
+cleanly". `orcbrew/private/*.orcbrew` is git-ignored; put the export there
+and run
+
+```sh
+lein run -m clojure.main scripts/dump-template.clj --summary \
+    fixtures/orcbrew/private/<name>.orcbrew fixtures/orcbrew/private/<name>.summary.json
+```
+
+The summary is a `.template.json` without `templateDelta`: `import` (the
+old importer's log and key conflicts), `plugins` (source → type → keys),
+`content` (the chain's lists, keys and names) and `templateSummary`
+(top-level option keys), plus `bomStripped` and `bytes`. No descriptions or
+rules text.
+
+| Summary | Export | Notes |
+|---|---|---|
+| `private/all-content3.summary.json` | the repo owner's export, 2,275,607 bytes, 29 packs, 1412 items | finding 9 describes it; the byte-order mark was stripped before import |
+
 ## Regenerating
 
 From the project root, with Leiningen (the supported path):
@@ -371,7 +394,5 @@ Line numbers are for commit `bcd9d68`.
    - The proper `:level-modifiers` shape is `[{:type … :value … :level …}]`,
      confirming that the nested form in `duplicate-external-*` (finding 6)
      is an artefact of those test files, not of real exports.
-   - The full template delta against SRD is 9.8 MB of JSON; a keys-only
-     summary (import log, plugin keys, content lists, top-level option keys)
-     is ~150 KB and would make a useful private regression target for M3/M5
-     if the owner wants to keep the export alongside the repo.
+   - The full template delta against SRD is 9.8 MB of JSON. A keys-only
+     summary is committed instead (*Private exports* below).

@@ -4,6 +4,7 @@
 ;;
 ;;   lein run -m clojure.main scripts/dump-template.clj <pack.orcbrew> <out.template.json>
 ;;   lein run -m clojure.main scripts/dump-template.clj --baseline <out.template.json.gz>
+;;   lein run -m clojure.main scripts/dump-template.clj --summary <pack.orcbrew> <out.summary.json>
 ;;
 ;;   scripts/oracle-env.sh scripts/dump-template.clj ...     ; no Leiningen/Clojars
 ;;
@@ -14,7 +15,10 @@
 ;; template. The output records the import log, the content the pack
 ;; contributed, and the template's structural delta against the SRD-only
 ;; baseline (--baseline writes that baseline, gzipped: it is ~6 MB of JSON).
-;; See fixtures/README.md.
+;; --summary writes the same minus the template delta, for packs whose text
+;; cannot be committed (a user's full all-content export): keys and names only.
+;; It also strips a leading byte-order mark, which browsers strip before the
+;; old importer ever sees the text. See fixtures/README.md.
 (load-file "scripts/orcpub/oracle.clj")
 
 (ns dump-template
@@ -92,16 +96,36 @@
        "templateDelta" (oracle/shape-delta baseline (oracle/template-shape template))})
      (println "wrote" out-path))))
 
+(defn dump-summary [pack-path out-path]
+  (let [name (oracle/pack-name pack-path)
+        raw-text (slurp pack-path)
+        text (str/replace-first raw-text #"^\uFEFF" "")
+        {:keys [result plugins]} (oracle/import-orcbrew name text {})
+        template (oracle/template-for-plugins plugins)]
+    (oracle/write-json-file
+     out-path
+     {"pack" name
+      "bomStripped" (not= raw-text text)
+      "bytes" (.length (clojure.java.io/file pack-path))
+      "import" (import-summary result)
+      "plugins" (plugins-summary plugins)
+      "content" (content-summary)
+      "templateSummary" (oracle/template-summary template)})
+    (println "wrote" out-path)))
+
 (defn -main [& args]
   (cond (= (first args) "--baseline")
         (dump-baseline (second args))
+
+        (= (first args) "--summary")
+        (apply dump-summary (rest args))
 
         (= 2 (count args))
         (apply dump-template args)
 
         :else
         (do (binding [*out* *err*]
-              (println "usage: dump-template.clj <pack.orcbrew> <out.template.json> | --baseline <out.json.gz>"))
+              (println "usage: dump-template.clj <pack.orcbrew> <out.template.json> | --baseline <out.json.gz> | --summary <pack.orcbrew> <out.summary.json>"))
             (System/exit 2))))
 
 (when (seq *command-line-args*)

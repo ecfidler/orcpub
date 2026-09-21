@@ -103,3 +103,6 @@ cljsjs/
 
 # Phase A oracle: downloaded jars + cloned sources (scripts/oracle-env.sh)
 scripts/.oracle-deps/
+
+# Real all-content exports (not redistributable); only their keys-only summaries are committed
+fixtures/orcbrew/private/*.orcbrew
