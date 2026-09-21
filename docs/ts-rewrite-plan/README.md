@@ -2,6 +2,13 @@
 
 > **Status: active.** This is the plan being seriously considered for
 > implementation. "The plan", unqualified, refers to this plan set.
+>
+> **Tracking:** the work is managed in Linear (workspace *Orc Alchemy*):
+> project **PubDoor** for the engine package (Phase A, this fork; M0 is
+> done) and project **Alchemy 5e** for the new app (Phase B, its own
+> repository). Milestones, issues with acceptance criteria, the risk
+> register and condensed copies of these documents live there; these files
+> remain the technical reference Linear points back to.
 
 A plan for building a **new web application** — new TypeScript/React UI and,
 in time, its own backend — whose rules engine is the **existing Clojure(Script)
@@ -64,14 +71,14 @@ a *new product* that reuses only the engine.
 
 | Doc | Summary |
 |-----|---------|
-| [HANDOFF-phase-a.md](HANDOFF-phase-a.md) | **Start here for Phase A**: environment, M0/M1 step sequence, exit criteria, rules |
+| [HANDOFF-phase-a.md](HANDOFF-phase-a.md) | **Start here for Phase A**: environment, repository state, the M1 sequence (as Linear issues), rules |
 | [00-repo-strategy.md](00-repo-strategy.md) | Where the work happens: engine built and published from this fork, the app in its own repository |
 | [01-compatibility-contract.md](01-compatibility-contract.md) | The three user-level contracts: homebrew (both ways), characters (old → new), content identity |
 | [02-engine-library.md](02-engine-library.md) | What the compiled engine package must expose beyond Plan Set 1's facade; build scope; wrinkles; golden tests |
 | [03-character-import-and-storage.md](03-character-import-and-storage.md) | Getting characters out of an old instance (exporter bookmarklet), importing them, the new app's native format |
 | [04-homebrew.md](04-homebrew.md) | `.orcbrew` import/export through the library; validation, conflicts, storage; old bugs to fix |
 | [05-app-and-backend.md](05-app-and-backend.md) | The application layer by reference to Plan Set 1, local-first mode, and the new backend |
-| [06-milestones-and-risks.md](06-milestones-and-risks.md) | Sequencing, definitions of done, risk register |
+| [06-milestones-and-risks.md](06-milestones-and-risks.md) | Milestone summary, decision record, definition of done (status and the risk register are in Linear) |
 
 ## Ground rules
 

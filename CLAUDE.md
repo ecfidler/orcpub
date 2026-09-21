@@ -22,6 +22,22 @@ TypeScript frontend. They are grounded in an investigation of this codebase
 and cite file and line numbers; prefer them over re-deriving the
 architecture.
 
+**Tracking lives in Linear** (workspace *Orc Alchemy*,
+https://linear.app/orc-alchemy):
+
+- **PubDoor** — the engine package, Phase A, this fork:
+  https://linear.app/orc-alchemy/project/pubdoor-13db9e66264b
+- **Alchemy 5e** — the new app, Phase B, its own repository:
+  https://linear.app/orc-alchemy/project/alchemy-5e-9db66f3ef51e
+- *Plan overview* (team document; links the compatibility contract and
+  the risk register):
+  https://linear.app/orc-alchemy/document/plan-overview-typescript-rewrite-on-the-compiled-engine-1afe72ecb90d
+
+Milestones, issue status and sequencing are there; the documents below are
+the technical reference. When they disagree on *what* is built, the docs
+win; on *status*, Linear wins. Reference the issue (`ORC-nn`) in commits
+and PRs.
+
 **Status: `docs/ts-rewrite-plan/` (Plan Set 2) is the plan being seriously
 considered for implementation.** When the user says "the plan" without
 qualification, they mean Plan Set 2. Plan Set 1 remains as reference
@@ -34,8 +50,11 @@ material that Plan Set 2 builds on.
   `README.md`. Key docs: `01-compatibility-contract.md` (what must
   import/export, with the legacy data quirks) and `02-engine-library.md`
   (facade surface, engine wrinkles, the few upstream patches needed).
-  **Implementing Phase A (fixtures + engine package, in this fork)? Read
-  `docs/ts-rewrite-plan/HANDOFF-phase-a.md` first.**
+  **Implementing Phase A (the engine package, in this fork)? Read
+  `docs/ts-rewrite-plan/HANDOFF-phase-a.md` first.** M0 (fixtures) is done:
+  `fixtures/` and `scripts/` are the oracle outputs and tooling, described
+  in `fixtures/README.md`, whose *Findings* section corrects the plan in a
+  few places.
 - **`docs/ts-frontend-plan/`** (Plan Set 1, reference) — replace the
   ClojureScript UI with TypeScript/React while reusing the compiled engine
   and keeping this backend unchanged. Plan Set 2 references it where the

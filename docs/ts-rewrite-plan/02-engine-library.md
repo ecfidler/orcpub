@@ -112,7 +112,7 @@ Commits to this fork (doc 00); each bumps the published package version.
 | Patch | Why |
 |---|---|
 | Re-enable the legacy unnamespaced-key migration (`character.cljc:130-165`, currently `#_`) inside `importCharacter` | Contract R7 |
-| Take the Dueling/app-db reads from the entity instead of `app-db` | Wrinkle 1 |
+| Take the Dueling/app-db reads from the entity instead of `app-db`; fix the `(fn [weapon _] …)` arity (JS-only) and document that the bonus applies only with a one-handed melee main hand **and** a non-weapon such as a shield in the off hand (`fixtures/README.md` finding 2) | Wrinkle 1 |
 | Add `:boons` to `required-fields` and `content-type-names` in `import_validation.cljs` | Doc 01 known quirks |
 | Extend `key-reference-map` to spells' `:spell-lists` and `level-selections` | Doc 01 known quirks |
 
@@ -133,9 +133,8 @@ Same strategy as Plan Set 1 doc 03, extended for the new scope:
 
 ## Deliverables
 
-- [ ] `engine-js/` in this fork with the build configuration above; the
-      four patches committed; package published as `@dmv/pubdoor`
-- [ ] shadow-cljs `:esm` build, `^:export`ed facade, hand-written `.d.ts`
-- [ ] De-re-framed `buildTemplate`; `evaluate` memoized with one-pass
-      extraction
-- [ ] Golden tests 1–4 green
+Tracked in Linear, project **PubDoor**: milestone M1 (ORC-15 to ORC-26 —
+scaffold, `evaluate`, golden tests, mutations, `importCharacter`, patches
+D1/D2, `autofill`, types, CI, publish 0.1.0) and milestone M3 (ORC-27 to
+ORC-43 — `buildTemplate`, `parseOrcbrew`, export, reconciliation, patches
+D3/D4, content lists, the C3 identity test, bundle size, publish 0.2.0).

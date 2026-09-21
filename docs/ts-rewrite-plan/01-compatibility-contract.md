@@ -24,7 +24,16 @@ including the ten de-facto drift forms it auto-cleans:
 The old pipeline (`import_validation.cljs:1266-1376`) handles all ten and is
 compiled into the library (doc 04), so the contract here is: **call it, don't
 bypass it**, and cover each form with a fixture so a library upgrade can't
-regress it.
+regress it (`fixtures/orcbrew/drift-01…10`).
+
+Corrections from M0 (`fixtures/README.md` §Findings): form 10 is *accepted
+without effect*, not normalized — `{:con 2}` adds nothing to Constitution
+while `race-ability-increases` still reports it (finding 4; whether the new
+importer normalizes it is Linear decision ORC-40). Real exports also start
+with a UTF-8 byte-order mark (strip `\uFEFF` before parsing) and carry
+internal key conflicts, pack names that disagree with `:option-pack`,
+subclasses attached to homebrew or absent classes, and `:skill-options`
+without `:choose` (finding 9). The old importer accepts all of it.
 
 **Mechanics fidelity.** A homebrew race/class/feat/subclass evaluates to the
 same character in both apps. Inherited: the conversion from orcbrew records
@@ -61,7 +70,7 @@ logged in — and imports the file into the new app.
 | R1 | Equipment as a map `{item-kw value}` (old) vs vector of `{key value}` (new), under all seven equipment keys | Inherited: `vectorize-equipment` (`character.cljc:274`) |
 | R2 | `prepared-spells-by-class` stored as a seq of records | Inherited: `update-values-from-strict` (`:294`) |
 | R3 | `slots-used` / `features-used` values as vectors; stray `:db/id` in `features-used` | Inherited (same function) |
-| R4 | Option `int-value 0` / `string-value ""` read back as nil | Inherited (`entity.cljc:151`); note only |
+| R4 | Option `int-value 0` / `string-value ""` | Preserved as `0` / `""` — the `or` in `entity.cljc:158` keeps them, both being truthy in Clojure(Script). An earlier version of this row said they read back as nil; `fixtures/README.md` finding 3 corrected it. Fixture `legacy/r4-zero-int-value` |
 | R5 | `xps` as a string | **Not inherited** — the old *server* coerces it (`routes.clj:930`). The importer must parse; blank/invalid → 0 |
 | R6 | `equip/quantity` as a string | Inherited on save path (`fix-quantities`); apply on import too |
 | R7 | Unqualified legacy keys (`:str`, `:quantity`) | **Not inherited** — detection specs exist (`character.cljc:47-94`) but the migration is `#_`-disabled. Re-enable in the facade's `importCharacter` (a listed patch, doc 02) |

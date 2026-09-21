@@ -50,7 +50,10 @@ decoded Transit, or the new app's JSON) and applies, in order:
 1. Transit decode (if needed).
 2. The inherited `char5e/from-strict` normalizations (R1–R3, R6, R9).
 3. The two additions: `xps` string → int (R5); legacy unnamespaced keys →
-   namespaced (R7, the re-enabled migration).
+   namespaced (R7, the re-enabled migration). Both must run before anything
+   reaches `to-strict`, which drops a string `xps` and, on an unmigrated
+   entity, throws on the JVM and silently zeroes quantities in JS
+   (`fixtures/README.md` finding 7).
 4. Missing-content reconciliation (R8): every option key is checked against
    the current template (SRD + loaded homebrew); unresolved keys are
    reported with suggestions (`content_reconciliation.cljs` scoring) and the
@@ -105,7 +108,9 @@ survives every round-trip.
 
 ## Deliverables
 
-- [ ] Exporter bookmarklet + a one-page "moving from the old app" guide
-- [ ] `importCharacter` with reconciliation UI
-- [ ] Native envelope + IndexedDB storage + file export/import
-- [ ] Fixture suite green
+Tracked in Linear: `importCharacter` and the legacy fixtures on **PubDoor**
+M1 (ORC-20, ORC-21) and `reconcileMissingContent` on M3 (ORC-33); the
+native envelope, IndexedDB storage and file export/import on **Alchemy 5e**
+M2 (ORC-47, ORC-49, ORC-50); the exporter bookmarklet, its integration
+test, the migration guide and the reconciliation UI on M5 (ORC-66 to
+ORC-68, ORC-71).
