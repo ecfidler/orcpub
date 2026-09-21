@@ -28,7 +28,7 @@ fixtures/
     character-test-{1,2,3}.*  the three real Datomic entities from character_test.clj
     r{3..9}-*.*               one synthetic strict entity per import quirk (doc 01 §C2)
   orcbrew/
-    <pack>.orcbrew            2 real packs, 1 ported test pack, 10 drift-form packs
+    <pack>.orcbrew            2 real packs, 1 ported test pack, 10 drift-form packs, 2 community packs
     <pack>.template.json      the old template chain's output for that pack alone
     _srd-baseline.template.json.gz  the SRD-only template shape (gzipped, ~6 MB raw)
   README.md
@@ -38,7 +38,7 @@ fixtures/
 |---|---|
 | Golden characters | 11 (`characters/`) |
 | Legacy entities | 3 real + 8 synthetic (`legacy/`) |
-| `.orcbrew` packs | 13, each with a `.template.json`, plus the baseline |
+| `.orcbrew` packs | 15, each with a `.template.json`, plus the baseline |
 
 ## Formats
 
@@ -86,11 +86,12 @@ recorded under these keys (the `-fn` suffix of the sub name is dropped):
 | `tool-bonus` | per tool key in `tool-profs` |
 | `prepare-spell-count` | per class name in `prepares-spells` |
 
-Two JVM-only adjustments were needed to evaluate what the browser computes;
-both are documented in *Findings* and neither changes a value:
+Three JVM-only adjustments were needed to evaluate what the browser
+computes; all are documented in *Findings* and none changes a value:
 non-magical armor gets `::mi5e/magical-ac-bonus 0` before the AC function
-runs, and the `?damage-bonus-fns` entries are wrapped for JavaScript's
-lenient arity.
+runs, the `?damage-bonus-fns` entries are wrapped for JavaScript's lenient
+arity, and `proficiency-help` tolerates a nil count
+(`orcpub.oracle/install-js-semantics!`).
 
 ### `<name>.selections.json`
 
@@ -218,11 +219,19 @@ behaviour; every other fixture is built exactly as `char5e/from-strict` +
 | `drift-08-multi-plugin` | synthetic | EPL-2.0 | two named packs in one file; a subrace in pack two extending a race in pack one |
 | `drift-09-size-forms` | synthetic | EPL-2.0 | `:size "Medium"`, `:size :medium`, a subrace with `:size "Small"` |
 | `drift-10-ability-key-forms` | synthetic | EPL-2.0 | `:abilities {:con 2}` vs `{:orcpub.dnd.e5.character/con 2}`; feats with `#{:con}` vs namespaced |
+| `community-mezzoloth-race.orcbrew` | the repo owner's own homebrew, taken verbatim (pack `"me"`) from their old-app `all-content` export | EPL-2.0 (author's own work, contributed here) | a race authored in the old UI: racial spells with `:value`/`:level`, `:languages` as a set, pack-level `:disabled? false` |
+| `community-dandwiki-star-elf.orcbrew` | D&D Wiki (dandwiki.com), as recorded in the pack name; transcribed into the old app by the repo owner | GNU FDL 1.3 (D&D Wiki's license) — **verify the page before relying on it** | a subrace attached to the built-in Elf with `:props` weapon/skill proficiencies and level-gated racial spells |
 
-**Community packs: none.** The handoff asks for ≥3 packs published by their
-authors. Every code-search route was unreachable from the sandbox this was
-produced in (GitHub API and HTML, Sourcegraph, grep.app, archive.org; the one
-GitLab project found has no readable repository). Add packs by dropping
+**Community packs: two, not three.** The handoff asks for ≥3 packs published
+openly by their authors. No code-search route was reachable from the
+sandbox this was produced in (GitHub API and HTML, Sourcegraph, grep.app,
+archive.org; the one GitLab project found has no readable repository). The
+repo owner's own `all-content.orcbrew` export (29 packs, 1412 items) was
+then reviewed: everything else in it is WotC book text transcribed by
+community members (PHB, XGtE, TCoE, MToF, VGtM, GGtR, SCAG, EE, DMG, MPMM,
+Eberron, UA) or Critical Role's Blood Hunter and Gunslinger (free to
+download, not redistributable), so it cannot be committed. The export itself
+was run through the oracle in full; see *Findings* 9. Add packs by dropping
 the `.orcbrew` into `fixtures/orcbrew/`, recording source and license in the
 table above, and running the template dump (below).
 
@@ -326,3 +335,43 @@ Line numbers are for commit `bcd9d68`.
    where Leiningen works. shadow-cljs itself is installable from npm
    (`shadow-cljs-jar` bundles the JVM side), so M1 does not depend on Clojars
    if the ClojureScript libraries are supplied as source paths.
+9. **What a real `all-content.orcbrew` export looks like** (the repo owner's,
+   29 packs, 1412 items, 2.2 MB; not committed). The old importer accepts all
+   of it (0 skipped, 0.4 s on the JVM) and the template chain builds 52
+   races, 15 classes, 63 backgrounds, 115 feats in 1.9 s. Things the plan's
+   drift list does not mention, all of which the new importer will meet:
+   - The file starts with a UTF-8 **byte-order mark**. Browsers strip it in
+     `FileReader.readAsText`, so the old app never sees it; fed to the old
+     importer directly it does not report a parse error but throws in
+     `fill-missing-in-plugin` (the reader returns a symbol). Strip `\uFEFF`
+     before parsing.
+   - Pack keys and `:option-pack` values disagree freely: one pack carries
+     items from several `:option-pack` names, including Discord handles
+     ("Players Hand Book (arandomstringofnum#2919)"); the same book appears
+     as two packs ("Tasha's Cauldron of Everything" and
+     "Tashas_Cauldron_of_Everything", the latter twice, one copy disabled).
+     Hence **86 internal key conflicts** in one file, which the old UI would
+     route through the conflict modal; the oracle imports as if resolved.
+   - `:disabled?` occurs as `nil`, `true` and `false` at pack and item level.
+   - Subclasses attached to *homebrew* classes (`:class :ranger-revised-`,
+     `:blood-hunter`, `:blood-hunter-order-of-the-profane-soul-`) and to a
+     class that is not present at all (Tasha's `:armorer` → `:artificer`).
+     Warlock patrons stored under the Blood Hunter pack with the Blood
+     Hunter's key as `:class`.
+   - Four subclasses have `:profs {:skill-options {:options {...}}}` with no
+     `:choose`. `options.cljc:848` `(> nil 1)` throws on the JVM (JS: false),
+     and only when the level options are realized — the subscription chain
+     itself never realizes them, so this surfaces the first time a template
+     shape or a character at that class is built. Shimmed in the oracle.
+   - 206 keys end in `-` (parenthesised names through `name-to-kw`);
+     `:prereqs #{}` and `:languages` as sets; `:equipment-choices ()` as an
+     empty list; `?` in place of apostrophes (mojibake from a copy/paste);
+     nil monster saving throws and a nil `:spell-list-kw` (both handled by
+     the old cleaner); `:cleric-spells` as nested level→index→spell maps.
+   - The proper `:level-modifiers` shape is `[{:type … :value … :level …}]`,
+     confirming that the nested form in `duplicate-external-*` (finding 6)
+     is an artefact of those test files, not of real exports.
+   - The full template delta against SRD is 9.8 MB of JSON; a keys-only
+     summary (import log, plugin keys, content lists, top-level option keys)
+     is ~150 KB and would make a useful private regression target for M3/M5
+     if the owner wants to keep the export alongside the repo.

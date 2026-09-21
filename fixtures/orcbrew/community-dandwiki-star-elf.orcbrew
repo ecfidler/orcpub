@@ -1,0 +1,18 @@
+#:orcpub.dnd.e5{:subraces
+                {:star-elf
+                 {:race :elf,
+                  :traits [],
+                  :name "Star Elf",
+                  :abilities #:orcpub.dnd.e5.character{:wis 1},
+                  :props
+                  {:weapon-prof {:dart true, :morningstar true, :rapier true, :shortbow true},
+                   :skill-prof {:insight true}},
+                  :spells
+                  [{:value {:key :guidance, :ability :orcpub.dnd.e5.character/wis}}
+                   {:level 3,
+                    :value {:level 1, :ability :orcpub.dnd.e5.character/wis, :key :detect-magic}}
+                   {:value
+                    {:ability :orcpub.dnd.e5.character/wis, :level 2, :key :detect-thoughts},
+                    :level 5}],
+                  :option-pack "dand wiki",
+                  :key :star-elf}}}

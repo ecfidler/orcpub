@@ -182,6 +182,25 @@
     (reset! import-validation-loaded? true)))
 
 ;;; ---------------------------------------------------------------------------
+;;; JavaScript semantics the engine relies on
+;;; ---------------------------------------------------------------------------
+
+(defonce ^:private js-semantics-installed? (atom false))
+
+(defn install-js-semantics!
+  "Runtime replacements for engine fns that only work because JavaScript
+   treats null leniently. Each keeps the browser's behaviour on the JVM; the
+   engine source is untouched (see fixtures/README.md, findings).
+   - options.cljc:848 proficiency-help: (> nil 1) — a homebrew subclass whose
+     skill-options has no :choose. JS: null > 1 is false."
+  []
+  (when-not @js-semantics-installed?
+    (let [help (resolve 'orcpub.dnd.e5.options/proficiency-help)]
+      (alter-var-root help
+                      (fn [f] (fn [num singular plural] (f (or num 0) singular plural)))))
+    (reset! js-semantics-installed? true)))
+
+;;; ---------------------------------------------------------------------------
 ;;; Template
 ;;; ---------------------------------------------------------------------------
 
@@ -191,6 +210,7 @@
    app-db. {} gives the SRD-only template."
   [plugins]
   (load-old-subs!)
+  (install-js-semantics!)
   (swap! rfdb/app-db assoc :plugins plugins)
   @(rf/subscribe [:orcpub.dnd.e5.character/template]))
 
