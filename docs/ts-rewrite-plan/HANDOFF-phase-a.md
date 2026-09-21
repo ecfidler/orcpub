@@ -1,12 +1,13 @@
 # Phase A Handoff — start here
 
 You are picking up **Phase A** of the active plan (`docs/ts-rewrite-plan/`,
-Plan Set 2): produce the fixture set and the compiled engine package
-`@dmv/pubdoor` **in this fork**, so a new TypeScript app can later consume
-the existing Clojure(Script) rules engine as a library. All 24 Phase A
-decisions were reviewed and approved on 2026-09-20; this document turns
-them into a starting sequence. It is self-contained, but it points into the
-plan for detail rather than repeating it.
+Plan Set 2): the compiled engine package `@dmv/pubdoor`, built **in this
+fork** so a new TypeScript app can consume the existing Clojure(Script)
+rules engine as a library. All 24 Phase A decisions were reviewed and
+approved on 2026-09-20. **M0 (fixtures) is done**; the next milestone is
+M1. The work is tracked in Linear (project **PubDoor**); this document is
+the on-ramp — environment, repository state, the M1 sequence, the rules —
+and points into the plan for detail rather than repeating it.
 
 ## 1. Read these first (30 minutes)
 
@@ -23,6 +24,9 @@ In order:
    (Plan Set 1); doc 02 above is the delta on top of it.
 6. `docs/ts-frontend-plan/01-reference-app.md` — how to run the old app
    and capture fixtures.
+7. `fixtures/README.md` — what M0 produced, the exact conversion rules
+   `evaluate().built` must reproduce, and nine *Findings* that correct the
+   plan (R4, drift form 10, the Dueling condition, JS-only semantics).
 
 Skim later: `06-milestones-and-risks.md` (M0/M1 rows), `03-character-import-and-storage.md`
 (what `importCharacter` must do), `04-homebrew.md` (what `parseOrcbrew`
@@ -30,12 +34,15 @@ must expose).
 
 ## 2. State of the repository when you arrive
 
-- Branch `planning` carries the plan docs and `CLAUDE.md` (PR #2 into
-  `develop`; it may or may not be merged yet — check). Start Phase A on a
-  branch named **`engine`** off `planning` (or off `develop` if PR #2 has
-  merged).
-- Nothing of Phase A exists yet: no `engine-js/`, no `fixtures/`, no
-  `scripts/*.clj`. You create them.
+- `develop` carries the plan docs, `CLAUDE.md`, and **M0 complete**: the
+  fixture set under `fixtures/` (11 golden characters, 3 real + 8 synthetic
+  legacy entities, 15 `.orcbrew` packs with template dumps, the SRD
+  baseline) and the oracle scripts under `scripts/`, merged from the
+  `engine` branch as PR #4. Read `fixtures/README.md` §Findings before
+  writing facade code.
+- Nothing of M1 exists yet: no `engine-js/`. You create it. Work on the
+  **`engine`** branch, recreated from `develop` (the earlier `engine`
+  branch is merged).
 - The engine you are packaging is unmodified upstream code. The only
   intended source changes are the four patches in doc 02 §Patches.
 - Decisions already made (do not re-open without the user): package name
@@ -43,6 +50,10 @@ must expose).
   exclusions; plain-JS boundary with one-pass extraction; hand-written
   `.d.ts`; fixtures generated here and snapshot-copied to the app repo;
   CI on the `engine` branch; manual tagged publish.
+- Linear, project **PubDoor**: M0 follow-ups are ORC-11 to ORC-14; M1 is
+  ORC-15 to ORC-26; the engine half of M3 is ORC-27 to ORC-43. Each issue
+  carries its acceptance criteria — move it to *In Progress* when you start
+  and *Done* when its criteria hold.
 
 ## 3. Environment
 
@@ -74,91 +85,26 @@ your `shadow-cljs.edn` must declare: `re-frame 1.4.4`, `reagent 2.0.1`,
 Reagent also needs `react`, `react-dom` and `create-react-class` installed
 from npm even though the facade never renders anything.
 
-## 4. M0 — fixtures (target: ~1 week)
+shadow-cljs itself installs from npm (`shadow-cljs-jar` bundles the JVM
+side), so M1 does not depend on Clojars if the ClojureScript libraries are
+supplied as source paths (`fixtures/README.md` finding 8; the M0 run had no
+Clojars access and used `scripts/oracle-env.sh` instead of Leiningen).
 
-Goal: a committed `fixtures/` directory with real inputs and
-oracle-produced expected outputs. Everything in M1 is tested against it.
+## 4. M0 — fixtures (done)
 
-### 4.1 Layout
+M0 is complete and merged (PR #4). `fixtures/README.md` is the reference:
+the layout, the exact JSON conversion rules `evaluate().built` must
+reproduce (`orcpub.oracle/->plain`), the function-valued attribute keys
+(`armor-class-with-armor`, `weapon-modifiers`, …), the template shape and
+delta algorithm M3 must reproduce, and the regeneration commands
+(`scripts/golden-characters.clj`, `scripts/dump-template.clj`,
+`scripts/dump-built-character.clj`). Generation is deterministic — a
+regeneration on unchanged engine source must produce no diff.
 
-```
-fixtures/
-  README.md                    ; what each set is, how it was produced, fork commit
-  characters/
-    <name>.strict.json         ; strict entity (Transit-decoded, string keys)
-    <name>.expected.json       ; built values: every accessor in §4.3
-  orcbrew/
-    <pack>.orcbrew             ; real packs + one synthetic file per drift form
-    <pack>.template.json       ; buildTemplate expected output (M3 uses it)
-  legacy/
-    <quirk>.strict.json        ; one per R1–R9 (doc 01 §C2)
-scripts/
-  dump-built-character.clj     ; strict entity → expected.json
-  dump-template.clj            ; plugins map → template.json
-```
-
-### 4.2 Golden characters — build them in code, not by clicking
-
-The full target is 12 classes × levels 1/5/11/20 plus multiclass, homebrew
-and legacy cases. Do **not** build 50 characters in the UI. The existing
-end-to-end test shows the shortcut: `test/cljc/orcpub/dnd/e5/warlock_test.clj:106-232`
-constructs a raw entity as a Clojure map and builds it against the real
-template. Write golden characters the same way — a raw entity per case,
-then `char5e/to-strict` to produce the `.strict.json` — and reserve the UI
-for a handful of spot checks that the code-built entities match what the
-app produces (save one from the UI, fetch it via
-`GET /dnd/5e/characters/<id>` with `Authorization: Token <jwt>`, compare).
-
-Order of work: Fighter and Wizard at all four levels first (they exercise
-equipment, fighting styles, and prepared casting), then one multiclass
-(Fighter/Wizard is fine), then Warlock (reuse the warlock test), then the
-rest. M1 can start once Fighter and Wizard exist; keep adding classes in
-parallel.
-
-Ready-made legacy fixtures: the three real Datomic entities in
-`test/cljc/orcpub/dnd/e5/character_test.clj:100-113` — copy them as-is.
-
-### 4.3 The dump script
-
-`scripts/dump-built-character.clj`, run in `lein repl`: read a strict
-entity, `char5e/from-strict`, `entity/build` against `t5e/template`, then
-evaluate the accessor list and write JSON. The accessor list is
-`character.cljc:363-738` (one thin `defn` per attribute) — mirror the
-`character-subs` map at `src/cljs/orcpub/dnd/e5/subs.cljs:628-736`, which is
-the same list keyed for the UI. Convert namespaced keywords to
-`"ns/name"` strings and sets to sorted arrays so the output is stable.
-Functions-valued attributes (`armor-class-with-armor`, `spell-save-dc`,
-`weapon-attack-modifier`, …) can't be serialized directly: evaluate them
-against fixed arguments (each equipped armor/shield combination; each
-spellcasting ability; each carried weapon with finesse on/off) and record
-the results — doc 02 §Facade surface lists what the facade exposes, and
-that is what the expected output must cover.
-
-JSON writing: check `project.clj` for `cheshire` (a transitive dependency
-of Pedestal) or add `org.clojure/data.json` to the `:dev` profile.
-
-### 4.4 Homebrew fixtures
-
-- Real: `test/duplicate-external-a.orcbrew`, `test/duplicate-external-b.orcbrew`,
-  plus community packs. Search GitHub for `.orcbrew` files; record each
-  pack's source and license in `fixtures/README.md` and prefer packs whose
-  authors publish them openly.
-- Synthetic: one file per drift form in doc 01 §C1 (ten of them), each a
-  minimal pack that exercises exactly that form.
-- Expected output: `scripts/dump-template.clj` runs the old subscription
-  chain's functions over a plugins map and writes the resulting template
-  shape (selection keys, option keys, min/max) — see doc 02
-  §De-re-framing for which functions. This is what M3 compares against;
-  producing it in M0 while the REPL is warm saves a round trip.
-
-### 4.5 M0 exit criteria
-
-- [ ] Fighter and Wizard at four levels, one multiclass, the warlock case,
-      the three legacy entities: each with `.strict.json` + `.expected.json`
-- [ ] Both real `.orcbrew` fixtures + ≥3 community packs + 10 drift files,
-      each with a `.template.json`
-- [ ] `fixtures/README.md` records the producing fork commit and how to
-      regenerate
+Left for later, as Linear issues on the M0 milestone: the UI spot check
+against a character saved in the old UI (ORC-11), a third openly-licensed
+community pack (ORC-12), a `lein test` run with Clojars access (ORC-13),
+and folding the findings back into the plan docs (ORC-14).
 
 ## 5. M1 — the engine package (target: ~2–3 weeks)
 
@@ -203,38 +149,24 @@ Timebox this; it is where shadow-cljs friction lives. Then remove `hello`.
 
 ### 5.2 Facade, in this order
 
-1. `evaluate(strictEntityJson, homebrew?)` → `{ built, selections }`.
-   Build: `char5e/from-strict` → `entity/build` with `t5e/template` (see
-   how `subs.cljs:300-347` assembles the template and calls `build`).
-   Extract `built` in one pass to a plain object — the same accessor list
-   as the dump script, so `expected.json` and `evaluate().built` are
-   directly comparable. `selections` from `entity/available-selections`,
-   flattened with each selection's `actualPath` (doc 02 wrinkle 5).
-   Memoize on the input JSON string.
-2. **First golden test**: `evaluate(fighter-1.strict.json).built` deep-equals
-   `fighter-1.expected.json`. Then all of M0's characters.
-3. Port `warlock_test.clj` assertions and the three `character_test.clj`
-   round-trips as vitest tests (`exportCharacter(importCharacter(x))` ≡ x).
-4. Mutations: `select`, `deselect`, `setValue`, `setField`, `addLevel`,
-   `removeLevel`, `setClass`, `addStartingEquipment` — backed by
-   `event_handlers.cljc` and `character.cljc:752-856`; port the round-trip
-   tests in `test/cljc/orcpub/dnd/e5/event_handlers_test.clj`.
-5. `importCharacter(transitText | json)` and `exportCharacter(entity)`:
-   inherited `from-strict`/`to-strict` **plus** the two non-inherited
-   quirks — string `xps` (R5) and the legacy unnamespaced-key migration
-   (R7, patch D1: re-enable `character.cljc:130-165`). One fixture per
-   quirk from `fixtures/legacy/`.
-6. `autofill(entity)` — the fixed-point loop from `events.cljs:310`.
-7. Patch D2: audit `grep -rn "re-frame\|app-db\|subscribe\|dispatch" src/cljc`
-   and make each read take its input from the entity. Add a golden
-   character with the Dueling fighting style so the patch is tested.
-8. `types/index.d.ts` written by hand alongside each function.
-9. Publish `0.1.0` (tag `pubdoor-v0.1.0`); CI on `engine` runs the build
-   and vitest on every push.
+Each step is a Linear issue with its acceptance criteria; the order is the
+recommended sequence, and steps 4–8 can interleave once step 3 is green.
+
+| Step | Linear | What |
+|---|---|---|
+| 1 | ORC-15 | Scaffold `engine-js/`; a `hello` export compiles under `:advanced` and imports from TS (timebox it; then remove `hello`) |
+| 2 | ORC-16 | `evaluate(strict, homebrew?)` → `{ built, selections }`: build via `char5e/from-strict` → `entity/build` with `t5e/template` (see `subs.cljs:300-347`); one-pass extraction with the `fixtures/README.md` conversion rules; `selections` flattened with `actualPath`; memoized on the input |
+| 3 | ORC-17 | Golden tests: every SRD golden character and legacy fixture matches its `expected.json` and `selections.json`; plus the ordering test |
+| 4 | ORC-18 | Port `warlock_test.clj` and the three `character_test.clj` round-trips |
+| 5 | ORC-19 | Mutations (`select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`) and the `event_handlers_test` port |
+| 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:130-165`), then `importCharacter` / `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
+| 7 | ORC-22 | Patch D2: `app-db` reads in `options.cljc` → the entity; the Dueling arity and off-hand condition; `fighter-5` is the test |
+| 8 | ORC-23 | `autofill(entity)` — the fixed-point loop from `events.cljs:310` |
+| 9 | ORC-24, ORC-25, ORC-26 | `types/index.d.ts` by hand; CI on `engine`; publish `0.1.0` (tag `pubdoor-v0.1.0`; record the registry choice on ORC-26) |
 
 `buildTemplate`, `parseOrcbrew`, `orcbrewToEdn`, `reconcileMissingContent`,
-the content lists and the `keys.*` helpers are **M3**, not M1 — leave stubs
-out entirely rather than shipping half of them.
+the content lists and the `keys.*` helpers are **M3** (ORC-27 onward), not
+M1 — leave stubs out entirely rather than shipping half of them.
 
 ### 5.3 Things that will bite you (from doc 02 §Wrinkles)
 
@@ -252,6 +184,9 @@ out entirely rather than shipping half of them.
 - `:advanced` renames everything not `^:export`ed or listed in `:exports`.
 
 ### 5.4 M1 exit criteria
+
+The M1 milestone in Linear closes when ORC-15 to ORC-26 are done, which
+amounts to:
 
 - [ ] `npm install @dmv/pubdoor` works from the registry; `import { evaluate } from "@dmv/pubdoor"` type-checks
 - [ ] Every M0 golden character: `evaluate().built` equals `expected.json`
@@ -271,14 +206,15 @@ out entirely rather than shipping half of them.
   think the engine needs is a facade concern — write it in `facade.cljs`
   and note it in the PR.
 - Keep `lein test` green throughout; the old app must keep working.
-- Commit small; open a PR from `engine` into `planning` (or `develop` if
-  the plans have merged) at the end of M0 and again at the end of M1.
+- Commit small; open a PR from `engine` into `develop` at the end of M1
+  (M0's is merged). Name the Linear issue (`ORC-nn`) in each commit or PR.
 - If a plan doc cites a line number that has moved, regenerate the
   citation from the source; don't guess.
 
 ## 7. When you're done
 
-Report: the published package version, the fixture counts, the golden-test
-pass count, and anything in the plan that turned out to be wrong (with the
-file and line). Phase B starts by creating the app repository and copying
+Post the M1 exit report as a comment on ORC-26: the published package
+version, the fixture counts, the golden-test pass count, and anything in
+the plan that turned out to be wrong (with the file and line). Phase B
+starts by creating the app repository (Alchemy 5e, ORC-44) and copying
 `fixtures/` and `docs/ts-rewrite-plan/` into it — see doc 00 §Phase B.

@@ -95,8 +95,8 @@ background `:key` ignored.
 
 ## Deliverables
 
-- [ ] Import flow + log + conflict UI
-- [ ] Storage with quarantine; My Content page
-- [ ] Export (per pack, all, pretty) validated against the old spec
-- [ ] Builders, in usage order
-- [ ] Fixture suite green
+Tracked in Linear: the engine half on **PubDoor** M3 (ORC-27 to ORC-43);
+the minimal app-side loader and storage on **Alchemy 5e** M3 (ORC-52 to
+ORC-54); the import flow, conflict UI, reconciliation UI, My Content,
+export, builders, magic items and the real-user acceptance run on M5
+(ORC-69 to ORC-78).
