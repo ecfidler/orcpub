@@ -93,13 +93,8 @@ material that Plan Set 2 builds on.
 
 ## Agent skills
 
-Matt Pocock's engineering and productivity skills, plus `unslop` and
-`technical-writing` from the pstack plugin (cursor/plugins), are installed as
-project skills under `.claude/skills/` (tracked by `skills-lock.json`;
-refresh with `npx skills@latest update`). Start with `/ask-matt` to pick a
-flow; run `/unslop` on prose and `/technical-writing` on docs, PR bodies and
-commit messages. The per-repo configuration the engineering skills read
-lives in `docs/agents/`.
+Run `/unslop` on prose and `/technical-writing` on docs, PR bodies, Issue
+Tracker tickets, and commit messages.
 
 ### Issue tracker
 
