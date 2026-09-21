@@ -22,12 +22,21 @@ TypeScript frontend. They are grounded in an investigation of this codebase
 and cite file and line numbers; prefer them over re-deriving the
 architecture.
 
-**Tracking lives in Linear** (workspace *Orc Alchemy*): project **PubDoor**
-is the engine package (Phase A, this fork) and project **Alchemy 5e** is
-the new app (Phase B, its own repository). Milestones, issue status and
-sequencing are there; the documents below are the technical reference.
-When they disagree on *what* is built, the docs win; on *status*, Linear
-wins. Reference the issue (`ORC-nn`) in commits and PRs.
+**Tracking lives in Linear** (workspace *Orc Alchemy*,
+https://linear.app/orc-alchemy):
+
+- **PubDoor** — the engine package, Phase A, this fork:
+  https://linear.app/orc-alchemy/project/pubdoor-13db9e66264b
+- **Alchemy 5e** — the new app, Phase B, its own repository:
+  https://linear.app/orc-alchemy/project/alchemy-5e-9db66f3ef51e
+- *Plan overview* (team document; links the compatibility contract and
+  the risk register):
+  https://linear.app/orc-alchemy/document/plan-overview-typescript-rewrite-on-the-compiled-engine-1afe72ecb90d
+
+Milestones, issue status and sequencing are there; the documents below are
+the technical reference. When they disagree on *what* is built, the docs
+win; on *status*, Linear wins. Reference the issue (`ORC-nn`) in commits
+and PRs.
 
 **Status: `docs/ts-rewrite-plan/` (Plan Set 2) is the plan being seriously
 considered for implementation.** When the user says "the plan" without
