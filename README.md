@@ -1,27 +1,6 @@
-# Dungeon Master's Vault - Community Edition
-<div align="center">
-    <br>
-    <img src=".github/screenshot.png" alt="DMV" width="300">
-    <br>
-</div>
+# Ethan's fork of Dungeon Master's Vault - Community Edition
 
-<div align="center">
-    <h4>A D&D 5e Character Sheet Generator</h4>
-
-Forked from [OrcPub2](https://github.com/larrychristensen/orcpub) (Jan 2019) with ongoing improvements.
-
-![GitHub language count](https://img.shields.io/github/languages/count/orcpub/orcpub) ![GitHub top language](https://img.shields.io/github/languages/top/orcpub/orcpub) ![GitHub contributors](https://img.shields.io/github/contributors/orcpub/orcpub) ![GitHub repo size](https://img.shields.io/github/repo-size/orcpub/orcpub)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/orcpub/orcpub/develop)
-
-![GitHub pull requests](https://img.shields.io/github/issues-pr/orcpub/orcpub) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/orcpub/orcpub)
-
-![GitHub issues](https://img.shields.io/github/issues/orcpub/orcpub) ![GitHub closed issues](https://img.shields.io/github/issues-closed/orcpub/orcpub)
-
-![CI](https://img.shields.io/github/actions/workflow/status/orcpub/orcpub/continuous-integration.yml?branch=develop&label=CI) ![Docker Pulls](https://img.shields.io/docker/pulls/orcpub/orcpub)
-
-[About](#about) | [Quick Start](#quick-start) | [Development](#development) | [Architecture](#architecture) | [Contributing](#contributing) | [FAQ](#faq)
-
-</div>
+I'm currently using this repo trying to compile the 5e game engine to a typescript package with shadow-clj. This is not a locally running copy of dmv.
 
 ## About
 
