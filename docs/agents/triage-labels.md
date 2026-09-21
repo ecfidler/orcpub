@@ -15,11 +15,10 @@ the actual label strings used in this repo's issue tracker (Linear, see
 When a skill mentions a role (e.g. "apply the AFK-ready triage label"), use the
 corresponding label string from this table.
 
-**These five labels do not exist in the Linear workspace yet.** Linear only applies
-labels that already exist, so create them (workspace-level, in Settings > Labels, or
-with the Linear `save_issue_label` tool) before the first `/triage`, `/to-spec` or
-`/to-tickets` run. Until then, skills that would apply one should say so instead of
-failing silently.
+These five labels exist as workspace-level labels in Linear (created 2026-09-21).
+Linear only applies labels that already exist, so if one is ever renamed or deleted,
+update the right-hand column here or recreate it (Settings > Labels, or the Linear
+`save_issue_label` tool) before the next `/triage`, `/to-spec` or `/to-tickets` run.
 
 `/triage` also uses two **category** roles. Linear already has labels for these, so map
 onto them rather than creating lowercase duplicates:

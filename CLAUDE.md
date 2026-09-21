@@ -107,8 +107,8 @@ repo) and **Alchemy 5e**, driven through the Linear MCP tools rather than
 ### Triage labels
 
 The five canonical labels (`needs-triage`, `needs-info`, `ready-for-agent`,
-`ready-for-human`, `wontfix`), mapped one-to-one; they still have to be
-created in Linear. See `docs/agents/triage-labels.md`.
+`ready-for-human`, `wontfix`), mapped one-to-one onto workspace labels that
+already exist in Linear. See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
