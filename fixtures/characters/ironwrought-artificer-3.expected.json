@@ -1,0 +1,293 @@
+{
+  "abilities": {
+    "orcpub.dnd.e5.character/cha": 8,
+    "orcpub.dnd.e5.character/con": 15,
+    "orcpub.dnd.e5.character/dex": 14,
+    "orcpub.dnd.e5.character/int": 13,
+    "orcpub.dnd.e5.character/str": 10,
+    "orcpub.dnd.e5.character/wis": 12
+  },
+  "ability-bonuses": {
+    "orcpub.dnd.e5.character/cha": -1,
+    "orcpub.dnd.e5.character/con": 2,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 0,
+    "orcpub.dnd.e5.character/wis": 1
+  },
+  "ability-increases": {
+    "con": 2
+  },
+  "actions": [],
+  "age": null,
+  "al-illegal-reasons": null,
+  "alignment": "Lawful Good",
+  "all-armor-inventory": {
+    "scale-mail": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor": {
+    "scale-mail": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor-class": 12,
+  "armor-class-with-armor": [
+    {
+      "ac": 16,
+      "armor": "scale-mail",
+      "shield": null
+    },
+    {
+      "ac": 12,
+      "armor": null,
+      "shield": null
+    }
+  ],
+  "armor-profs": [],
+  "attacks": null,
+  "attuned-magic-items": null,
+  "background": "Acolyte",
+  "base-flying-speed": 0,
+  "base-land-speed": 30,
+  "base-swimming-speed": 0,
+  "bonds": null,
+  "bonus-actions": [],
+  "character-name": "Unit Seven",
+  "class-hit-point-level-bonus": {},
+  "class-level": {
+    "artificer": 3
+  },
+  "classes": [
+    "artificer"
+  ],
+  "condition-immunities": [],
+  "crit-values-str": 20,
+  "critical-hit-values": [
+    20
+  ],
+  "current-hit-points": null,
+  "custom-equipment": null,
+  "custom-treasure": null,
+  "damage-immunities": [],
+  "damage-vulnerabilities": null,
+  "darkvision": 0,
+  "description": null,
+  "equipment": {
+    "amulet": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "clothes-common": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "incense": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 5
+    },
+    "pouch": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "prayer-book": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "vestements": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "eyes": null,
+  "faction-image-url": null,
+  "faction-image-url-failed": null,
+  "faction-name": null,
+  "feats": null,
+  "features-used": {},
+  "flaws": null,
+  "hair": null,
+  "height": null,
+  "hit-point-level-bonus": 2,
+  "ideals": null,
+  "image-url": null,
+  "image-url-failed": null,
+  "immunities": [],
+  "initiative": 2,
+  "languages": [
+    "common",
+    "gnomish"
+  ],
+  "levels": {
+    "artificer": {
+      "class-level": 3,
+      "class-name": "Artificer (Alternate) (duplicate-external-b)",
+      "hit-die": 8,
+      "subclass": "alchemist",
+      "subclass-name": "Alchemist"
+    }
+  },
+  "magic-armor": null,
+  "magic-items": null,
+  "magic-weapons": null,
+  "main-hand-weapon": null,
+  "max-hit-points": 24,
+  "notes": null,
+  "number-of-attacks": 1,
+  "off-hand-weapon": null,
+  "option-sources": null,
+  "pact-magic?": null,
+  "passive-perception": 11,
+  "personality-trait-1": null,
+  "personality-trait-2": null,
+  "player-name": null,
+  "prepare-spell-count": {},
+  "prepares-spells": null,
+  "proficiency-bonus": 2,
+  "public?": null,
+  "race": "Ironwrought",
+  "race-ability-increases": {
+    "con": 2
+  },
+  "reactions": [],
+  "resistances": [],
+  "save-bonuses": {
+    "orcpub.dnd.e5.character/cha": -1,
+    "orcpub.dnd.e5.character/con": 2,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 1,
+    "orcpub.dnd.e5.character/str": 0,
+    "orcpub.dnd.e5.character/wis": 1
+  },
+  "saving-throws": [],
+  "sex": null,
+  "skill-bonuses": {
+    "acrobatics": 2,
+    "animal-handling": 1,
+    "arcana": 1,
+    "athletics": 0,
+    "deception": -1,
+    "history": 1,
+    "insight": 3,
+    "intimidation": -1,
+    "investigation": 1,
+    "medicine": 1,
+    "nature": 1,
+    "perception": 1,
+    "performance": -1,
+    "persuasion": -1,
+    "religion": 3,
+    "sleight-of-hand": 2,
+    "stealth": 2,
+    "survival": 1
+  },
+  "skill-expertise": null,
+  "skill-profs": {
+    "insight": {
+      "Acolyte": true
+    },
+    "religion": {
+      "Acolyte": true
+    }
+  },
+  "skin": null,
+  "speed-with-armor": null,
+  "spell-attack-modifier": {
+    "orcpub.dnd.e5.character/cha": 1,
+    "orcpub.dnd.e5.character/con": 4,
+    "orcpub.dnd.e5.character/dex": 4,
+    "orcpub.dnd.e5.character/int": 3,
+    "orcpub.dnd.e5.character/str": 2,
+    "orcpub.dnd.e5.character/wis": 3
+  },
+  "spell-modifiers": {},
+  "spell-save-dc": {
+    "orcpub.dnd.e5.character/cha": 9,
+    "orcpub.dnd.e5.character/con": 12,
+    "orcpub.dnd.e5.character/dex": 12,
+    "orcpub.dnd.e5.character/int": 11,
+    "orcpub.dnd.e5.character/str": 10,
+    "orcpub.dnd.e5.character/wis": 11
+  },
+  "spell-slot-factors": null,
+  "spell-slots": {},
+  "spells-known": {},
+  "spells-known-modes": null,
+  "subrace": "Envoy",
+  "subrace-ability-increases": null,
+  "tool-bonus": {},
+  "tool-expertise": [],
+  "tool-profs": {},
+  "total-levels": 3,
+  "total-spellcaster-levels": 0,
+  "traits": [
+    {
+      "class-key": null,
+      "description": "You are resistant to poison and do not need to eat, drink, or breathe.",
+      "name": "Constructed Resilience",
+      "source": null
+    },
+    {
+      "class-key": null,
+      "name": "Shelter the Faithful",
+      "page": 127,
+      "source": null,
+      "summary": "You and your companions can expect free healing at an establishment of your faith."
+    },
+    {
+      "class-key": "artificer",
+      "description": "You sow a bit of magical inspiration into mundane objects.",
+      "level": 1,
+      "name": "Experimental Tweaks",
+      "source": null
+    },
+    {
+      "class-key": "artificer",
+      "description": "You have studied the principles behind magic and crafting.",
+      "level": 1,
+      "name": "Spellcasting",
+      "source": null
+    }
+  ],
+  "treasure": null,
+  "unarmored-speed-bonus": null,
+  "used-resources": null,
+  "weapon-modifiers": {
+    "light-hammer": {
+      "attack": {
+        "finesse": 0,
+        "standard": 0
+      },
+      "best-attack": 0,
+      "best-damage": 0,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 0,
+        "off-hand": 0,
+        "standard": 0
+      },
+      "dual-wield?": true,
+      "has-prof?": false
+    }
+  },
+  "weapon-profs": [],
+  "weapons": {
+    "light-hammer": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "weight": null,
+  "wielded-shield": null,
+  "worn-armor": "scale-mail",
+  "xps": 900
+}

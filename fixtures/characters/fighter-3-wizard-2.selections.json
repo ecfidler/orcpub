@@ -1,0 +1,854 @@
+[
+  {
+    "actualPath": [
+      "ability-scores"
+    ],
+    "key": "ability-scores",
+    "max": 1,
+    "min": 1,
+    "name": "Base Ability Scores",
+    "optionCount": 4,
+    "path": [
+      "ability-scores"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "standard-scores"
+    ]
+  },
+  {
+    "actualPath": [
+      "alignment"
+    ],
+    "key": "alignment",
+    "max": 1,
+    "min": 1,
+    "name": "Alignment",
+    "optionCount": 9,
+    "path": [
+      "alignment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "chaotic-neutral"
+    ]
+  },
+  {
+    "actualPath": [
+      "race"
+    ],
+    "key": "race",
+    "max": 1,
+    "min": 1,
+    "name": "Race",
+    "optionCount": 10,
+    "path": [
+      "race"
+    ],
+    "remaining": 0,
+    "selected": [
+      "half-elf"
+    ]
+  },
+  {
+    "actualPath": [
+      "race",
+      "half-elf",
+      "asi"
+    ],
+    "key": "asi",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Ability Score Improvement",
+    "optionCount": 5,
+    "path": [
+      "race",
+      "half-elf",
+      "asi"
+    ],
+    "remaining": 0,
+    "selected": [
+      "orcpub.dnd.e5.character/str",
+      "orcpub.dnd.e5.character/int"
+    ]
+  },
+  {
+    "actualPath": [
+      "race",
+      "half-elf",
+      "skill-proficiency"
+    ],
+    "key": "skill-proficiency",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Skill Proficiency",
+    "optionCount": 18,
+    "path": [
+      "race",
+      "half-elf",
+      "skill-proficiency"
+    ],
+    "ref": [
+      "race",
+      "half-elf",
+      "skill-proficiency"
+    ],
+    "remaining": 0,
+    "selected": [
+      "deception",
+      "persuasion"
+    ]
+  },
+  {
+    "actualPath": [
+      "languages"
+    ],
+    "key": "languages",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Languages",
+    "optionCount": 16,
+    "path": [
+      "race",
+      "half-elf",
+      "languages"
+    ],
+    "ref": [
+      "languages"
+    ],
+    "remaining": -3,
+    "selected": [
+      "common",
+      "elvish",
+      "dwarvish",
+      "orc"
+    ]
+  },
+  {
+    "actualPath": [
+      "background"
+    ],
+    "key": "background",
+    "max": 1,
+    "min": 1,
+    "name": "Background",
+    "optionCount": 2,
+    "path": [
+      "background"
+    ],
+    "remaining": 0,
+    "selected": [
+      "acolyte"
+    ]
+  },
+  {
+    "actualPath": [
+      "background",
+      "acolyte",
+      "starting-equipment-holy-symbol"
+    ],
+    "key": "starting-equipment-holy-symbol",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Holy Symbol",
+    "optionCount": 4,
+    "path": [
+      "background",
+      "acolyte",
+      "starting-equipment-holy-symbol"
+    ],
+    "remaining": 0,
+    "selected": [
+      "amulet"
+    ]
+  },
+  {
+    "actualPath": [
+      "background",
+      "acolyte",
+      "starting-equipment-prayer-book-wheel"
+    ],
+    "key": "starting-equipment-prayer-book-wheel",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Prayer Book/Wheel",
+    "optionCount": 3,
+    "path": [
+      "background",
+      "acolyte",
+      "starting-equipment-prayer-book-wheel"
+    ],
+    "remaining": 0,
+    "selected": [
+      "prayer-book"
+    ]
+  },
+  {
+    "actualPath": [
+      "languages"
+    ],
+    "key": "languages",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Languages",
+    "optionCount": 16,
+    "path": [
+      "background",
+      "acolyte",
+      "languages"
+    ],
+    "ref": [
+      "languages"
+    ],
+    "remaining": -2,
+    "selected": [
+      "common",
+      "elvish",
+      "dwarvish",
+      "orc"
+    ]
+  },
+  {
+    "actualPath": [
+      "feats"
+    ],
+    "key": "feats",
+    "max": 0,
+    "min": 0,
+    "multiselect": true,
+    "name": "Feats",
+    "optionCount": 1,
+    "path": [
+      "feats"
+    ],
+    "ref": [
+      "feats"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "class"
+    ],
+    "key": "class",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Class",
+    "optionCount": 12,
+    "path": [
+      "class"
+    ],
+    "remaining": 0,
+    "selected": [
+      "fighter",
+      "wizard"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "fighting-style"
+    ],
+    "key": "fighting-style",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Fighting Style",
+    "optionCount": 6,
+    "path": [
+      "class",
+      "fighter",
+      "fighting-style"
+    ],
+    "ref": [
+      "class",
+      "fighter",
+      "fighting-style"
+    ],
+    "remaining": 0,
+    "selected": [
+      "defense"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "starting-equipment-armor"
+    ],
+    "key": "starting-equipment-armor",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Armor",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "fighter",
+      "starting-equipment-armor"
+    ],
+    "remaining": 0,
+    "selected": [
+      "chain-mail"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "starting-equipment-weapons"
+    ],
+    "key": "starting-equipment-weapons",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Weapons",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "fighter",
+      "starting-equipment-weapons"
+    ],
+    "remaining": 0,
+    "selected": [
+      "martial-weapon-and-shield"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "starting-equipment-weapons",
+      "martial-weapon-and-shield",
+      "starting-equipment-martial-weapon"
+    ],
+    "key": "starting-equipment-martial-weapon",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Martial Weapon",
+    "optionCount": 27,
+    "path": [
+      "class",
+      "fighter",
+      "starting-equipment-weapons",
+      "martial-weapon-and-shield",
+      "starting-equipment-martial-weapon"
+    ],
+    "remaining": 0,
+    "selected": [
+      "longsword"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "starting-equipment-additional-weapons"
+    ],
+    "key": "starting-equipment-additional-weapons",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Additional Weapons",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "fighter",
+      "starting-equipment-additional-weapons"
+    ],
+    "remaining": 0,
+    "selected": [
+      "two-handaxes"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "starting-equipment-equipment-pack"
+    ],
+    "key": "starting-equipment-equipment-pack",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Equipment Pack",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "fighter",
+      "starting-equipment-equipment-pack"
+    ],
+    "remaining": 0,
+    "selected": [
+      "dungeoneers-pack"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "skill-proficiency"
+    ],
+    "key": "skill-proficiency",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Skill Proficiency",
+    "optionCount": 8,
+    "path": [
+      "class",
+      "fighter",
+      "skill-proficiency"
+    ],
+    "remaining": 0,
+    "selected": [
+      "athletics",
+      "perception"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "levels"
+    ],
+    "key": "levels",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Fighter Levels",
+    "optionCount": 20,
+    "path": [
+      "class",
+      "fighter",
+      "levels"
+    ],
+    "remaining": 0,
+    "selected": [
+      "level-1",
+      "level-2",
+      "level-3"
+    ],
+    "sequential": true
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Fighter 2",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "fighter",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "levels",
+      "level-3",
+      "martial-archetype"
+    ],
+    "key": "martial-archetype",
+    "max": 1,
+    "min": 1,
+    "name": "Martial Archetype",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "fighter",
+      "levels",
+      "level-3",
+      "martial-archetype"
+    ],
+    "remaining": 0,
+    "selected": [
+      "champion"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "fighter",
+      "levels",
+      "level-3",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Fighter 3",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "fighter",
+      "levels",
+      "level-3",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels"
+    ],
+    "key": "levels",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Wizard Levels",
+    "optionCount": 20,
+    "path": [
+      "class",
+      "wizard",
+      "levels"
+    ],
+    "remaining": 0,
+    "selected": [
+      "level-1",
+      "level-2"
+    ],
+    "sequential": true
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "key": "wizard-cantrips-known",
+    "max": 3,
+    "min": 3,
+    "multiselect": true,
+    "name": "Wizard Cantrips Known",
+    "optionCount": 14,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-1",
+      "wizard-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-cantrips-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "acid-splash",
+      "chill-touch",
+      "dancing-lights"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 6,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 27,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-1",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-1",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 1",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-1",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "key": "wizard-spells-known",
+    "max": null,
+    "min": 2,
+    "multiselect": true,
+    "name": "Wizard Spells Known",
+    "optionCount": 27,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "wizard-spells-known"
+    ],
+    "ref": [
+      "class",
+      "wizard",
+      "wizard-spells-known"
+    ],
+    "remaining": 0,
+    "selected": [
+      "alarm",
+      "burning-hands",
+      "charm-person",
+      "color-spray",
+      "comprehend-languages",
+      "detect-magic",
+      "disguise-self",
+      "expeditious-retreat"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "arcane-tradition"
+    ],
+    "key": "arcane-tradition",
+    "max": 1,
+    "min": 1,
+    "name": "Arcane Tradition",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "arcane-tradition"
+    ],
+    "remaining": 0,
+    "selected": [
+      "school-of-evocation"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Wizard 2",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "wizard",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "treasure"
+    ],
+    "key": "treasure",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Treasure",
+    "optionCount": 11,
+    "path": [
+      "treasure"
+    ],
+    "remaining": 0,
+    "selected": [
+      "gp"
+    ]
+  },
+  {
+    "actualPath": [
+      "weapons"
+    ],
+    "key": "weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Weapons",
+    "optionCount": 40,
+    "path": [
+      "weapons"
+    ],
+    "remaining": 0,
+    "selected": [
+      "longsword",
+      "handaxe"
+    ]
+  },
+  {
+    "actualPath": [
+      "magic-weapons"
+    ],
+    "key": "magic-weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Weapons",
+    "optionCount": 306,
+    "path": [
+      "magic-weapons"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "armor"
+    ],
+    "key": "armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Armor",
+    "optionCount": 14,
+    "path": [
+      "armor"
+    ],
+    "remaining": 0,
+    "selected": [
+      "chain-mail",
+      "shield"
+    ]
+  },
+  {
+    "actualPath": [
+      "magic-armor"
+    ],
+    "key": "magic-armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Armor",
+    "optionCount": 252,
+    "path": [
+      "magic-armor"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "equipment"
+    ],
+    "key": "equipment",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Equipment",
+    "optionCount": 162,
+    "path": [
+      "equipment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "backpack",
+      "crowbar",
+      "hammer",
+      "piton",
+      "torch",
+      "rations",
+      "waterskin",
+      "rope-hempen",
+      "clothes-common",
+      "pouch",
+      "incense",
+      "vestements",
+      "amulet",
+      "prayer-book"
+    ]
+  },
+  {
+    "actualPath": [
+      "other-magic-items"
+    ],
+    "key": "other-magic-items",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Other Magic Items",
+    "optionCount": 247,
+    "path": [
+      "other-magic-items"
+    ],
+    "remaining": 0,
+    "selected": []
+  }
+]

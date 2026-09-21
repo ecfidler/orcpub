@@ -1,0 +1,27 @@
+{"Drift 08 Pack One"
+ {:orcpub.dnd.e5/races
+  {:tidefolk
+   {:key :tidefolk
+    :name "Tidefolk"
+    :option-pack "Drift 08 Pack One"
+    :speed 30
+    :size :medium
+    :abilities {:orcpub.dnd.e5.character/con 2}
+    :props {:swimming-speed 30}
+    :traits [{:name "Amphibious" :description "You can breathe air and water."}]}}}
+ "Drift 08 Pack Two"
+ {:orcpub.dnd.e5/subraces
+  {:reef-tidefolk
+   {:key :reef-tidefolk
+    :name "Reef Tidefolk"
+    :race :tidefolk
+    :option-pack "Drift 08 Pack Two"
+    :abilities {:orcpub.dnd.e5.character/wis 1}
+    :traits [{:name "Coral Armor" :description "Your natural armor gives you AC 13 + Dexterity modifier while unarmored."}]}}
+  :orcpub.dnd.e5/backgrounds
+  {:pearl-diver
+   {:key :pearl-diver
+    :name "Pearl Diver"
+    :option-pack "Drift 08 Pack Two"
+    :profs {:skill {:athletics true :nature true}}
+    :traits [{:name "Deep Lungs" :description "You can hold your breath for twice as long as normal."}]}}}}

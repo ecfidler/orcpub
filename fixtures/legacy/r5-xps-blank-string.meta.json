@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "xps stored as a blank string; imports as 0.",
+  "name": "r5-xps-blank-string",
+  "orcbrew": [],
+  "quirk": "R5",
+  "strictRoundTrip": false,
+  "unfilledSelections": []
+}

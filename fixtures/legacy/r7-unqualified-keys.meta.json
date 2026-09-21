@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "Legacy unqualified keys: ability scores as :str/:dex/..., equipment map-values as :quantity/:equipped?, values as :character-name/:xps. Not inherited — the importer must namespace them (patch D1).",
+  "name": "r7-unqualified-keys",
+  "orcbrew": [],
+  "quirk": "R7",
+  "strictRoundTrip": "throws: Cannot invoke \"java.lang.Character.charValue()\" because \"x\" is null",
+  "unfilledSelections": []
+}

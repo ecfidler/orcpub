@@ -1,0 +1,69 @@
+{
+  "checks": [],
+  "description": "Real Datomic entity from character_test.clj strict-round-trip-3: warlock 1 / druid 1 multiclass with Spy background (unresolved without the warlock pack) and background starting equipment.",
+  "name": "character-test-3",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": [
+    [
+      "alignment"
+    ],
+    [
+      "race"
+    ],
+    [
+      "class",
+      "druid",
+      "druid-cantrips-known"
+    ],
+    [
+      "class",
+      "druid",
+      "levels",
+      "level-1",
+      "hit-points"
+    ],
+    [
+      "class",
+      "warlock",
+      "starting-equipment-weapon"
+    ],
+    [
+      "class",
+      "warlock",
+      "starting-equipment-simple-weapon"
+    ],
+    [
+      "class",
+      "warlock",
+      "starting-equipment-equipment-pack"
+    ],
+    [
+      "class",
+      "warlock",
+      "starting-equipment-spellcasting-equipment"
+    ],
+    [
+      "class",
+      "warlock",
+      "skill-proficiency"
+    ],
+    [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    [
+      "class",
+      "warlock",
+      "levels",
+      "level-1",
+      "otherworldly-patron"
+    ]
+  ]
+}

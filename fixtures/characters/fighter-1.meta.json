@@ -1,0 +1,29 @@
+{
+  "checks": [
+    {
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "pass": true
+    },
+    {
+      "actual": 12,
+      "expected": 12,
+      "pass": true
+    },
+    {
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    }
+  ],
+  "description": "Level 1 human (standard) fighter, Acolyte, Defense style, chain mail + longsword + shield. Baseline martial.",
+  "name": "fighter-1",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

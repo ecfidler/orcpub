@@ -1,0 +1,27 @@
+{:orcpub.dnd.e5/backgrounds
+ {:spy
+  {:key :spy
+   :name "Spy"
+   :option-pack "Warlock Test Content"
+   :help "Criminal variant. Ported from test/cljc/orcpub/dnd/e5/warlock_test.clj (spy-bg-cfg) so the warlock golden character can be built from an .orcbrew pack."
+   :profs {:skill {:deception true :stealth true}}
+   :traits [{:name "Criminal Contact"
+             :description "reliable criminal underworld contact"}]}}
+ :orcpub.dnd.e5/feats
+ {:keen-mind
+  {:key :keen-mind
+   :name "Keen Mind"
+   :option-pack "Warlock Test Content"
+   :description "increase INT by 1; always know north; recall anything within a month"
+   :ability-increases #{:orcpub.dnd.e5.character/int}}}
+ :orcpub.dnd.e5/subraces
+ {:dark-elf-drow-
+  {:key :dark-elf-drow-
+   :name "Dark Elf (Drow)"
+   :race :elf
+   :option-pack "Warlock Test Content"
+   :abilities {:orcpub.dnd.e5.character/cha 1}
+   :darkvision 120
+   :props {:weapon-prof {:rapier true :shortsword true :crossbow-hand true}}
+   :traits [{:name "Sunlight Sensitivity"
+             :description "Disadvantage on attack and perception rolls in direct sunlight"}]}}}

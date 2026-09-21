@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "xps stored as the string \"6500\" (the old server coerced it in routes.clj; the new importer must parse it, blank/invalid → 0).",
+  "name": "r5-xps-string",
+  "orcbrew": [],
+  "quirk": "R5",
+  "strictRoundTrip": false,
+  "unfilledSelections": []
+}

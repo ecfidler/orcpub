@@ -1,0 +1,493 @@
+{
+  "abilities": {
+    "orcpub.dnd.e5.character/cha": 17,
+    "orcpub.dnd.e5.character/con": 13,
+    "orcpub.dnd.e5.character/dex": 10,
+    "orcpub.dnd.e5.character/int": 10,
+    "orcpub.dnd.e5.character/str": 14,
+    "orcpub.dnd.e5.character/wis": 17
+  },
+  "ability-bonuses": {
+    "orcpub.dnd.e5.character/cha": 3,
+    "orcpub.dnd.e5.character/con": 1,
+    "orcpub.dnd.e5.character/dex": 0,
+    "orcpub.dnd.e5.character/int": 0,
+    "orcpub.dnd.e5.character/str": 2,
+    "orcpub.dnd.e5.character/wis": 3
+  },
+  "ability-increases": null,
+  "actions": [],
+  "age": null,
+  "al-illegal-reasons": [
+    "You may not choose 'Standard Roll' for your abilities. The only legal options are 'Point Buy' or 'Standard Scores'"
+  ],
+  "alignment": null,
+  "all-armor-inventory": {
+    "leather": {
+      "db/id": 17592186549061,
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor": {
+    "leather": {
+      "db/id": 17592186549061,
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor-class": 10,
+  "armor-class-with-armor": [
+    {
+      "ac": 11,
+      "armor": "leather",
+      "shield": null
+    },
+    {
+      "ac": 10,
+      "armor": null,
+      "shield": null
+    }
+  ],
+  "armor-profs": [
+    "light",
+    "medium",
+    "shields"
+  ],
+  "attacks": null,
+  "attuned-magic-items": null,
+  "background": null,
+  "base-flying-speed": 0,
+  "base-land-speed": 0,
+  "base-swimming-speed": 0,
+  "bonds": null,
+  "bonus-actions": [],
+  "character-name": null,
+  "class-hit-point-level-bonus": {},
+  "class-level": {
+    "druid": 1,
+    "warlock": 1
+  },
+  "classes": [
+    "warlock",
+    "druid"
+  ],
+  "condition-immunities": [],
+  "crit-values-str": 20,
+  "critical-hit-values": [
+    20
+  ],
+  "current-hit-points": null,
+  "custom-equipment": null,
+  "custom-treasure": null,
+  "damage-immunities": [],
+  "damage-vulnerabilities": null,
+  "darkvision": 0,
+  "description": null,
+  "equipment": {
+    "clothes-common": {
+      "db/id": 17592186549048,
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "crowbar": {
+      "db/id": 17592186549046,
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "pouch": {
+      "db/id": 17592186549050,
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "eyes": null,
+  "faction-image-url": null,
+  "faction-image-url-failed": null,
+  "faction-name": null,
+  "feats": null,
+  "features-used": {},
+  "flaws": null,
+  "hair": null,
+  "height": null,
+  "hit-point-level-bonus": 1,
+  "ideals": null,
+  "image-url": null,
+  "image-url-failed": null,
+  "immunities": [],
+  "initiative": 0,
+  "languages": [
+    "druidic"
+  ],
+  "levels": {
+    "druid": {
+      "class-level": 1,
+      "class-name": "Druid",
+      "hit-die": 8
+    },
+    "warlock": {
+      "class-level": 1,
+      "class-name": "Warlock",
+      "hit-die": 8
+    }
+  },
+  "magic-armor": null,
+  "magic-items": null,
+  "magic-weapons": null,
+  "main-hand-weapon": null,
+  "max-hit-points": 10,
+  "notes": null,
+  "number-of-attacks": 1,
+  "off-hand-weapon": null,
+  "option-sources": null,
+  "pact-magic?": true,
+  "passive-perception": 13,
+  "personality-trait-1": null,
+  "personality-trait-2": null,
+  "player-name": null,
+  "prepare-spell-count": {
+    "Druid": 4
+  },
+  "prepares-spells": {
+    "Druid": true
+  },
+  "proficiency-bonus": 2,
+  "public?": null,
+  "race": null,
+  "race-ability-increases": null,
+  "reactions": [],
+  "resistances": [],
+  "save-bonuses": {
+    "orcpub.dnd.e5.character/cha": 5,
+    "orcpub.dnd.e5.character/con": 1,
+    "orcpub.dnd.e5.character/dex": 0,
+    "orcpub.dnd.e5.character/int": 0,
+    "orcpub.dnd.e5.character/str": 2,
+    "orcpub.dnd.e5.character/wis": 5
+  },
+  "saving-throws": [
+    "orcpub.dnd.e5.character/cha",
+    "orcpub.dnd.e5.character/wis"
+  ],
+  "sex": null,
+  "skill-bonuses": {
+    "acrobatics": 0,
+    "animal-handling": 3,
+    "arcana": 0,
+    "athletics": 2,
+    "deception": 3,
+    "history": 0,
+    "insight": 3,
+    "intimidation": 3,
+    "investigation": 0,
+    "medicine": 3,
+    "nature": 0,
+    "perception": 3,
+    "performance": 3,
+    "persuasion": 3,
+    "religion": 0,
+    "sleight-of-hand": 0,
+    "stealth": 0,
+    "survival": 3
+  },
+  "skill-expertise": null,
+  "skill-profs": null,
+  "skin": null,
+  "speed-with-armor": null,
+  "spell-attack-modifier": {
+    "orcpub.dnd.e5.character/cha": 5,
+    "orcpub.dnd.e5.character/con": 3,
+    "orcpub.dnd.e5.character/dex": 2,
+    "orcpub.dnd.e5.character/int": 2,
+    "orcpub.dnd.e5.character/str": 4,
+    "orcpub.dnd.e5.character/wis": 5
+  },
+  "spell-modifiers": {
+    "Druid": {
+      "ability": "orcpub.dnd.e5.character/wis",
+      "class": "Druid",
+      "spell-attack-modifier": 5,
+      "spell-save-dc": 13
+    }
+  },
+  "spell-save-dc": {
+    "orcpub.dnd.e5.character/cha": 13,
+    "orcpub.dnd.e5.character/con": 11,
+    "orcpub.dnd.e5.character/dex": 10,
+    "orcpub.dnd.e5.character/int": 10,
+    "orcpub.dnd.e5.character/str": 12,
+    "orcpub.dnd.e5.character/wis": 13
+  },
+  "spell-slot-factors": {
+    "druid": 1
+  },
+  "spell-slots": {
+    "1": 3
+  },
+  "spells-known": {
+    "1": {
+      "__entries": [
+        [
+          [
+            "Druid",
+            "animal-friendship"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "animal-friendship"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "charm-person"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "charm-person"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "create-or-destroy-water"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "create-or-destroy-water"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "cure-wounds"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "cure-wounds"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "detect-magic"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "detect-magic"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "detect-poison-and-disease"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "detect-poison-and-disease"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "entangle"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "entangle"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "faerie-fire"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "faerie-fire"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "fog-cloud"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "fog-cloud"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "goodberry"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "goodberry"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "healing-word"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "healing-word"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "jump"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "jump"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "longstrider"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "longstrider"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "purify-food-and-drink"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "purify-food-and-drink"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "speak-with-animals"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "speak-with-animals"
+          }
+        ],
+        [
+          [
+            "Druid",
+            "thunderwave"
+          ],
+          {
+            "ability": "orcpub.dnd.e5.character/wis",
+            "class": "Druid",
+            "class-key": "druid",
+            "key": "thunderwave"
+          }
+        ]
+      ]
+    }
+  },
+  "spells-known-modes": {
+    "Druid": "all",
+    "Warlock": "schedule"
+  },
+  "subrace": null,
+  "subrace-ability-increases": null,
+  "tool-bonus": {},
+  "tool-expertise": [],
+  "tool-profs": {},
+  "total-levels": 2,
+  "total-spellcaster-levels": 1,
+  "traits": [
+    {
+      "class-key": "druid",
+      "name": "Druidic",
+      "page": 66,
+      "source": null,
+      "summary": "You can speak Druidic and use it to leave hidden message and automatically spot messages left by others"
+    }
+  ],
+  "treasure": {
+    "gp": {
+      "db/id": 17592186549055,
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 15
+    }
+  },
+  "unarmored-speed-bonus": null,
+  "used-resources": null,
+  "weapon-modifiers": {
+    "dagger": {
+      "attack": {
+        "finesse": 2,
+        "standard": 4
+      },
+      "best-attack": 4,
+      "best-damage": 2,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 0,
+        "off-hand": 0,
+        "standard": 2
+      },
+      "dual-wield?": true,
+      "has-prof?": true
+    }
+  },
+  "weapon-profs": [
+    "simple"
+  ],
+  "weapons": {
+    "dagger": {
+      "db/id": 17592186549058,
+      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 2
+    }
+  },
+  "weight": null,
+  "wielded-shield": null,
+  "worn-armor": null,
+  "xps": null
+}

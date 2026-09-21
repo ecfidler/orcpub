@@ -1,0 +1,27 @@
+{:orcpub.dnd.e5/spells
+ {:unfinished-bolt
+  {:key :unfinished-bolt
+   :option-pack "Drift 07"
+   :description "A spell entry missing its name, level and school."
+   :spell-lists {:wizard true :sorcerer true}}
+  :ember-dart
+  {:key :ember-dart
+   :name "Ember Dart"
+   :option-pack "Drift 07"
+   :level 1
+   :school "evocation"
+   :casting-time "1 action"
+   :range "60 feet"
+   :duration "Instantaneous"
+   :components {:verbal true :somatic true}
+   :description "A dart of embers streaks toward a creature within range. Make a ranged spell attack; on a hit the target takes 2d6 fire damage."
+   :spell-lists {:wizard true :sorcerer true}}}
+ :orcpub.dnd.e5/classes
+ {:unnamed-class
+  {:key :unnamed-class
+   :option-pack "Drift 07"
+   :hit-die 8
+   :ability-increase-levels [4 8 12 16 19]
+   :subclass-level 3
+   :subclass-title "Path"
+   :traits [{:name "Nameless Talent" :level 1 :description "This class has no name; the importer fills in a placeholder."}]}}}

@@ -1,0 +1,50 @@
+{
+  "checks": [
+    {
+      "actual": 5,
+      "expected": 5,
+      "pass": true
+    },
+    {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "pass": true
+    },
+    {
+      "actual": 18,
+      "expected": 18,
+      "pass": true
+    },
+    {
+      "actual": [
+        19,
+        20
+      ],
+      "expected": [
+        19,
+        20
+      ],
+      "pass": true
+    },
+    {
+      "actual": 6,
+      "expected": 6,
+      "pass": true
+    },
+    {
+      "actual": 4,
+      "expected": 4,
+      "pass": true
+    }
+  ],
+  "description": "Level 5 hill dwarf fighter (Champion), Dueling style, ASI at 4 (STR+2). Extra Attack; longsword in the main hand and the shield in the off hand, which is what options.cljc's Dueling condition requires (a non-weapon in the off-hand slot) for the +2 damage bonus (patch D2 coverage).",
+  "name": "fighter-5",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

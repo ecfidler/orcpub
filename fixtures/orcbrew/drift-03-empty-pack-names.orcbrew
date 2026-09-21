@@ -1,0 +1,17 @@
+{""
+ {:orcpub.dnd.e5/races
+  {:duskling
+   {:key :duskling
+    :name "Duskling"
+    :option-pack ""
+    :speed 30
+    :size :medium
+    :abilities {:orcpub.dnd.e5.character/dex 2}
+    :traits [{:name "Dusk Sight" :description "You can see normally in dim light within 60 feet."}]}}
+  :orcpub.dnd.e5/backgrounds
+  {:lamplighter
+   {:key :lamplighter
+    :name "Lamplighter"
+    :option-pack nil
+    :profs {:skill {:perception true :athletics true}}
+    :traits [{:name "Night Routes" :description "You know the safest paths through any city after dark."}]}}}}

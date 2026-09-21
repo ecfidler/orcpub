@@ -1,0 +1,1399 @@
+[
+  {
+    "actualPath": [
+      "ability-scores"
+    ],
+    "key": "ability-scores",
+    "max": 1,
+    "min": 1,
+    "name": "Base Ability Scores",
+    "optionCount": 4,
+    "path": [
+      "ability-scores"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "standard-roll"
+    ]
+  },
+  {
+    "actualPath": [
+      "alignment"
+    ],
+    "key": "alignment",
+    "max": 1,
+    "min": 1,
+    "name": "Alignment",
+    "optionCount": 9,
+    "path": [
+      "alignment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "chaotic-neutral"
+    ]
+  },
+  {
+    "actualPath": [
+      "race"
+    ],
+    "key": "race",
+    "max": 1,
+    "min": 1,
+    "name": "Race",
+    "optionCount": 10,
+    "path": [
+      "race"
+    ],
+    "remaining": 0,
+    "selected": [
+      "elf"
+    ]
+  },
+  {
+    "actualPath": [
+      "race",
+      "elf",
+      "subrace"
+    ],
+    "key": "subrace",
+    "max": 1,
+    "min": 1,
+    "name": "Subrace",
+    "optionCount": 3,
+    "path": [
+      "race",
+      "elf",
+      "subrace"
+    ],
+    "remaining": 0,
+    "selected": [
+      "dark-elf-drow-"
+    ]
+  },
+  {
+    "actualPath": [
+      "background"
+    ],
+    "key": "background",
+    "max": 1,
+    "min": 1,
+    "name": "Background",
+    "optionCount": 3,
+    "path": [
+      "background"
+    ],
+    "remaining": 0,
+    "selected": [
+      "spy"
+    ]
+  },
+  {
+    "actualPath": [
+      "feats"
+    ],
+    "key": "feats",
+    "max": 0,
+    "min": 0,
+    "multiselect": true,
+    "name": "Feats",
+    "optionCount": 2,
+    "path": [
+      "feats"
+    ],
+    "ref": [
+      "feats"
+    ],
+    "remaining": -1,
+    "selected": [
+      "keen-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class"
+    ],
+    "key": "class",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Class",
+    "optionCount": 12,
+    "path": [
+      "class"
+    ],
+    "remaining": 0,
+    "selected": [
+      "warlock"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "starting-equipment-weapon"
+    ],
+    "key": "starting-equipment-weapon",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Weapon",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "starting-equipment-weapon"
+    ],
+    "remaining": 0,
+    "selected": [
+      "any-simple-weapon"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "starting-equipment-simple-weapon"
+    ],
+    "key": "starting-equipment-simple-weapon",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Simple Weapon",
+    "optionCount": 15,
+    "path": [
+      "class",
+      "warlock",
+      "starting-equipment-simple-weapon"
+    ],
+    "remaining": 0,
+    "selected": [
+      "dagger"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "starting-equipment-equipment-pack"
+    ],
+    "key": "starting-equipment-equipment-pack",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Equipment Pack",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "starting-equipment-equipment-pack"
+    ],
+    "remaining": 0,
+    "selected": [
+      "dungeoneers-pack"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "starting-equipment-spellcasting-equipment"
+    ],
+    "key": "starting-equipment-spellcasting-equipment",
+    "max": 1,
+    "min": 1,
+    "name": "Starting Equipment: Spellcasting Equipment",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "starting-equipment-spellcasting-equipment"
+    ],
+    "remaining": 0,
+    "selected": [
+      "component-pouch"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "skill-proficiency"
+    ],
+    "key": "skill-proficiency",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Skill Proficiency",
+    "optionCount": 7,
+    "path": [
+      "class",
+      "warlock",
+      "skill-proficiency"
+    ],
+    "remaining": 0,
+    "selected": [
+      "history",
+      "intimidation"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels"
+    ],
+    "key": "levels",
+    "max": null,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Levels",
+    "optionCount": 20,
+    "path": [
+      "class",
+      "warlock",
+      "levels"
+    ],
+    "remaining": 0,
+    "selected": [
+      "level-1",
+      "level-2",
+      "level-3",
+      "level-4",
+      "level-5",
+      "level-6",
+      "level-7",
+      "level-8",
+      "level-9",
+      "level-10"
+    ],
+    "sequential": true
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    "key": "warlock-cantrips-known",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Warlock Cantrips Known",
+    "optionCount": 7,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-1",
+      "warlock-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    "remaining": -2,
+    "selected": [
+      "friends",
+      "minor-illusion",
+      "prestidigitation",
+      "eldritch-blast"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 7,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-1",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -8,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-1",
+      "otherworldly-patron"
+    ],
+    "key": "otherworldly-patron",
+    "max": 1,
+    "min": 1,
+    "name": "Otherworldly Patron",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-1",
+      "otherworldly-patron"
+    ],
+    "remaining": 0,
+    "selected": [
+      "the-archfey"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "key": "eldritch-invocations",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Eldritch Invocations",
+    "optionCount": 32,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-2",
+      "eldritch-invocations"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "remaining": -3,
+    "selected": [
+      "book-of-ancient-secrets",
+      "agonizing-blast",
+      "beast-speech",
+      "eyes-of-the-rune-keeper",
+      "mire-the-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "eldritch-invocations",
+      "book-of-ancient-secrets",
+      "book-of-ancient-secrets-rituals"
+    ],
+    "key": "book-of-ancient-secrets-rituals",
+    "max": 2,
+    "min": 2,
+    "multiselect": true,
+    "name": "Book of Ancient Secrets Rituals",
+    "optionCount": 11,
+    "path": [
+      "class",
+      "warlock",
+      "eldritch-invocations",
+      "book-of-ancient-secrets",
+      "book-of-ancient-secrets-rituals"
+    ],
+    "remaining": 0,
+    "selected": [
+      "detect-poison-and-disease",
+      "illusory-script"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 7,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-2",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 2",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-2",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "pact-boon"
+    ],
+    "key": "pact-boon",
+    "max": 1,
+    "min": 1,
+    "name": "Pact Boon",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "pact-boon"
+    ],
+    "remaining": 0,
+    "selected": [
+      "pact-of-the-tome"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "pact-boon",
+      "pact-of-the-tome",
+      "book-of-shadows-cantrips"
+    ],
+    "key": "book-of-shadows-cantrips",
+    "max": 3,
+    "min": 3,
+    "multiselect": true,
+    "name": "Book of Shadows Cantrips",
+    "optionCount": 24,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "pact-boon",
+      "pact-of-the-tome",
+      "book-of-shadows-cantrips"
+    ],
+    "remaining": 0,
+    "selected": [
+      "blade-ward",
+      "spare-the-dying",
+      "thorn-whip"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 10,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 3",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-3",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    "key": "warlock-cantrips-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Cantrips Known",
+    "optionCount": 7,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "warlock-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    "remaining": -3,
+    "selected": [
+      "friends",
+      "minor-illusion",
+      "prestidigitation",
+      "eldritch-blast"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 10,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "feat"
+    ]
+  },
+  {
+    "actualPath": [
+      "feats"
+    ],
+    "key": "feats",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Feats",
+    "optionCount": 1,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "asi-or-feat",
+      "feat",
+      "feats"
+    ],
+    "ref": [
+      "feats"
+    ],
+    "remaining": 0,
+    "selected": [
+      "keen-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 4",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-4",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "key": "eldritch-invocations",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Eldritch Invocations",
+    "optionCount": 32,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-5",
+      "eldritch-invocations"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "remaining": -4,
+    "selected": [
+      "book-of-ancient-secrets",
+      "agonizing-blast",
+      "beast-speech",
+      "eyes-of-the-rune-keeper",
+      "mire-the-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 11,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-5",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-5",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 5",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-5",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 11,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-6",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-6",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 6",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-6",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "key": "eldritch-invocations",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Eldritch Invocations",
+    "optionCount": 32,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-7",
+      "eldritch-invocations"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "remaining": -4,
+    "selected": [
+      "book-of-ancient-secrets",
+      "agonizing-blast",
+      "beast-speech",
+      "eyes-of-the-rune-keeper",
+      "mire-the-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 4,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-7",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-7",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 7",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-7",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 4,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-8",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-8",
+      "asi-or-feat"
+    ],
+    "key": "asi-or-feat",
+    "max": 1,
+    "min": 1,
+    "name": "Ability Score Improvement or Feat",
+    "optionCount": 2,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-8",
+      "asi-or-feat"
+    ],
+    "remaining": 0,
+    "selected": [
+      "feat"
+    ]
+  },
+  {
+    "actualPath": [
+      "feats"
+    ],
+    "key": "feats",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Feats",
+    "optionCount": 1,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-8",
+      "asi-or-feat",
+      "feat",
+      "feats"
+    ],
+    "ref": [
+      "feats"
+    ],
+    "remaining": 0,
+    "selected": [
+      "keen-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-8",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 8",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-8",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "key": "eldritch-invocations",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Eldritch Invocations",
+    "optionCount": 32,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-9",
+      "eldritch-invocations"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "eldritch-invocations"
+    ],
+    "remaining": -4,
+    "selected": [
+      "book-of-ancient-secrets",
+      "agonizing-blast",
+      "beast-speech",
+      "eyes-of-the-rune-keeper",
+      "mire-the-mind"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "key": "warlock-spells-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Spells Known",
+    "optionCount": 4,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-9",
+      "warlock-spells-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-spells-known"
+    ],
+    "remaining": -9,
+    "selected": [
+      "charm-person",
+      "hellish-rebuke",
+      "comprehend-languages",
+      "ray-of-enfeeblement",
+      "sleep",
+      "hold-monster",
+      "dominate-person",
+      "crown-of-madness",
+      "fear",
+      "faerie-fire"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-9",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 9",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-9",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    "key": "warlock-cantrips-known",
+    "max": 1,
+    "min": 1,
+    "multiselect": true,
+    "name": "Warlock Cantrips Known",
+    "optionCount": 7,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-10",
+      "warlock-cantrips-known"
+    ],
+    "ref": [
+      "class",
+      "warlock",
+      "warlock-cantrips-known"
+    ],
+    "remaining": -3,
+    "selected": [
+      "friends",
+      "minor-illusion",
+      "prestidigitation",
+      "eldritch-blast"
+    ]
+  },
+  {
+    "actualPath": [
+      "class",
+      "warlock",
+      "levels",
+      "level-10",
+      "hit-points"
+    ],
+    "key": "hit-points",
+    "max": 1,
+    "min": 1,
+    "name": "Hit Points: Warlock 10",
+    "optionCount": 3,
+    "path": [
+      "class",
+      "warlock",
+      "levels",
+      "level-10",
+      "hit-points"
+    ],
+    "remaining": 0,
+    "requireValue": true,
+    "selected": [
+      "average"
+    ]
+  },
+  {
+    "actualPath": [
+      "treasure"
+    ],
+    "key": "treasure",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Treasure",
+    "optionCount": 11,
+    "path": [
+      "treasure"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "weapons"
+    ],
+    "key": "weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Weapons",
+    "optionCount": 40,
+    "path": [
+      "weapons"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "magic-weapons"
+    ],
+    "key": "magic-weapons",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Weapons",
+    "optionCount": 306,
+    "path": [
+      "magic-weapons"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "armor"
+    ],
+    "key": "armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Armor",
+    "optionCount": 14,
+    "path": [
+      "armor"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "magic-armor"
+    ],
+    "key": "magic-armor",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Magic Armor",
+    "optionCount": 252,
+    "path": [
+      "magic-armor"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "equipment"
+    ],
+    "key": "equipment",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Equipment",
+    "optionCount": 162,
+    "path": [
+      "equipment"
+    ],
+    "remaining": 0,
+    "selected": []
+  },
+  {
+    "actualPath": [
+      "other-magic-items"
+    ],
+    "key": "other-magic-items",
+    "max": null,
+    "min": 0,
+    "multiselect": true,
+    "name": "Other Magic Items",
+    "optionCount": 247,
+    "path": [
+      "other-magic-items"
+    ],
+    "remaining": 0,
+    "selected": []
+  }
+]

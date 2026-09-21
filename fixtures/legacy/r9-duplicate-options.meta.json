@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "A multi-select option key repeated (magic-missile twice in wizard-spells-known); has-duplicate-selections? flags it, the build tolerates it.",
+  "name": "r9-duplicate-options",
+  "orcbrew": [],
+  "quirk": "R9",
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

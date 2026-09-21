@@ -1,0 +1,21 @@
+{:orcpub.dnd.e5/races
+ {:mezzoloth
+  {:key :mezzoloth,
+   :speed 30,
+   :name "Mezzoloth",
+   :darkvision 60,
+   :spells
+   [{:value {:ability :orcpub.dnd.e5.character/cha, :key :message}}
+    {:value {:level 2, :ability :orcpub.dnd.e5.character/cha, :key :darkness}}],
+   :abilities #:orcpub.dnd.e5.character{:con 2},
+   :size :medium,
+   :option-pack "me",
+   :languages #{"Common" "Infernal"},
+   :traits
+   [{:name "Natural Weapon",
+     :description
+     "you have razor sharp claws, which are a simple melee weapon you are proficient with, uses a d6 for it's damage die and deals slashing damage"}
+    {:name "Multilimbed",
+     :description
+     "You have four arms. All of your arms are strong enough to carry weapons, shields, arcane focuses, other objects, or hold in terrain features such as tree branch or ladder. You cannon gain a benefit from having more than one shield, and holding more than two weapons does not affect how two-weapon fighting works for you"}]}},
+ :disabled? false}

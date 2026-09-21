@@ -1,0 +1,30 @@
+{:orcpub.dnd.e5/races
+ {:oxkin
+  {:key :oxkin
+   :name "Oxkin"
+   :option-pack "Drift 10"
+   :speed 30
+   :size :medium
+   :abilities {:con 2 :str 1}
+   :traits [{:name "Sturdy" :description "Your hit point maximum increases by 1 for every level you have."}]}
+  :hawkkin
+  {:key :hawkkin
+   :name "Hawkkin"
+   :option-pack "Drift 10"
+   :speed 30
+   :size :medium
+   :abilities {:orcpub.dnd.e5.character/dex 2 :orcpub.dnd.e5.character/wis 1}
+   :traits [{:name "Keen Sight" :description "You have advantage on Wisdom (Perception) checks that rely on sight."}]}}
+ :orcpub.dnd.e5/feats
+ {:ox-heart
+  {:key :ox-heart
+   :name "Ox Heart"
+   :option-pack "Drift 10"
+   :description "Increase your Constitution by 1."
+   :ability-increases #{:con}}
+  :hawk-eye
+  {:key :hawk-eye
+   :name "Hawk Eye"
+   :option-pack "Drift 10"
+   :description "Increase your Wisdom by 1."
+   :ability-increases #{:orcpub.dnd.e5.character/wis}}}}

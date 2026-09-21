@@ -1,0 +1,9 @@
+{
+  "checks": [],
+  "description": "A rolled hit-point option with int-value 0 and a string-value \"\" as the character name. Doc 01 R4 says these read back as nil; they do not: (or 0 nil nil) is 0 in Clojure and ClojureScript alike, so the roll counts as 0 hit points and the name stays \"\" (see fixtures/README.md, findings).",
+  "name": "r4-zero-int-value",
+  "orcbrew": [],
+  "quirk": "R4",
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}
