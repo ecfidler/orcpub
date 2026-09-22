@@ -102,6 +102,11 @@ Do not contradict these without checking the source.
 Run `/unslop` on all prose, and `/technical-writing` on docs, PR bodies,
 Linear issues, and commit messages.
 
+### Subagents
+
+Use the `opus` model for `Explore` subagents in this repo. Pass
+`model: "opus"` on every `Agent` call with `subagent_type: "Explore"`.
+
 ### Issue tracker
 
 The issue tracker is Linear: workspace *Orc Alchemy*, team key `ORC`,
