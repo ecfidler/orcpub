@@ -1,4 +1,4 @@
-# Fixtures — Phase A, M0
+# Fixtures: Phase A, M0
 
 Real inputs and oracle-produced expected outputs for the engine package
 (`@dmv/pubdoor`, M1) and the homebrew engine path (M3). The plan is
@@ -7,7 +7,7 @@ Real inputs and oracle-produced expected outputs for the engine package
 The oracle is the **old app's own code** running on the JVM, unmodified:
 `entity/build` and the `character.cljc` accessors for characters, and the
 `spell_subs.cljs` / `equipment_subs.cljs` subscription chain for the template
-(loaded onto the JVM through re-frame's JVM interop — see
+(loaded onto the JVM through re-frame's JVM interop, see
 `scripts/orcpub/oracle.clj`). Nothing here was typed in by hand except the
 raw entities of the golden characters and the synthetic `.orcbrew` packs.
 
@@ -21,7 +21,7 @@ engine source is unchanged from `develop` at that point). Regenerate whenever
 fixtures/
   characters/
     <name>.strict.json      strict entity, Transit-JSON (verbose mode)
-    <name>.expected.json    built values — what evaluate(strict).built must equal
+    <name>.expected.json    built values: what evaluate(strict).built must equal
     <name>.selections.json  available selections, flattened with actualPath
     <name>.meta.json        packs needed, description, checks run, round-trip result
   legacy/
@@ -79,7 +79,7 @@ recorded under these keys (the `-fn` suffix of the sub name is dropped):
 
 | Key | Value |
 |---|---|
-| `armor-class-with-armor` | `[{armor, shield, ac}]` for every combination of carried non-shield armor × carried shield, each side also `null` — exactly `armor-calculations` in `subs.cljs` (items resolved through `::mi5e/all-armor-map`, sorted by key) |
+| `armor-class-with-armor` | `[{armor, shield, ac}]` for every combination of carried non-shield armor × carried shield, each side also `null`. This is exactly `armor-calculations` in `subs.cljs` (items resolved through `::mi5e/all-armor-map`, sorted by key) |
 | `weapon-modifiers` | per carried weapon key (normal + magic inventories, resolved through `::mi5e/all-weapons-map`; `null` if unresolved): `attack {standard, finesse}`, `best-attack`, `damage {standard, finesse, off-hand}`, `best-damage`, `best-damage-off-hand`, `dual-wield?`, `has-prof?` |
 | `spell-save-dc`, `spell-attack-modifier` | per ability key |
 | `class-level` | per class key in `levels` |
@@ -96,7 +96,7 @@ arity, and `proficiency-help` tolerates a nil count
 ### `<name>.selections.json`
 
 `entity/available-selections` for the built character, flattened: `key`,
-`name`, `path`, `actualPath` (the `ref` path when the selection has one —
+`name`, `path`, `actualPath` (the `ref` path when the selection has one, see
 doc 02 wrinkle 5), `min`, `max`, `remaining` (`entity/count-remaining`),
 `optionCount`, `selected` (option keys currently chosen), and `ref`,
 `multiselect`, `sequential`, `requireValue` when set. Option lists are not
@@ -117,28 +117,28 @@ the legacy set.
 
 What the old subscription chain produces for that pack loaded alone,
 after the old importer (`import_validation.cljs`, progressive strategy,
-auto-clean on — the `::e5/import-plugin` event path):
+auto-clean on, the `::e5/import-plugin` event path):
 
-- `pack` — the source name the old UI would use (file name without `.orcbrew`)
-- `import` — the importer's result: `success`, `changes` (every auto-clean
+- `pack`: the source name the old UI would use (file name without `.orcbrew`)
+- `import`: the importer's result: `success`, `changes` (every auto-clean
   operation), `skipped-items`, `key-conflicts`, `imported-count`, and the
   parse error fields when parsing failed
-- `plugins` — app-db `:plugins` after the import: source name → content type
+- `plugins`: app-db `:plugins` after the import: source name → content type
   → sorted item keys
-- `content` — the chain's intermediate subscriptions (`::races5e/races`,
+- `content`: the chain's intermediate subscriptions (`::races5e/races`,
   `::bg5e/backgrounds`, `::classes5e/classes`, `::feats5e/feats`,
   `::langs5e/languages`, invocations, boons, and the `plugin-*` lists), as
   key/name lists
-- `templateSummary` — per top-level selection: `min`, `max`, `optionKeys` in
+- `templateSummary`: per top-level selection: `min`, `max`, `optionKeys` in
   template order
-- `templateDelta` — the structural difference between this pack's template
+- `templateDelta`: the structural difference between this pack's template
   shape and the SRD-only shape (below)
 
 The **template shape** (`orcpub.oracle/selection-shape`) of a selection is
 `key`, `name`, `min`, `max`, `options`, and `ref`, `order`, `tags`,
 `multiselect`, `sequential`, `requireValue` when set; of an option it is
 `key`, `name`, `order`, `prereqs` (count), `selections` (recursive) and
-`modifiers` — each modifier's `key`, and `name`/`value` when they are plain
+`modifiers`, which holds each modifier's `key`, and `name`/`value` when they are plain
 data. No functions.
 
 The **delta** matches nodes by `key` (selection nodes have `options`
@@ -164,15 +164,15 @@ would; `unfilledSelections` is empty for all eleven.
 
 | Name | What it covers | Packs |
 |---|---|---|
-| `fighter-1` | Human (standard) fighter 1, Acolyte, Defense, chain mail + longsword + shield | — |
-| `fighter-5` | Hill dwarf fighter 5, Champion, **Dueling** (+2 damage on the one-handed longsword: the `patch D2` case), ASI, Extra Attack, tool proficiency | — |
-| `fighter-11` | Half-orc fighter 11, Champion, Great Weapon Fighting, three attacks, three ASIs, greataxe | — |
-| `fighter-20` | Human fighter 20, Champion, Protection, four attacks, every ASI (one as the Grappler feat), plate + shield, a `+1` longsword and an attuned amulet of health | — |
-| `wizard-1` | High elf wizard 1, racial cantrip, 6 spells known, 4 prepared | — |
-| `wizard-5` | Rock gnome wizard 5, Evocation, ASI, 3rd-level slots, 14 spells known | — |
-| `wizard-11` | Tiefling wizard 11, Evocation, two ASIs, 6th-level slots, 5 wizard cantrips + Thaumaturgy, cloak of protection | — |
-| `wizard-20` | Human wizard 20, Evocation, every ASI, 9th-level slots, 44 spells known, Spell Mastery and Signature Spells chosen | — |
-| `fighter-3-wizard-2` | Half-elf multiclass; wizard as the second class (no wizard skill pick, hit points at wizard level 1), combined-level spell slots | — |
+| `fighter-1` | Human (standard) fighter 1, Acolyte, Defense, chain mail + longsword + shield | none |
+| `fighter-5` | Hill dwarf fighter 5, Champion, **Dueling** (+2 damage on the one-handed longsword: the `patch D2` case), ASI, Extra Attack, tool proficiency | none |
+| `fighter-11` | Half-orc fighter 11, Champion, Great Weapon Fighting, three attacks, three ASIs, greataxe | none |
+| `fighter-20` | Human fighter 20, Champion, Protection, four attacks, every ASI (one as the Grappler feat), plate + shield, a `+1` longsword and an attuned amulet of health | none |
+| `wizard-1` | High elf wizard 1, racial cantrip, 6 spells known, 4 prepared | none |
+| `wizard-5` | Rock gnome wizard 5, Evocation, ASI, 3rd-level slots, 14 spells known | none |
+| `wizard-11` | Tiefling wizard 11, Evocation, two ASIs, 6th-level slots, 5 wizard cantrips + Thaumaturgy, cloak of protection | none |
+| `wizard-20` | Human wizard 20, Evocation, every ASI, 9th-level slots, 44 spells known, Spell Mastery and Signature Spells chosen | none |
+| `fighter-3-wizard-2` | Half-elf multiclass; wizard as the second class (no wizard skill pick, hit points at wizard level 1), combined-level spell slots | none |
 | `warlock-10-drow` | The `warlock_test.clj` entity verbatim: Drow warlock 10 of the Archfey, Spy, Keen Mind, Pact of the Tome, five invocations. Its nine assertions are re-run as `checks` | `warlock-test-content.orcbrew` |
 | `ironwrought-artificer-3` | Homebrew-only race/subrace/class/subclass | `duplicate-external-b.orcbrew` |
 
@@ -184,9 +184,9 @@ in order (`wizard-spells-known` in `scripts/golden-characters.clj`).
 
 | Name | Quirk | Content |
 |---|---|---|
-| `character-test-1..3` | real data | The three Datomic entities from `test/cljc/orcpub/dnd/e5/character_test.clj` (`strict-round-trip`, `-2`, `-3`), extracted by the reader, unmodified. `-2` has non-SRD content that does not resolve (Eldritch Knight, Noble, Ritual Caster) — real R8 data. All three are incomplete characters; `unfilledSelections` lists what the UI would flag |
+| `character-test-1..3` | real data | The three Datomic entities from `test/cljc/orcpub/dnd/e5/character_test.clj` (`strict-round-trip`, `-2`, `-3`), extracted by the reader, unmodified. `-2` has non-SRD content that does not resolve (Eldritch Knight, Noble, Ritual Caster). That is real R8 data. All three are incomplete characters; `unfilledSelections` lists what the UI would flag |
 | `r3-slots-used-vectors` | R3 | `slots-used` as vectors, stray `:db/id` in `features-used` |
-| `r4-zero-int-value` | R4 | hit-point roll `int-value 0`, name `string-value ""` — see *Findings*: both are preserved, not nil |
+| `r4-zero-int-value` | R4 | hit-point roll `int-value 0`, name `string-value ""`. See *Findings*: both are preserved, not nil |
 | `r5-xps-string`, `r5-xps-blank-string` | R5 | `xps` as `"6500"` and as `" "`; expected values use the parsed int (6500 / 0) |
 | `r6-quantity-string` | R6 | a weapon quantity `"2"` |
 | `r7-unqualified-keys` | R7 | `:str`-style ability keys, `:quantity`/`:equipped?` equipment values, `:character-name`/`:xps`/`:custom-equipment` values; expected values are for the **migrated** entity (see `orcpub.oracle/legacy-normalize`, the behaviour `importCharacter` must implement for patch D1) |
@@ -220,7 +220,7 @@ behaviour; every other fixture is built exactly as `char5e/from-strict` +
 | `drift-09-size-forms` | synthetic | EPL-2.0 | `:size "Medium"`, `:size :medium`, a subrace with `:size "Small"` |
 | `drift-10-ability-key-forms` | synthetic | EPL-2.0 | `:abilities {:con 2}` vs `{:orcpub.dnd.e5.character/con 2}`; feats with `#{:con}` vs namespaced |
 | `community-mezzoloth-race.orcbrew` | the repo owner's own homebrew, taken verbatim (pack `"me"`) from their old-app `all-content` export | EPL-2.0 (author's own work, contributed here) | a race authored in the old UI: racial spells with `:value`/`:level`, `:languages` as a set, pack-level `:disabled? false` |
-| `community-dandwiki-star-elf.orcbrew` | D&D Wiki (dandwiki.com), as recorded in the pack name; transcribed into the old app by the repo owner | GNU FDL 1.3 (D&D Wiki's license) — **verify the page before relying on it** | a subrace attached to the built-in Elf with `:props` weapon/skill proficiencies and level-gated racial spells |
+| `community-dandwiki-star-elf.orcbrew` | D&D Wiki (dandwiki.com), as recorded in the pack name; transcribed into the old app by the repo owner | GNU FDL 1.3 (D&D Wiki's license). **Verify the page before relying on it** | a subrace attached to the built-in Elf with `:props` weapon/skill proficiencies and level-gated racial spells |
 
 **Community packs: two, not three.** The handoff asks for ≥3 packs published
 openly by their authors. No code-search route was reachable from the
@@ -303,7 +303,7 @@ reproduces its `.expected.json` and `.selections.json` byte for byte.
   test namespaces pass on the fallback classpath, and no engine source was
   modified.
 
-## Findings — where the plan or the engine differs from what was assumed
+## Findings: where the plan or the engine differs from what was assumed
 
 Line numbers are for commit `bcd9d68`.
 
@@ -319,7 +319,7 @@ Line numbers are for commit `bcd9d68`.
    JS: pads). Its condition (`:1743-1750`) is true only when
    `::char5e/main-hand-weapon` is a one-handed melee weapon **and**
    `::char5e/off-hand-weapon` is set to something that is not a weapon
-   (`:shield`) — with an empty off hand the bonus does not apply. Both belong
+   (`:shield`). With an empty off hand, the bonus does not apply. Both belong
    in patch D2 alongside the `app-db` read (`:1746`), and the facade docs
    should say how `evaluate` expects the hand slots to be filled.
 3. **Doc 01 R4 is wrong.** `entity.cljc:158` `(or int-value map-value string-value)`
@@ -383,7 +383,7 @@ Line numbers are for commit `bcd9d68`.
      Hunter's key as `:class`.
    - Four subclasses have `:profs {:skill-options {:options {...}}}` with no
      `:choose`. `options.cljc:848` `(> nil 1)` throws on the JVM (JS: false),
-     and only when the level options are realized — the subscription chain
+     and only when the level options are realized. The subscription chain
      itself never realizes them, so this surfaces the first time a template
      shape or a character at that class is built. Shimmed in the oracle.
    - 206 keys end in `-` (parenthesised names through `name-to-kw`);
