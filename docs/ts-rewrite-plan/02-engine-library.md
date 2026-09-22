@@ -1,140 +1,158 @@
-# 02 — The Engine Library
+# 02: The engine library
 
 Plan Set 1 doc 03 (`docs/ts-frontend-plan/03-engine-package.md`) describes
-the base: a shadow-cljs build of the `.cljc` core behind a small typed facade
-(`buildCharacter`, `availableSelections`, `selectOption`, `setValue`,
-`randomCharacter`, …). This document covers what a **new app** needs on top
-of that, what the engine investigation says a facade author must know, and
-how the build is scoped (doc 00 covers where it lives).
+the base: a shadow-cljs build of the `.cljc` core behind a small typed
+facade with `buildCharacter`, `availableSelections`, `selectOption`,
+`setValue`, `randomCharacter`, and a few more. This document covers what a
+new app needs on top of that, what the engine investigation says a facade
+author must know, and how the build is scoped. Doc 00 covers where the
+build lives.
 
 ## Where the engine is built
 
-**Superseded by doc 00:** the engine is built and published from this fork,
-not vendored into the app repo. The build lives at `engine-js/` beside
-`src/` (the Plan Set 1 doc 03 layout) and compiles the engine namespaces in
-place:
+Doc 00 supersedes the original text of this section: the engine is built
+and published from this fork, not vendored into the app repo. The build is
+at `engine-js/` beside `src/`, the Plan Set 1 doc 03 layout, and compiles
+the engine namespaces in place:
 
-- all of `src/cljc/orcpub/**`;
-- from `src/cljs/orcpub/dnd/e5/`: `spell_subs.cljs` (built-in
-  races/backgrounds/languages + the homebrew → template pipeline),
-  `import_validation.cljs` (`.orcbrew` parse/clean/validate),
-  `content_reconciliation.cljs` (missing-content detection).
-  (`compute.cljc`, the pure helpers already extracted from subs, is under
-  `src/cljc` and comes in with the rest of it.)
-- `engine-js/src/orcpub/facade.cljs` — the exported API.
+- All of `src/cljc/orcpub/**`. This includes `compute.cljc`, the pure
+  helpers already extracted from the subscriptions.
+- From `src/cljs/orcpub/dnd/e5/`: `spell_subs.cljs` (the built-in races,
+  backgrounds, and languages, plus the pipeline from homebrew to template),
+  `import_validation.cljs` (`.orcbrew` parsing, cleaning, and validation),
+  and `content_reconciliation.cljs` (missing-content detection).
+- `engine-js/src/orcpub/facade.cljs`, the exported API.
 
-Excluded from the build on purpose: `pdf_spec.cljc` (no PDF feature),
-`character/random.cljc` (non-SRD name tables — see doc 01),
-`char_decision_tree.cljc` (depends on random names; the "newb" builder is
-out of scope), everything under `templates/` (unreferenced, non-SRD), all
-of `src/clj`.
+The build excludes these on purpose:
 
-The four patches below are ordinary commits to this fork's source. The app
-repo consumes the published `@dmv/pubdoor` package and never sees Clojure.
+- `pdf_spec.cljc`: there is no PDF feature.
+- `character/random.cljc`: non-SRD name tables (doc 01).
+- `char_decision_tree.cljc`: it depends on the random names, and the "newb"
+  builder is out of scope.
+- Everything under `templates/`: unreferenced and non-SRD.
+- All of `src/clj`.
 
-## Facade surface (beyond Plan Set 1 doc 03)
+The four patches listed below are ordinary commits to this fork's source.
+The app repo consumes the published `@dmv/pubdoor` package and never sees
+Clojure.
+
+## Facade API beyond Plan Set 1 doc 03
 
 | Facade function | Backed by | Notes |
 |---|---|---|
-| `evaluate(entity, homebrew)` → `{ built, selections }` | `entity/build`, `entity/available-selections`, the template built from `t5e/template` with homebrew merged in | Replaces the old subscription chain; one call, memoized on `(entity, homebrewVersion)` |
-| `mutations`: `select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`, … | `event_handlers.cljc`, `character.cljc:752-856` | Pure; each has an old round-trip test to port |
-| `importCharacter(transitOrEdn)` → entity | `char5e/from-strict` + the R5/R7 additions from doc 01 | See doc 03 |
-| `exportCharacter(entity)` → JSON | `char5e/to-strict` | The new app's own file format (doc 03) |
-| `buildTemplate(homebrew)` | the `spell_subs.cljs` chain, lifted to functions | See "De-re-framing" below |
-| `parseOrcbrew(text)` → `{ data, log, conflicts }` | `import_validation/validate-import` and friends | Pure; see doc 04 |
-| `orcbrewToEdn(plugins)` / `prettyEdn` | `pr-str` / `pprint` | Export |
+| `evaluate(entity, homebrew)`, returning `{ built, selections }` | `entity/build`, `entity/available-selections`, and the template built from `t5e/template` with homebrew merged in | Replaces the old subscription chain. One call, memoized on `(entity, homebrewVersion)` |
+| The mutations: `select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`, and the rest | `event_handlers.cljc`, `character.cljc:752-856` | Pure. Each has an old round-trip test to port |
+| `importCharacter(transitOrEdn)`, returning an entity | `char5e/from-strict` plus the R5 and R7 additions from doc 01 | See doc 03 |
+| `exportCharacter(entity)`, returning JSON | `char5e/to-strict` | The new app's own file format (doc 03) |
+| `buildTemplate(homebrew)` | The `spell_subs.cljs` chain, lifted to functions | See §De-re-framing below |
+| `parseOrcbrew(text)`, returning `{ data, log, conflicts }` | `import_validation/validate-import` and its helpers | Pure. See doc 04 |
+| `orcbrewToEdn(plugins)` and `prettyEdn` | `pr-str` and `pprint` | Export |
 | `reconcileMissingContent(entity, homebrew)` | `content_reconciliation.cljs` | Suggestions for unresolved keys |
-| `content.spells()`, `monsters()`, `magicItems()`, `weapons()`, … | the data namespaces + `magic-items` expansion | Plain JS lists for browse pages; consider a build-time JSON dump instead so those pages code-split away from the engine chunk |
-| `keys.selectionKeys()`, `optionKeys()` | walk of the built template | For the C3 identity test |
+| `content.spells()`, `monsters()`, `magicItems()`, `weapons()`, and the rest | The data namespaces plus the `magic-items` expansion | Plain JS lists for the browse pages. Consider a build-time JSON dump instead, so those pages can be split away from the engine chunk |
+| `keys.selectionKeys()` and `optionKeys()` | A walk of the built template | For the C3 identity test |
 
 ## De-re-framing `spell_subs.cljs`
 
-The homebrew → template conversion is a chain of `reg-sub`s
-(`::e5/plugins` → `plugin-vals` → `plugin-races`/`plugin-classes`/… →
-`::races5e/races`/`::classes5e/classes`/… → `::char5e/template-selections`
-→ `::char5e/template`; `spell_subs.cljs:38-1235`, `equipment_subs.cljs:290-329`).
-Each sub's handler is a pure function of its inputs; the facade re-expresses
-the chain as ordinary function calls with the same bodies. This is the
-largest piece of Clojure glue in the plan (a few hundred lines, mechanical),
-and `dnd/e5/compute.cljc` shows the pattern — it was extracted for exactly this
-reason. Do it once, test it by comparing `buildTemplate(fixtures)` to what
-the old app's subscriptions produce in a REPL.
+De-re-framing means rewriting re-frame subscriptions as plain functions.
+The conversion from homebrew to template is a chain of `reg-sub` calls:
+`::e5/plugins`, then `plugin-vals`, then `plugin-races`, `plugin-classes`,
+and their siblings, then `::races5e/races`, `::classes5e/classes`, and
+their siblings, then `::char5e/template-selections`, and finally
+`::char5e/template` (`spell_subs.cljs:38-1235`,
+`equipment_subs.cljs:290-329`). Each subscription's handler is a pure
+function of its inputs, so the facade re-expresses the chain as ordinary
+function calls with the same bodies. This is the largest piece of Clojure
+glue in the plan, a few hundred mechanical lines. `dnd/e5/compute.cljc`
+shows the pattern. It was extracted for exactly this reason. Do it once,
+and test it by comparing `buildTemplate(fixtures)` to what the old app's
+subscriptions produce in a REPL.
 
-Also lift: the built-in race/background/language definitions in the same
-file (`spell_subs.cljs:514-928`) — they're plain `def`s and need no change.
+Also lift the built-in race, background, and language definitions in the
+same file (`spell_subs.cljs:514-928`). They are plain `def` forms and need
+no change.
 
-## Wrinkles (from the engine investigation)
+## Wrinkles: engine behaviors the facade must work around
 
-1. **`options.cljc` requires re-frame** (`options.cljc:26-27`) and a few
-   modifiers read the global `re-frame.db/app-db` inside conditions (Dueling,
-   `options.cljc:1739-1758`). The bundle carries re-frame as a dependency
-   (small); the facade must either seed `app-db` with the keys those reads
-   expect or patch the reads to take their input from the entity. Audit every
-   `@re-frame.db/app-db` / `subscribe` / `dispatch` in `src/cljc` first —
-   there are few. Patch it (D2 in the patch list below).
-2. **No caching, lazy attributes.** Every attribute read re-runs its closure
-   chain (`entity_spec.cljc:5-10`); the old UI debounces builds by 500 ms.
-   The facade memoizes `evaluate` per entity value and converts the built
-   character to a plain JS object **once** (extracting the ~100 accessors in
-   `character.cljc:363-738` in one pass), so React never touches lazy
-   ClojureScript values.
-3. **Ordering matters.** Selection order in the entity drives modifier order;
-   `from-strict-selections` uses `array-map` deliberately
+The engine investigation found eight behaviors, called wrinkles in this
+plan, that a facade author must work around.
+
+1. **`options.cljc` requires re-frame** (`options.cljc:26-27`), and a few
+   modifiers read the global `re-frame.db/app-db` inside conditions, for
+   example Dueling (`options.cljc:1739-1758`). The bundle carries re-frame
+   as a dependency, which is small. The facade must either seed `app-db`
+   with the keys those reads expect or patch the reads to take their input
+   from the entity. First audit every `@re-frame.db/app-db`, `subscribe`,
+   and `dispatch` in `src/cljc`. There are few. Then patch them (D2 in the
+   patch list below).
+2. **Lazy attributes with no caching.** Every attribute read re-runs its
+   closure chain (`entity_spec.cljc:5-10`), which is why the old UI
+   debounces builds by 500 ms. The facade memoizes `evaluate` per entity
+   value and converts the built character to a plain JS object once,
+   extracting the roughly 100 accessors in `character.cljc:363-738` in one
+   pass, so React never touches lazy ClojureScript values.
+3. **Ordering matters.** Selection order in the entity drives modifier
+   order, and `from-strict-selections` uses `array-map` deliberately
    (`entity.cljc:168-171`). The facade must not round-trip entities through
-   plain JS objects in a way that reorders keys; keep the entity as an
-   opaque handle (or as the strict JSON with arrays, never key-ordered
-   maps).
+   plain JS objects in a way that reorders keys. Keep the entity as an
+   opaque handle, or as the strict JSON with arrays, never as key-ordered
+   maps.
 4. **Availability depends on the build.** `available-selections` takes the
-   built character (prereqs). `evaluate` builds first, then resolves; the
-   old `random-character` fixed-point loop (`events.cljs:310`, ≤10 rounds)
-   becomes `autofill`.
-5. **`ref` selections** store data at a global path and merge min/max across
-   tree occurrences (`entity.cljc:423-514`). The facade exposes each
-   selection's `actualPath` so the UI writes to the right place.
-6. **Deferred values and multi-effect items.** Options with user values
-   (ability scores, HP rolls, equipment quantity/equipped) resolve at build
-   time; equipped magic items expand into several modifiers. All inherited —
-   just don't strip `::entity/value` from options.
-7. **Dead code to leave out of the facade**: the plugin patching system
-   (`build-template`, `collect-plugins` — unused; live homebrew goes through
-   `template-selections` arguments), `collect-modifiers` v1, memoized
-   variants, the `#_`-disabled sourcebook blocks.
-8. **Bundle size**: the content namespaces are ~2 MB of source. `:advanced`
-   optimizations, async chunk + splash. Excluding `random.cljc` (56 KB),
-   `templates/` (310 KB), and `monsters.cljc` from the *engine* chunk
-   (monsters are never used by the character build — serve them as JSON for
-   the browse page) helps.
+   built character, because prerequisites depend on it. `evaluate` builds
+   first, then resolves. The old `random-character` fixed-point loop
+   (`events.cljs:310`, at most 10 rounds) becomes `autofill`.
+5. **`ref` selections** store data at a global path and merge `min` and
+   `max` across tree occurrences (`entity.cljc:423-514`). The facade
+   exposes each selection's `actualPath` so the UI writes to the right
+   place.
+6. **Deferred values and multi-effect items.** Options with user values,
+   such as ability scores, HP rolls, and equipment quantity and equipped
+   state, resolve at build time. Equipped magic items expand into several
+   modifiers. All of this is inherited. Do not strip `::entity/value` from
+   options.
+7. **Dead code to leave out of the facade.** The plugin patching system
+   (`build-template` and `collect-plugins`) is unused, because live
+   homebrew goes through `template-selections` arguments. Also leave out
+   `collect-modifiers` v1, the memoized variants, and the sourcebook blocks
+   disabled with `#_`.
+8. **Bundle size.** The content namespaces are about 2 MB of source. Use
+   `:advanced` optimizations, and load the engine as an async chunk behind
+   a splash screen. Excluding `random.cljc` (about 56 KB), `templates/`
+   (about 310 KB), and `monsters.cljc` from the engine chunk also helps.
+   The character build never uses monsters, so serve them as JSON for the
+   browse page.
 
-## Patches to the engine source (the complete list, keep it short)
+## Patches to the engine source
 
-Commits to this fork (doc 00); each bumps the published package version.
+This is the complete list. Keep it short. Each patch is a commit to this
+fork (doc 00) and bumps the published package version.
 
-| Patch | Why |
-|---|---|
-| Re-enable the legacy unnamespaced-key migration (`character.cljc:130-165`, currently `#_`) inside `importCharacter` | Contract R7 |
-| Take the Dueling/app-db reads from the entity instead of `app-db`; fix the `(fn [weapon _] …)` arity (JS-only) and document that the bonus applies only with a one-handed melee main hand **and** a non-weapon such as a shield in the off hand (`fixtures/README.md` finding 2) | Wrinkle 1 |
-| Add `:boons` to `required-fields` and `content-type-names` in `import_validation.cljs` | Doc 01 known quirks |
-| Extend `key-reference-map` to spells' `:spell-lists` and `level-selections` | Doc 01 known quirks |
+| Patch | What | Why |
+|---|---|---|
+| D1 | Re-enable the legacy unnamespaced-key migration (`character.cljc:130-165`, currently disabled with `#_`) inside `importCharacter` | Quirk R7 |
+| D2 | Take the Dueling reads from the entity instead of `app-db`. Fix the `(fn [weapon _] …)` arity, which fails only in JS, and document that the bonus applies only with a one-handed melee weapon in the main hand and a non-weapon such as a shield in the off hand (`fixtures/README.md` finding 2) | Wrinkle 1 |
+| D3 | Add `:boons` to `required-fields` and `content-type-names` in `import_validation.cljs` | Doc 01 §Known quirks |
+| D4 | Extend `key-reference-map` to spells' `:spell-lists` and `level-selections` | Doc 01 §Known quirks |
 
 Anything else is a facade concern, not an engine patch.
 
 ## Golden tests
 
-Same strategy as Plan Set 1 doc 03, extended for the new scope:
+The strategy is the same as Plan Set 1 doc 03, extended for the new scope:
 
 1. Port `warlock_test.clj` and the three `character_test.clj` round-trip
    entities verbatim.
-2. For each golden character (Plan Set 1 doc 01 §0.3 — add homebrew-using
-   and legacy-quirk cases), assert `evaluate` matches values captured from
-   the old app.
+2. For each golden character (Plan Set 1 doc 01 §0.3, plus homebrew and
+   legacy-quirk cases), assert that `evaluate` matches the values captured
+   from the old app.
 3. `buildTemplate` over each fixture `.orcbrew` matches the old
-   subscription output (captured once from a REPL).
+   subscription output, captured once from a REPL.
 4. The C3 identity test: zero unresolved keys across all fixtures.
 
 ## Deliverables
 
-Tracked in Linear, project **PubDoor**: milestone M1 (ORC-15 to ORC-26 —
-scaffold, `evaluate`, golden tests, mutations, `importCharacter`, patches
-D1/D2, `autofill`, types, CI, publish 0.1.0) and milestone M3 (ORC-27 to
-ORC-43 — `buildTemplate`, `parseOrcbrew`, export, reconciliation, patches
-D3/D4, content lists, the C3 identity test, bundle size, publish 0.2.0).
+Linear project PubDoor tracks the deliverables in two milestones. M1
+(ORC-15 to ORC-26) covers the scaffold, `evaluate`, the golden tests, the
+mutations, `importCharacter`, patches D1 and D2, `autofill`, the types, CI,
+and publishing 0.1.0. M3 (ORC-27 to ORC-43) covers `buildTemplate`,
+`parseOrcbrew`, export, reconciliation, patches D3 and D4, the content
+lists, the C3 identity test, bundle size, and publishing 0.2.0.
