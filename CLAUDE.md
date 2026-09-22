@@ -90,3 +90,25 @@ material that Plan Set 2 builds on.
   for the keyword you need rather than reading top to bottom.
 - Do not edit the plan documents' cited line numbers by hand; regenerate
   them from the source if the code moves.
+
+## Agent skills
+
+Run `/unslop` on prose and `/technical-writing` on docs, PR bodies, Issue
+Tracker tickets, and commit messages.
+
+### Issue tracker
+
+Linear, workspace *Orc Alchemy*, team key `ORC`, projects **PubDoor** (this
+repo) and **Alchemy 5e**, driven through the Linear MCP tools rather than
+`gh` or GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical labels (`needs-triage`, `needs-info`, `ready-for-agent`,
+`ready-for-human`, `wontfix`), mapped one-to-one onto workspace labels that
+already exist in Linear. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` plus `docs/adr/` at the repo root, both
+created lazily by `/domain-modeling`. See `docs/agents/domain.md`.
