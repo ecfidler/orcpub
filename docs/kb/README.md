@@ -9,6 +9,7 @@ direct inspection of code, logs, or authoritative references. Speculation is mar
 | Document | Topic | Source quality |
 |----------|-------|---------------|
 | [datomic-crash-analysis.md](datomic-crash-analysis.md) | Datomic transactor crashes — root cause, frequency, fix options | High — direct log analysis from `logs/datomic.{1,2,3}.log` |
+| [srd-5.2-rules-delta.md](srd-5.2-rules-delta.md) | SRD 5.1 vs SRD 5.2.1 character-building rules, licensing, backward compatibility, and dual-edition prior art | High: SRD 5.1 and 5.2.1 PDFs (GitHub-hosted copies, hashes recorded), Foundry dnd5e, 5e-bits, Open5e, and Charnik source. Low for release dates and the 2024 PHB backward-compatibility rules: D&D Beyond was blocked, so those claims come from search summaries and are flagged unvalidated |
 
 ## Contribution rules
 
