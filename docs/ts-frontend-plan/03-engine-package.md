@@ -1,49 +1,54 @@
-# Phase 2 — The Rules Engine as an npm Package
+# Phase 2: Package the rules engine for npm
 
-Goal: `@dmv/pubdoor` — an npm package, compiled from the existing `.cljc` code
-with shadow-cljs, exposing the rules engine to TypeScript behind a small typed
-facade. This is the only phase that involves writing Clojure. The code is
-mechanical glue (~300–500 lines), not game logic.
+The goal is `@dmv/pubdoor`, an npm package compiled from the existing
+`.cljc` code with shadow-cljs that exposes the rules engine to TypeScript
+behind a small typed facade. This is the only phase that involves writing
+Clojure. The code is mechanical glue, about 300 to 500 lines, not game
+logic.
 
 ## What the engine is
 
-The generic machinery (`src/cljc/orcpub/`):
+The generic machinery is in `src/cljc/orcpub/`:
 
-- `template.cljc` — a **template** is a tree of selections and options: what
-  *can* be chosen and what each choice does (via attached modifiers)
-- `entity.cljc` — an **entity** is a set of choices against a template.
-  Key functions: `build` (entity.cljc:620) folds choices into a built
-  character; `available-selections` computes what can currently be picked;
-  `to-strict`/`from-strict` convert to/from the wire format
-- `modifiers.cljc`, `entity_spec.cljc` — how options mutate computed attributes
+- `template.cljc`. A template is a tree of selections and options: what
+  can be chosen, and what each choice does through its attached modifiers.
+- `entity.cljc`. An entity is a set of choices against a template. The key
+  functions are `build` (entity.cljc:620), which folds choices into a built
+  character, `available-selections`, which computes what can currently be
+  picked, and `to-strict` and `from-strict`, which convert to and from the
+  wire format.
+- `modifiers.cljc` and `entity_spec.cljc`. How options change computed
+  attributes.
 
-The 5e instantiation (`src/cljc/orcpub/dnd/e5/`):
+The 5e instantiation is in `src/cljc/orcpub/dnd/e5/`:
 
-- `template.cljc` — `template` (line 1565) assembles the full 5e character
-  decision tree from the data namespaces
-- `character.cljc` — accessors over a built character: `levels`,
-  `total-levels`, and dozens more (`armor-class`, saves, skills, spells...)
-  plus 5e-specific `to-strict`/`from-strict` wrappers that normalize equipment
-  and ability keys
-- the data namespaces (`classes.cljc`, `spells.cljc`, `monsters.cljc`,
-  `magic_items.cljc`, `options.cljc`, ...) — content
+- `template.cljc`. `template` (line 1565) assembles the full 5e character
+  decision tree from the data namespaces.
+- `character.cljc`. Accessors over a built character: `levels`,
+  `total-levels`, `armor-class`, saves, skills, spells, and dozens more,
+  plus 5e-specific `to-strict` and `from-strict` wrappers that normalize
+  equipment and ability keys.
+- The data namespaces, among them `classes.cljc`, `spells.cljc`,
+  `monsters.cljc`, `magic_items.cljc`, and `options.cljc`. Content.
 
-How the current UI uses it (the pattern the facade must support — see
-`src/cljs/orcpub/dnd/e5/subs.cljs:307`): keep a raw entity in state; on every
-change run `entity/build` (debounced) to get the built character and
-`entity/available-selections` to get the current choice tree; render both.
+The current UI uses the engine in a pattern the facade must support (see
+`src/cljs/orcpub/dnd/e5/subs.cljs:307`). It keeps a raw entity in state.
+On every change it runs `entity/build`, debounced, to get the built
+character and `entity/available-selections` to get the current choice
+tree. Then it renders both.
 
 ## Package design
 
 ### Boundary contract
 
-Plain JSON-safe JS in, plain JSON-safe JS out. No ClojureScript data
-structures ever cross the boundary — convert with `clj->js`/`js->clj` (or
-`cljs-bean` for performance) inside the facade. Namespaced keywords become
-`"namespace/name"` strings, matching the Transit codec convention from doc 02
-so entities flow between API and engine without translation.
+Plain JSON-safe JS goes in, and plain JSON-safe JS comes out. No
+ClojureScript data structure ever crosses the boundary. Convert with
+`clj->js` and `js->clj`, or with `cljs-bean` for performance, inside the
+facade. Namespaced keywords become `"namespace/name"` strings, matching
+the Transit codec convention from doc 02, so entities pass between the API
+and the engine without translation.
 
-### Facade API (the `.d.ts` you write by hand)
+### Facade API, the `.d.ts` you write by hand
 
 ```ts
 // A character entity in strict wire format (what the API stores)
@@ -90,19 +95,20 @@ export function withHomebrew(content: object): void; // extends the template
 
 Design notes:
 
-- `selectOption`/`setValue` mutate the *strict entity* and return a new one —
-  the TS app treats entities as opaque immutable values, which fits
-  React/Redux naturally.
-- Internally the facade converts strict → internal entity, applies the
-  change, converts back. If profiling shows this is too slow for keystroke-
-  level updates, add an opaque-handle variant (`openSession(entity)` returning
-  a stateful session with the internal representation cached). Start simple.
-- The current UI debounces `entity/build`; do the same in TS
-  (`useDeferredValue` or a debounced selector).
+- `selectOption` and `setValue` take the strict entity and return a new
+  one. The TypeScript app treats entities as opaque immutable values, which
+  fits React and Redux.
+- Internally the facade converts the strict entity to the internal entity,
+  applies the change, and converts back. If profiling shows this is too
+  slow for keystroke-level updates, add an opaque-handle variant:
+  `openSession(entity)` returns a stateful session with the internal
+  representation cached. Start simple.
+- The current UI debounces `entity/build`. Do the same in TypeScript, with
+  `useDeferredValue` or a debounced selector.
 
 ### shadow-cljs setup
 
-New top-level dir `engine-js/` (keeps `project.clj` untouched):
+A new top-level directory, `engine-js/`, keeps `project.clj` untouched:
 
 ```
 engine-js/
@@ -113,42 +119,44 @@ engine-js/
   test/                  ; golden-file tests
 ```
 
-`shadow-cljs.edn` points `:source-paths` at `["src" "../src/cljc"]` so the
-facade compiles against the existing engine sources unmodified. Use the
-`:esm` target with `:advanced` optimizations for release; `^:export` metadata
-protects facade names from renaming. Expect a large bundle (the data files are
-~2MB of source) — load the engine as an async chunk and show a splash while it
-loads, exactly like the current app effectively does.
+`shadow-cljs.edn` points `:source-paths` at `["src" "../src/cljc"]` so
+the facade compiles against the existing engine sources unmodified. Use
+the `:esm` target with `:advanced` optimizations for release. `^:export`
+metadata protects facade names from renaming. Expect a large bundle,
+because the data files are about 2 MB of source. Load the engine as an
+async chunk and show a splash screen while it loads, as the current app in
+effect does.
 
-Note: some `.cljc` files have `#?(:clj ...)` branches (spec requires); these
-already compile for cljs today — the whole point is that this is the same code
-the current frontend ships.
+Some `.cljc` files have `#?(:clj ...)` branches for spec requires. They
+already compile for ClojureScript today. That is the whole point: this is
+the same code the current frontend ships.
 
 ### Testing: golden files
 
-For each Phase 0 golden character: `buildCharacter(savedEntity)` must produce
-the same AC / HP / saves / skills / spell slots the reference app shows.
-Write these as vitest tests in `engine-js/test/`. This is the safety net for
-engine upgrades and for a future engine rewrite.
+For each Phase 0 golden character, `buildCharacter(savedEntity)` must
+produce the same AC, HP, saves, skills, and spell slots that the reference
+app shows. Write these as vitest tests in `engine-js/test/`. They are the
+safety net for engine upgrades and for a future engine rewrite.
 
 ## Steps
 
-1. Scaffold `engine-js/` with shadow-cljs; get a hello-world export compiling
-   and importable from a TS file. (First Clojure hurdle; budget a day or two.)
-2. Expose `buildCharacter` + a handful of `character.cljc` accessors; make the
-   first golden-file test pass.
-3. Expose `availableSelections` with the flattened option-tree shape above.
-   Study how `subs.cljs:217` calls `entity/available-selections` for the
-   argument plumbing.
-4. Expose `selectOption`/`setValue`; verify a scripted sequence of picks
-   reproduces a golden character from scratch.
-5. Expose `randomCharacter`, `parseOrcbrew`, `withHomebrew`.
-6. Wire `npm pack` / workspace linking so `web-ts/` consumes it; set up a CI
-   job that rebuilds the package and runs golden tests.
+1. Scaffold `engine-js/` with shadow-cljs. Get a hello-world export
+   compiling and importable from a TypeScript file. This is the first
+   Clojure hurdle, so budget a day or two.
+2. Expose `buildCharacter` and a handful of `character.cljc` accessors.
+   Make the first golden-file test pass.
+3. Expose `availableSelections` with the flattened option-tree shape
+   above. Study how `subs.cljs:217` calls `entity/available-selections` to
+   learn the argument plumbing.
+4. Expose `selectOption` and `setValue`. Verify that a scripted sequence
+   of picks reproduces a golden character from scratch.
+5. Expose `randomCharacter`, `parseOrcbrew`, and `withHomebrew`.
+6. Set up `npm pack` or workspace linking so `web-ts/` consumes the
+   package, and a CI job that rebuilds the package and runs the golden
+   tests.
 
 ## Exit criteria
 
-- [ ] `@dmv/pubdoor` builds reproducibly; importable from TS with types
+- [ ] `@dmv/pubdoor` builds reproducibly and imports from TypeScript with types
 - [ ] Golden-file tests pass for all reference characters
-- [ ] A scripted end-to-end: empty → picks → strict entity → accepted by
-      `POST /dnd/5e/characters` (proves engine output matches server spec)
+- [ ] A scripted end-to-end run: an empty character, a sequence of picks, a strict entity, and acceptance by `POST /dnd/5e/characters`. This proves the engine output matches the server spec
