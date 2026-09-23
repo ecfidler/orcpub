@@ -64,6 +64,11 @@ builds on.
   the page order. The key documents are `02-api-surface.md`, which lists
   every backend endpoint, the Transit wire format, and JWT auth, and
   `03-engine-package.md`, which describes the shadow-cljs facade.
+- `docs/reports/2024-rules-support.md` §Decision records how 2024 rules
+  (SRD 5.2) arrive: option E. `@dmv/pubdoor` serves 2014 only, and a later
+  TypeScript engine, tracked in Linear project *2024 engine*, adds 2024.
+  Read it before any work on rules editions, the `rules` tag, or 2024
+  content.
 
 ## Facts the plans depend on
 
