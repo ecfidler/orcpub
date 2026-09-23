@@ -75,9 +75,10 @@ cljs-test-runner-out
 .claude-data/
 
 # Agentic/AI tool files — belong in dotfiles or agents/ branch, not code branches
-# Claude Code: track project skills, ignore local settings and session files
+# Claude Code: track project skills and settings, ignore local settings and session files
 .claude/*
 !.claude/skills/
+!.claude/settings.json
 
 # NewRelic (DMV-specific, contains license key)
 newrelic*
