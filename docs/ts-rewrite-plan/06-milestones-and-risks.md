@@ -25,6 +25,9 @@ A usable standalone app exists after M4. User migration is complete after
 M5. Multi-device use arrives after M6. Relative sizes are on the Linear
 milestones.
 
+2024 rules support is not in this sequence. It starts after M5 in Linear
+project *2024 engine* (ORC-95 to ORC-97). See the decision record below.
+
 ## Decision record
 
 - **Why Option 2A over a from-scratch engine.** The investigation showed
@@ -47,6 +50,17 @@ milestones.
 - **Why local-first before the backend.** It is the fastest path to
   something a user can evaluate, it makes the whole app testable without
   infrastructure, and it leaves the backend design unconstrained.
+- **Why 2024 support is a later TypeScript engine (option E).** Decided on
+  2026-09-23 (ORC-94) from `docs/reports/2024-rules-support.md`. Building a
+  dual-edition engine first would put the 6 to 9 month re-authoring back
+  on the critical path. Writing 2024 in ClojureScript would grow a
+  codebase the owner wants to leave. So the compiled engine serves 2014,
+  and a new TypeScript engine adds 2024 after M5 with its own content
+  format. 2014 moves onto that engine last, and its acceptance bar is a
+  difference report, not identical values. A 2024 character uses only 2024
+  content, and 2014 characters are never converted. Until then, every
+  document the new app writes carries `"rules": "2014"`, and `evaluate`
+  takes a `rules` option.
 
 ## Definition of done
 
@@ -56,6 +70,10 @@ milestones.
 - A user of the old app can follow the published guide to export
   `all-content.orcbrew`, run the exporter bookmarklet, import both into the
   new app, and see every character evaluate to the same sheet values.
+
+The same sheet values are required while `@dmv/pubdoor` evaluates 2014
+characters. When the later engine takes over 2014 (ORC-97), the bar
+becomes the difference report in doc 01 §Scope.
 
 ## Risks
 

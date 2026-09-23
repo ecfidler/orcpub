@@ -56,7 +56,10 @@ log, conflicts, skipped }`, `validateForExport(plugins)`,
   holding the single-plugin map, plus enable and disable flags per pack and
   per item. Invalid entries are quarantined with a visible warning, never
   discarded wholesale. The in-memory shape passed to `buildTemplate` is the
-  multi-plugin map, exactly like the old app's `:plugins`.
+  multi-plugin map, exactly like the old app's `:plugins`. Each pack record
+  carries `"rules": "2014"` (ORC-53). `.orcbrew` is the 2014 homebrew
+  format only. 2024 homebrew uses a new format that the later 2024 engine
+  defines (ORC-96, `docs/reports/2024-rules-support.md`).
 - **The "My Content" page.** Per pack: enable, disable, export, and delete.
   Per type: the 13 lists, with enable, edit, and delete per item (the
   `views.cljs:7485-7759` behavior).

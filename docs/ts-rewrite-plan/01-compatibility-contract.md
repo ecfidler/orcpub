@@ -7,6 +7,22 @@ app inherits most of the hard parts rather than reimplementing them. This
 document is mostly about the cases where the old code does not already do
 the right thing.
 
+## Scope: 2014 content, and a later engine
+
+The three contracts cover 2014 content and characters, which is
+everything the old app holds. 2024 content has its own data format and key
+scheme (ORC-96) and no contract with the old app, because the old app has
+no 2024 rules.
+
+The contracts hold by construction while `@dmv/pubdoor` evaluates 2014
+characters. When a later engine replaces it (ORC-97), the bar for C1
+mechanics fidelity and for C2 changes. Every character must import and
+evaluate, and a difference report against `@dmv/pubdoor` lists every sheet
+value that changed. Identical values are not required then. C3 does not
+change: engine keys stay as they are, and the app qualifies the keys it
+stores or routes by rules edition. See `docs/reports/2024-rules-support.md`
+§Decision.
+
 ## C1. Homebrew: `.orcbrew` files in both directions
 
 **Import.** The user exports `all-content.orcbrew` (multi-plugin) or a

@@ -1,9 +1,9 @@
 # Supporting the 2024 rules: options for the engine library
 
-> Status: exploration report, written 2026-09-22 while M1 (ORC-15 to
-> ORC-26) is still in Todo. It is not part of the adopted plan (Plan Set 2,
-> `docs/ts-rewrite-plan/`). It lays out the options and the questions that
-> decide between them. The decision is the owner's.
+> Status: decided 2026-09-23. The owner chose option E (ORC-94). The
+> *Decision* section records the answers and what follows from them. The
+> analysis below it is kept as written on 2026-09-22, before M1 (ORC-15 to
+> ORC-26) started. The plan itself is Plan Set 2, `docs/ts-rewrite-plan/`.
 
 This report asks two things. Could a future engine library support both
 D&D 5e 2014 (SRD 5.1, what orcpub implements) and D&D 5e 2024 (SRD 5.2)?
@@ -48,6 +48,48 @@ survey of this repository. File and line citations are for commit
   the recommendation: if a 2024 character must use 2014 content from the
   first release, option C is the better path. Option C is a second rules
   edition written in ClojureScript on the compiled engine.
+
+## Decision (2026-09-23): option E
+
+The owner chose option E. The compiled engine, `@dmv/pubdoor`, serves 2014
+rules. A later TypeScript engine adds 2024 rules, and 2014 moves onto it
+last so that the Clojure build can be retired. The answers to *Questions to
+answer before deciding*:
+
+1. **Side by side only (level 1).** A 2024 character uses only 2024
+   content. A user who wants 2014 content in a 2024 character re-enters it
+   as 2024 homebrew. The engine does not implement the 2024 Player's
+   Handbook rules for older species and backgrounds.
+2. **The 2014 port may change values.** When 2014 moves to the new engine,
+   every character must import and evaluate, and a difference report
+   against `@dmv/pubdoor` lists every sheet value that changed. Identical
+   values stay required for as long as `@dmv/pubdoor` evaluates 2014
+   characters.
+3. **Clojure is temporary.** Working in it now is acceptable, for fast
+   content and data compatibility. Leaving it is the end goal, so option C
+   is out and the 2014 port is committed work.
+4. **2024 content gets a new data format**, for built-in content and
+   homebrew alike. `.orcbrew` stays the 2014 format.
+5. **2014 comes first.** 2024 work starts after Alchemy 5e M5.
+6. **No conversion.** A saved 2014 character is never converted to 2024.
+7. **The engine model is open.** Whether the 2024 engine keeps the strict
+   entity, the template of selections and options, and modifiers with
+   declared dependencies is decided by the spike.
+
+What follows from the answers:
+
+- The five changes in *Changes to make during M1 and M2* are adopted. They
+  are in ORC-16, ORC-24, ORC-48, ORC-49, ORC-50, ORC-53, and ORC-87, and
+  the differential corpus is ORC-98.
+- The spike drops its ClojureScript half, because option C is out. It
+  ports the generic core to TypeScript and builds the 2024 Fighter slice
+  (ORC-95).
+- Option E no longer needs the `.orcbrew` vocabulary for mixing, because
+  there is no mixing. The 2014 port still ports that vocabulary so that
+  old homebrew keeps working (ORC-97).
+- The 2024 content format and key scheme are a decision after the spike
+  (ORC-96).
+- Linear project *2024 engine* tracks ORC-95 to ORC-97.
 
 ## What "support both editions" can mean
 
@@ -453,6 +495,9 @@ facade from change 1 can describe a second engine without strain. Choose
 between C and E with those numbers.
 
 ## Questions to answer before deciding
+
+The owner answered these on 2026-09-23. See *Decision (2026-09-23): option
+E* for the answers.
 
 These questions pick the option. The first three matter most.
 

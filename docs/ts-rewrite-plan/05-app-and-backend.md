@@ -12,7 +12,10 @@ then covers the new backend, which is designed independently of orcpub.
   server.
 - **State model.** The same doc. The strict entity is the single source of
   truth, and `evaluate` produces the derived state. With a memoized
-  `evaluate` (doc 02), the old 500 ms debounce is unnecessary.
+  `evaluate` (doc 02), the old 500 ms debounce is unnecessary. The sheet
+  renders from an app-owned sheet type that one adapter module maps from
+  `evaluate().built`. No component reads `built` directly, so a later 2024
+  engine needs only a second adapter (ORC-48).
 - **Page rebuild order.** `docs/ts-frontend-plan/05-page-rebuild.md`. The
   tiers and the six builder sub-milestones hold. Drop 4.4 (PDF). The
   homebrew builders are doc 04 here.
@@ -36,7 +39,9 @@ then covers the new backend, which is designed independently of orcpub.
   bundle and `all-content.orcbrew`.
 - **Routing** need not mirror the old URLs, because the old app is not
   being replaced in place. Keep the spell, monster, and item pages keyed by
-  content key so that links can be shared.
+  rules edition and content key, for example `/2014/spells/fireball`, so
+  that links can be shared and a later 2024 `fireball` gets its own URL
+  (ORC-87).
 - **No PDF, Orcacle, newb builder, or combat tracker** unless they are
   wanted later.
 
@@ -49,7 +54,8 @@ requirements:
 - **Accounts.** Email and password with verification and password reset,
   or OIDC.
 - **Characters.** Opaque `dmv-character` documents per user (doc 03), with
-  a summary projection for lists. Sharing by link, that is, public read of
+  a summary projection for lists. The document's `rules` tag goes into the
+  projection. Sharing by link, that is, public read of
   one character, which is the one old-app feature users rely on.
 - **Homebrew.** Per-user packs, one document per pack holding the
   multi-plugin map, so a user's content follows them across devices.

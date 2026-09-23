@@ -29,8 +29,10 @@ In order:
    plan (R4, drift form 10, the Dueling condition, and JS-only semantics).
 
 Skim later: `06-milestones-and-risks.md` (the M0 and M1 rows),
-`03-character-import-and-storage.md` (what `importCharacter` must do), and
-`04-homebrew.md` (what `parseOrcbrew` must expose).
+`03-character-import-and-storage.md` (what `importCharacter` must do),
+`04-homebrew.md` (what `parseOrcbrew` must expose), and
+`docs/reports/2024-rules-support.md` §Decision (why `evaluate` takes a
+`rules` option).
 
 ## 2. State of the repository when you arrive
 
@@ -50,7 +52,10 @@ Skim later: `06-milestones-and-risks.md` (the M0 and M1 rows),
   the build scope and exclusions, a plain-JS boundary with one-pass
   extraction, a hand-written `.d.ts`, fixtures generated here and
   snapshot-copied to the app repo, CI on the `engine` branch, and a manual
-  tagged publish.
+  tagged publish. Also decided, on 2026-09-23 (ORC-94): `evaluate` takes a
+  `rules` option that defaults to `"2014"` and rejects any other value, and
+  the `.d.ts` splits the built character into an edition-neutral part and a
+  `Built2014` extension. 2024 rules are out of scope for Phase A.
 - In Linear project PubDoor, the M0 follow-ups are ORC-11 to ORC-14, M1 is
   ORC-15 to ORC-26, and the engine half of M3 is ORC-27 to ORC-43. Each
   issue carries its acceptance criteria. Move an issue to In Progress when
@@ -160,14 +165,14 @@ green.
 | Step | Linear | What |
 |---|---|---|
 | 1 | ORC-15 | Scaffold `engine-js/`. A `hello` export compiles under `:advanced` and imports from TypeScript. Timebox it, then remove `hello` |
-| 2 | ORC-16 | `evaluate(strict, homebrew?)`, returning `{ built, selections }`. Build with `char5e/from-strict` and then `entity/build` with `t5e/template` (see `subs.cljs:300-347`). One-pass extraction with the `fixtures/README.md` conversion rules. `selections` flattened with `actualPath`. Memoized on the input |
+| 2 | ORC-16 | `evaluate(strict, { rules?, homebrew? })`, returning `{ built, selections }`. `rules` defaults to `"2014"`, and any other value throws. Build with `char5e/from-strict` and then `entity/build` with `t5e/template` (see `subs.cljs:300-347`). One-pass extraction with the `fixtures/README.md` conversion rules. `selections` flattened with `actualPath`. Memoized on the input |
 | 3 | ORC-17 | Golden tests: every SRD golden character and legacy fixture matches its `expected.json` and `selections.json`, plus the ordering test |
 | 4 | ORC-18 | Port `warlock_test.clj` and the three `character_test.clj` round-trips |
 | 5 | ORC-19 | Mutations (`select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`) and the `event_handlers_test` port |
 | 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:130-165`), then `importCharacter` and `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
 | 7 | ORC-22 | Patch D2: the `app-db` reads in `options.cljc` read from the entity instead, plus the Dueling arity and off-hand condition. `fighter-5` is the test |
 | 8 | ORC-23 | `autofill(entity)`, the fixed-point loop from `events.cljs:310` |
-| 9 | ORC-24, ORC-25, ORC-26 | `types/index.d.ts` by hand, CI on `engine`, and publishing `0.1.0` with the tag `pubdoor-v0.1.0`. Record the registry choice on ORC-26 |
+| 9 | ORC-24, ORC-25, ORC-26 | `types/index.d.ts` by hand, with `Rules` and the `Built2014` split, CI on `engine`, and publishing `0.1.0` with the tag `pubdoor-v0.1.0`. Record the registry choice on ORC-26 |
 
 `buildTemplate`, `parseOrcbrew`, `orcbrewToEdn`, `reconcileMissingContent`,
 the content lists, and the `keys.*` helpers are M3 (ORC-27 onward), not

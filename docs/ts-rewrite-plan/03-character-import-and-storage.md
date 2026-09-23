@@ -82,10 +82,16 @@ tree. And it makes import a normalization step rather than a translation.
 Wrap it in an envelope the app owns:
 
 ```json
-{ "format": "dmv-character", "version": 1,
+{ "format": "dmv-character", "version": 1, "rules": "2014",
   "id": "…", "name": "Fizban", "updatedAt": "…",
   "entity": { "orcpub.entity.strict/selections": [...], "orcpub.entity.strict/values": {...} } }
 ```
+
+`rules` is the rules edition the character is built with, and the app
+passes it to `evaluate`. It is always `"2014"` in this plan. Import reads a
+missing `rules` as `"2014"`, and every character from the old app or the
+bookmarklet bundle is 2014. The tag exists so that a later 2024 engine can
+share the format (option E, `docs/reports/2024-rules-support.md`, ORC-50).
 
 Export from the new app is this envelope for a single character or the
 `dmv-export` bundle above for all characters plus homebrew. These are
@@ -99,7 +105,9 @@ order, survives every round-trip.
 
 - **Local-first.** IndexedDB, with one record per character plus an index
   of summaries (name, race, class and level, portrait) for the list page.
-  Autosave drafts as the old app does (`autosave_fx.cljs`).
+  Autosave drafts as the old app does (`autosave_fx.cljs`). Each record and
+  summary stores `rules`, and any content key a summary stores is
+  qualified by edition (ORC-49).
 - **With the new backend** (doc 05). The same envelope as an opaque document
   per character, with an owner, timestamps, and the summary projection.
   Those are the three things the old Datomic schema also keeps

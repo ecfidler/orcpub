@@ -40,7 +40,7 @@ Clojure.
 
 | Facade function | Backed by | Notes |
 |---|---|---|
-| `evaluate(entity, homebrew)`, returning `{ built, selections }` | `entity/build`, `entity/available-selections`, and the template built from `t5e/template` with homebrew merged in | Replaces the old subscription chain. One call, memoized on `(entity, homebrewVersion)` |
+| `evaluate(entity, { rules, homebrew })`, returning `{ built, selections }` | `entity/build`, `entity/available-selections`, and the template built from `t5e/template` with homebrew merged in | Replaces the old subscription chain. One call, memoized on `(entity, homebrewVersion)`. `rules` defaults to `"2014"`, and any other value throws (see §Rules edition) |
 | The mutations: `select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`, and the rest | `event_handlers.cljc`, `character.cljc:752-856` | Pure. Each has an old round-trip test to port |
 | `importCharacter(transitOrEdn)`, returning an entity | `char5e/from-strict` plus the R5 and R7 additions from doc 01 | See doc 03 |
 | `exportCharacter(entity)`, returning JSON | `char5e/to-strict` | The new app's own file format (doc 03) |
@@ -50,6 +50,23 @@ Clojure.
 | `reconcileMissingContent(entity, homebrew)` | `content_reconciliation.cljs` | Suggestions for unresolved keys |
 | `content.spells()`, `monsters()`, `magicItems()`, `weapons()`, and the rest | The data namespaces plus the `magic-items` expansion | Plain JS lists for the browse pages. Consider a build-time JSON dump instead, so those pages can be split away from the engine chunk |
 | `keys.selectionKeys()` and `optionKeys()` | A walk of the built template | For the C3 identity test |
+
+## Rules edition
+
+The facade names the rules edition although only one exists, so that a
+later 2024 engine can implement the same interface (option E in
+`docs/reports/2024-rules-support.md`, ORC-94).
+
+- `evaluate` takes `rules` in its options. It defaults to `"2014"`, the
+  only value 0.1 accepts, and any other value throws an error that names
+  the edition (ORC-16).
+- `types/index.d.ts` exports `type Rules = "2014"`. It splits
+  `BuiltCharacter` into an edition-neutral sheet part and a `Built2014`
+  extension with the 2014-shaped keys, such as `race-ability-increases`,
+  `spell-slot-factors`, and `pact-magic?` (ORC-24). The raw `built` object
+  is unchanged. The split is in the types only.
+
+Neither change touches the engine source, so neither is a patch.
 
 ## De-re-framing `spell_subs.cljs`
 
@@ -147,6 +164,10 @@ The strategy is the same as Plan Set 1 doc 03, extended for the new scope:
 3. `buildTemplate` over each fixture `.orcbrew` matches the old
    subscription output, captured once from a REPL.
 4. The C3 identity test: zero unresolved keys across all fixtures.
+5. The differential corpus: characters generated with the mutations and
+   `autofill`, dumped with their built values under `fixtures/corpus/`
+   (ORC-98). It is not an M1 deliverable. It is the acceptance suite for
+   the later engine's 2014 port (ORC-97).
 
 ## Deliverables
 

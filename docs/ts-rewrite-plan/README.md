@@ -43,6 +43,13 @@ only the engine.
 - **SRD only, as today.** The compiled bundle contains only SRD 5.1 content.
   Everything non-SRD in the source is either discarded by the `#_` reader
   macro or unreferenced. Non-SRD content enters only through homebrew files.
+- **2014 rules now, with an edition tag.** This plan covers the 2014 rules
+  only, and every contract in doc 01 is about 2014 content. Every document
+  the new app writes still carries its rules edition, `"rules": "2014"`,
+  and `evaluate` takes a `rules` option. 2024 rules (SRD 5.2) come later
+  from a separate TypeScript engine, and 2014 moves onto that engine last.
+  That is option E in `docs/reports/2024-rules-support.md`, decided on
+  2026-09-23 (ORC-94) and tracked in Linear project *2024 engine*.
 
 ## What the investigation established, and why it matters here
 
