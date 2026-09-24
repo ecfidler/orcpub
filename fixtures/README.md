@@ -28,7 +28,7 @@ fixtures/
     character-test-{1,2,3}.*  the three real Datomic entities from character_test.clj
     r{3..9}-*.*               one synthetic strict entity per import quirk (doc 01 §C2)
   orcbrew/
-    <pack>.orcbrew            2 real packs, 1 ported test pack, 10 drift-form packs, 2 community packs
+    <pack>.orcbrew            2 real packs, 1 ported test pack, 10 drift-form packs, 3 community packs
     <pack>.template.json      the old template chain's output for that pack alone
     _srd-baseline.template.json.gz  the SRD-only template shape (gzipped, ~6 MB raw)
   README.md
@@ -38,7 +38,7 @@ fixtures/
 |---|---|
 | Golden characters | 11 (`characters/`) |
 | Legacy entities | 3 real + 8 synthetic (`legacy/`) |
-| `.orcbrew` packs | 15, each with a `.template.json`, plus the baseline |
+| `.orcbrew` packs | 16, each with a `.template.json`, plus the baseline |
 
 ## Formats
 
@@ -230,19 +230,24 @@ behaviour; every other fixture is built exactly as `char5e/from-strict` +
 | `drift-10-ability-key-forms` | synthetic | EPL-2.0 | `:abilities {:con 2}` vs `{:orcpub.dnd.e5.character/con 2}`; feats with `#{:con}` vs namespaced |
 | `community-mezzoloth-race.orcbrew` | the repo owner's own homebrew, taken verbatim (pack `"me"`) from their old-app `all-content` export | EPL-2.0 (author's own work, contributed here) | a race authored in the old UI: racial spells with `:value`/`:level`, `:languages` as a set, pack-level `:disabled? false` |
 | `community-dandwiki-star-elf.orcbrew` | D&D Wiki (dandwiki.com), as recorded in the pack name; transcribed into the old app by the repo owner | GNU FDL 1.3 (D&D Wiki's license). **Verify the page before relying on it** | a subrace attached to the built-in Elf with `:props` weapon/skill proficiencies and level-gated racial spells |
+| `community-gmbinder-homebrew.orcbrew` | the repo owner's own homebrew, published as four GM Binder documents (Divine Domain: Waves, Sorcerous Origin: Divergent Soul, Sorcerous Origin: Ethereal Soul, and a spell compendium), converted to the old builder's save format for ORC-12 | EPL-2.0 (author's own work, contributed here) | 7 homebrew spells with `:spell-lists` in the builder's all-classes form (unticked classes are `false`), `:attack-roll?`, and material components; a cleric subclass with `:cleric-spells`; two sorcerer subclasses with `:spell` level-modifiers; a `:swimming-speed` level-modifier; level-gated traits with `:type`; two plugin selections used through `:level-selections`; 9 spell keys that are not in the SRD (finding 12) |
 
-**Community packs: two, not three.** The handoff asks for ≥3 packs published
-openly by their authors. No code-search route was reachable from the
-sandbox this was produced in (GitHub API and HTML, Sourcegraph, grep.app,
-archive.org; the one GitLab project found has no readable repository). The
-repo owner's own `all-content.orcbrew` export (29 packs, 1412 items) was
-then reviewed: everything else in it is WotC book text transcribed by
-community members (PHB, XGtE, TCoE, MToF, VGtM, GGtR, SCAG, EE, DMG, MPMM,
-Eberron, UA) or Critical Role's Blood Hunter and Gunslinger (free to
-download, not redistributable), so it cannot be committed. The export itself
-was run through the oracle in full; see *Findings* 9. Add packs by dropping
-the `.orcbrew` into `fixtures/orcbrew/`, recording source and license in the
-table above, and running the template dump (below).
+**Where the community packs come from.** The handoff asks for three or
+more packs published openly by their authors. No code-search route was
+reachable from the sandbox M0 was produced in, and the rest of the repo
+owner's `all-content.orcbrew` export (29 packs, 1412 items) is WotC book
+text or Critical Role's Blood Hunter and Gunslinger, which cannot be
+committed. The export was run through the oracle in full (*Findings* 9).
+The three community packs are the owner's own work or D&D Wiki text.
+`community-gmbinder-homebrew` was converted by hand from the owner's GM
+Binder PDFs: the spell and subclass fields follow what the builder saves
+(`views.cljs` `spell-builder` and `subclass-builder`, `db.cljs`
+`default-spell`), and traits keep the PDF text with spelling fixes. Two
+details from the PDFs cannot be expressed as modifiers and live only in
+trait text: the swim speed equals walking speed (the modifier is a fixed
+30 ft.), and Control Water is at will from level 17. To add a pack, put
+the `.orcbrew` in `fixtures/orcbrew/`, record its source and license in
+the table above, and run the template dump (below).
 
 ## Private exports (`orcbrew/private/`)
 
@@ -353,7 +358,6 @@ The other differences are intentional:
 
 ## Not done in M0
 
-- **Community `.orcbrew` packs** (see above).
 - `lein test` was not run here (Clojars is unreachable); the same five engine
   test namespaces pass on the fallback classpath, and no engine source was
   modified.
@@ -478,3 +482,17 @@ Line numbers are for commit `bcd9d68`.
     values had them. The M0 generator had both
     mistakes, and ORC-11 fixed them. An exporter that writes chosen items
     into the inventory produces entities the old app never saved.
+12. **Spell grants can name spells the app does not have.**
+    `community-gmbinder-homebrew` grants 9 spells that are not in the SRD
+    (Shape Water, Snilloc's Snowball Swarm, Wall of Water, Watery Sphere,
+    Maelstrom, Gift of Alacrity, Fortune's Favor, Gift of Gab, Temporal
+    Shunt), as a builder-made subclass does when the author had another
+    pack loaded. The five Elemental Evil keys are copied from the owner's
+    export, where Snowball Swarm is `:snilloc-s-snowball-swarm`, not the
+    `:snillocs-snowball-swarm` today's `name-to-kw` gives. The other four
+    come from today's `name-to-kw`. The pack imports
+    with no changes, and characters built from it compute: the grant
+    becomes a `spells-known` entry keyed `[class spell-key]` with no spell
+    record behind it (`spell_subs.cljs:169` for `:spell` level-modifiers,
+    `:362` for `:cleric-spells`). The new app must show such an entry
+    without a spell record, as it must for R8's unresolved options.
