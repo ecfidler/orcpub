@@ -48,13 +48,14 @@ The strict entity (`orcpub.entity.strict/entity`) as **Transit-JSON in
 verbose mode**, pretty-printed. It is valid JSON and lossless: keywords are
 `"~:ns/name"` strings, sets are `{"~#set": [...]}`, integer map keys are
 `"~i1"`. Read it with `transit-js` (`transit.reader("json")`) or with the
-engine's `importCharacter`; it is byte-for-byte what `GET /dnd/5e/characters/:id`
-would return apart from Transit's cache markers, so these files double as
-R10 (Transit wire format) fixtures. Selection order is significant and is
+engine's `importCharacter`. Selection order is significant and is
 preserved as array order.
 
-Code-built characters have no `:db/id`s; the real legacy entities keep
-theirs, plus `orcpub.entity.strict/owner` where the original had it.
+`GET /dnd/5e/characters/:id` does not return this format. It returns EDN
+with a `:db/id` on every map and five extra top-level keys (see *UI spot
+check* and finding 10). Code-built characters have no `:db/id`s; the real
+legacy entities keep theirs, plus `orcpub.entity.strict/owner` where the
+original had it.
 
 ### `<name>.expected.json`
 
@@ -180,6 +181,14 @@ Spell picks are deterministic: 6 first-level spells at level 1, then two
 spells of the highest castable level per level, walking the SRD wizard list
 in order (`wizard-spells-known` in `scripts/golden-characters.clj`).
 
+The inventory selections (`weapons`, `armor`, `equipment`, `treasure`) hold
+only what the old UI writes there: the fixed starting items of the
+background and of the first class, flagged `background-starting-equipment?`
+or `class-starting-equipment?`, plus items added by hand. Items from a starting-equipment choice, such as
+the fighter's chain mail or the wizard's quarterstaff, reach the built
+character through that option's modifiers and have no inventory entry
+(finding 11).
+
 ## Legacy fixtures
 
 | Name | Quirk | Content |
@@ -188,7 +197,7 @@ in order (`wizard-spells-known` in `scripts/golden-characters.clj`).
 | `r3-slots-used-vectors` | R3 | `slots-used` as vectors, stray `:db/id` in `features-used` |
 | `r4-zero-int-value` | R4 | hit-point roll `int-value 0`, name `string-value ""`. See *Findings*: both are preserved, not nil |
 | `r5-xps-string`, `r5-xps-blank-string` | R5 | `xps` as `"6500"` and as `" "`; expected values use the parsed int (6500 / 0) |
-| `r6-quantity-string` | R6 | a weapon quantity `"2"` |
+| `r6-quantity-string` | R6 | an equipment quantity `"5"` (incense) |
 | `r7-unqualified-keys` | R7 | `:str`-style ability keys, `:quantity`/`:equipped?` equipment values, `:character-name`/`:xps`/`:custom-equipment` values; expected values are for the **migrated** entity (see `orcpub.oracle/legacy-normalize`, the behaviour `importCharacter` must implement for patch D1) |
 | `r8-unresolved-keys` | R8 | `ironwrought-artificer-3` without its pack: race, subrace, class, subclass all unresolved |
 | `r9-duplicate-options` | R9 | `magic-missile` twice in the wizard's spells known |
@@ -290,14 +299,60 @@ Generation is deterministic; a regeneration on unchanged engine source must
 produce no diff. `dump-built-character.clj` on a checked-in `.strict.json`
 reproduces its `.expected.json` and `.selections.json` byte for byte.
 
+## UI spot check (ORC-11)
+
+HANDOFF §4.2 asks for a character saved in the old UI to be compared with
+the code-built entity. The repo owner built `fighter-1` and `wizard-5` on
+the officially hosted app, saved them, and fetched each with
+`GET /dnd/5e/characters/<id>` (responses attached to ORC-11). The
+comparison matched them by selection path and ignored the options chosen.
+
+These parts of the shape match: the ability-score `map-value` with
+namespaced keys, the average hit-point option with its `int-value`, `asi`
+options keyed `:orcpub.dnd.e5.character/int`, `fighting-style` and
+`languages` as multi-select `options`, subrace and variant under the race
+option, and the fixed background items with
+`background-starting-equipment? true`.
+
+One difference was a generator bug and is fixed. The generator wrote every
+starting-equipment choice into the inventory as well, flagged as starting
+equipment. The UI never does (finding 11). It also gave a wizard taken as a
+second class the wizard's starting-equipment selections, which only the
+first class gets. Regenerating removed the flags from the built equipment
+maps. `fighter-3-wizard-2` lost the scholar's pack, component pouch and
+quarterstaff it wrongly received, and the chain mail in `fighter-20` is now
+equipped (it comes from a modifier). The hit-point, AC and level checks
+are unchanged.
+
+The other differences are intentional:
+
+- **Server and client fields.** The response has `:db/id` on every map, the
+  `owner`, the `type`, `game` and `game-version` tags that
+  `add-dnd-5e-character-tags` adds (`routes.clj:861`), and the `summary`
+  that the client computes (`make-summary`, `events.cljs:386`). A code-built
+  entity has none of them. The new importer must ignore all six.
+- **Values set on the character sheet.** The fixtures set `xps`,
+  `worn-armor`, `wielded-shield`, `main-hand-weapon`, `off-hand-weapon` and
+  `prepared-spells-by-class`. The UI writes each one only after the user
+  sets it, and the spot-check characters set none. Finding 2 needs the hand
+  slots.
+- **Selections left unfilled.** The UI characters leave out skill
+  proficiencies, the background's holy symbol and prayer book, the
+  equipment pack, and the human's extra language. The fixtures fill every
+  required selection (`unfilledSelections` is empty). `fighter-1` fills the
+  human's extra language with `:common`, which the option list allows.
+- **Sibling order.** Every `selections` and `options` vector in the
+  responses is in ascending `:db/id` order, which is creation order. The
+  fixtures use the generator's order. `entity/from-strict-selections`
+  turns sibling selections into a map keyed by selection key, so their
+  order does not change a built value.
+- **Other choices.** The spot-check characters differ in spells,
+  scores, treasure and hand-added items. The hosted app offers non-SRD
+  spells (`:booming-blade`, `:absorb-elements`, `:thunder-step`), which an
+  SRD-only build reports as unresolved (R8).
+
 ## Not done in M0
 
-- **UI spot check** (HANDOFF §4.2: save a character in the old UI, fetch it
-  with `GET /dnd/5e/characters/<id>`, compare with the code-built entity).
-  No Datomic transactor or browser was available. The code-built entities
-  follow the shapes of the three real entities (starting-equipment flags,
-  average hit points with a stored value, ref selections at their global
-  path), but they have not been compared against a UI-saved character.
 - **Community `.orcbrew` packs** (see above).
 - `lein test` was not run here (Clojars is unreachable); the same five engine
   test namespaces pass on the fallback classpath, and no engine source was
@@ -396,3 +451,30 @@ Line numbers are for commit `bcd9d68`.
      is an artefact of those test files, not of real exports.
    - The full template delta against SRD is 9.8 MB of JSON. A keys-only
      summary is committed instead (*Private exports* below).
+10. **`GET /dnd/5e/characters/:id` returns EDN, not Transit.** The ORC-11
+    spot check fetched both characters from the hosted app with
+    `Accept: application/transit+json` and received EDN. `routes.clj` adds
+    no Transit response encoding, so Pedestal writes the Datomic pull as
+    EDN. The response carries `:db/id` on every map, plus `owner`, `type`,
+    `game`, `game-version` and `summary` at the top level. The GET route has
+    no `check-auth` (`routes.clj:1457`), so a character's URL works without
+    a login. Doc 01 §C2 and R10, and Plan Set 1 doc 02 (*Wire format*), say
+    the endpoint returns Transit. The new importer must read EDN and drop
+    those six keys. Datomic returns every `selections` and `options` vector
+    in ascending `:db/id` order.
+11. **Starting-equipment choices never reach the inventory.** A choice
+    option grants its items through modifiers:
+    `starting-equipment-option` (`options.cljc:2290`), `weapon-option-2`
+    (`:2368`), `armor-option` (`:2400`) and `equipment-option` (`:2408`,
+    which expands a pack into one modifier per item). The UI writes
+    inventory entries only for fixed items: the background's, through
+    `add-background-starting-equipment` (`event_handlers.cljc:53`), and
+    the first class's, through `set-class` (`character.cljc:828`, class
+    index 0 only). `new-starting-equipment-selection` (`options.cljc:2345`)
+    gates each choice on `first-class?`, but `entity/build` still applies
+    the chosen option's modifiers when that prereq fails. So a second-class
+    wizard given these selections gains a quarterstaff and a scholar's
+    pack that the UI cannot produce. The M0 `fighter-3-wizard-2` expected
+    values had them. The M0 generator had both
+    mistakes, and ORC-11 fixed them. An exporter that writes chosen items
+    into the inventory produces entities the old app never saved.

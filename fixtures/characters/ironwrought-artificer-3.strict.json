@@ -100,22 +100,6 @@
             "~:orcpub.dnd.e5.character.equipment/equipped?": true,
             "~:orcpub.dnd.e5.character.equipment/quantity": 1
           }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:amulet",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:prayer-book",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
         }
       ]
     },

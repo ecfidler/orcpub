@@ -1,17 +1,24 @@
 {
   "~:orcpub.entity.strict/selections": [
     {
-      "~:orcpub.entity.strict/key": "~:weapons",
-      "~:orcpub.entity.strict/options": [
-        {
-          "~:orcpub.entity.strict/key": "~:quarterstaff",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
+      "~:orcpub.entity.strict/key": "~:ability-scores",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:standard-scores",
+        "~:orcpub.entity.strict/map-value": {
+          "~:orcpub.dnd.e5.character/cha": 10,
+          "~:orcpub.dnd.e5.character/con": 13,
+          "~:orcpub.dnd.e5.character/dex": 14,
+          "~:orcpub.dnd.e5.character/int": 15,
+          "~:orcpub.dnd.e5.character/str": 8,
+          "~:orcpub.dnd.e5.character/wis": 12
         }
-      ]
+      }
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:alignment",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:neutral-good"
+      }
     },
     {
       "~:orcpub.entity.strict/key": "~:race",
@@ -34,24 +41,18 @@
       }
     },
     {
-      "~:orcpub.entity.strict/key": "~:ability-scores",
-      "~:orcpub.entity.strict/option": {
-        "~:orcpub.entity.strict/key": "~:standard-scores",
-        "~:orcpub.entity.strict/map-value": {
-          "~:orcpub.dnd.e5.character/cha": 10,
-          "~:orcpub.dnd.e5.character/con": 13,
-          "~:orcpub.dnd.e5.character/dex": 14,
-          "~:orcpub.dnd.e5.character/int": 15,
-          "~:orcpub.dnd.e5.character/str": 8,
-          "~:orcpub.dnd.e5.character/wis": 12
+      "~:orcpub.entity.strict/key": "~:languages",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:common"
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:draconic"
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:primordial"
         }
-      }
-    },
-    {
-      "~:orcpub.entity.strict/key": "~:alignment",
-      "~:orcpub.entity.strict/option": {
-        "~:orcpub.entity.strict/key": "~:neutral-good"
-      }
+      ]
     },
     {
       "~:orcpub.entity.strict/key": "~:background",
@@ -72,87 +73,6 @@
           }
         ]
       }
-    },
-    {
-      "~:orcpub.entity.strict/key": "~:equipment",
-      "~:orcpub.entity.strict/options": [
-        {
-          "~:orcpub.entity.strict/key": "~:spellbook",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:component-pouch",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:clothes-common",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:pouch",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:incense",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 5
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:vestements",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:amulet",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:prayer-book",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        }
-      ]
-    },
-    {
-      "~:orcpub.entity.strict/key": "~:treasure",
-      "~:orcpub.entity.strict/options": [
-        {
-          "~:orcpub.entity.strict/key": "~:gp",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1500
-          }
-        }
-      ]
     },
     {
       "~:orcpub.entity.strict/key": "~:class",
@@ -711,16 +631,59 @@
       ]
     },
     {
-      "~:orcpub.entity.strict/key": "~:languages",
+      "~:orcpub.entity.strict/key": "~:equipment",
       "~:orcpub.entity.strict/options": [
         {
-          "~:orcpub.entity.strict/key": "~:common"
+          "~:orcpub.entity.strict/key": "~:spellbook",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
         },
         {
-          "~:orcpub.entity.strict/key": "~:draconic"
+          "~:orcpub.entity.strict/key": "~:clothes-common",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
         },
         {
-          "~:orcpub.entity.strict/key": "~:primordial"
+          "~:orcpub.entity.strict/key": "~:pouch",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:incense",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 5
+          }
+        },
+        {
+          "~:orcpub.entity.strict/key": "~:vestements",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1
+          }
+        }
+      ]
+    },
+    {
+      "~:orcpub.entity.strict/key": "~:treasure",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:gp",
+          "~:orcpub.entity.strict/map-value": {
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1500
+          }
         }
       ]
     }
