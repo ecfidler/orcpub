@@ -8,7 +8,7 @@ const fixtures = new URL("../../fixtures/", import.meta.url);
 
 const SELECTIONS = "~:orcpub.entity.strict/selections";
 const OPTIONS = "~:orcpub.entity.strict/options";
-const KEY = "~:orcpub.entity.strict/key";
+const SELECTION_KEY = "~:orcpub.entity.strict/key";
 
 type Strict = Record<string, unknown> & { [SELECTIONS]: StrictSelection[] };
 type StrictSelection = Record<string, unknown>;
@@ -17,30 +17,34 @@ function read(dir: string, file: string): unknown {
   return JSON.parse(readFileSync(new URL(`${dir}/${file}`, fixtures), "utf8"));
 }
 
-function names(dir: string): string[] {
+function fixtureNames(dir: string): string[] {
   return readdirSync(new URL(`${dir}/`, fixtures))
     .filter((file) => file.endsWith(".meta.json"))
     .map((file) => file.slice(0, -".meta.json".length))
     .sort();
 }
 
-// Fixtures whose expected values are for the migrated entity. They pass
-// once evaluate() runs on importCharacter's output (ORC-21).
-const needsImport = new Set([
-  "r5-xps-blank-string",
-  "r5-xps-string",
-  "r7-unqualified-keys",
-]);
+type Meta = { orcbrew: string[]; quirk?: string };
+
+function meta(dir: string, name: string): Meta {
+  return read(dir, `${name}.meta.json`) as Meta;
+}
+
+// R5 and R7 fixtures expect the migrated entity. They pass once evaluate()
+// runs on importCharacter's output (ORC-21).
+function needsImport(dir: string, name: string): boolean {
+  const { quirk } = meta(dir, name);
+  return quirk === "R5" || quirk === "R7";
+}
 
 function usesHomebrew(dir: string, name: string): boolean {
-  const meta = read(dir, `${name}.meta.json`) as { orcbrew: string[] };
-  return meta.orcbrew.length > 0;
+  return meta(dir, name).orcbrew.length > 0;
 }
 
 for (const dir of ["characters", "legacy"]) {
   describe(`golden ${dir}`, () => {
-    for (const name of names(dir)) {
-      if (needsImport.has(name)) {
+    for (const name of fixtureNames(dir)) {
+      if (needsImport(dir, name)) {
         it.todo(`${name}: needs importCharacter (ORC-21)`);
         continue;
       }
@@ -60,8 +64,8 @@ for (const dir of ["characters", "legacy"]) {
   });
 }
 
-// Risk register: selection order carries meaning, so the suite must be able
-// to see order lost at the JS boundary.
+// Selection order carries meaning (doc 02, wrinkle 3), so the suite must be
+// able to see order lost at the JS boundary.
 describe("selection order", () => {
   it("changes built when the top-level selections are reordered", () => {
     const strict = read("characters", "fighter-1.strict.json") as Strict;
@@ -75,7 +79,7 @@ describe("selection order", () => {
     const reordered = {
       ...strict,
       [SELECTIONS]: strict[SELECTIONS].map((selection) =>
-        selection[KEY] === "~:class"
+        selection[SELECTION_KEY] === "~:class"
           ? { ...selection, [OPTIONS]: [...(selection[OPTIONS] as unknown[])].reverse() }
           : selection,
       ),

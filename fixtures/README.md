@@ -9,7 +9,9 @@ The oracle is the **old app's own code** running on the JVM, unmodified:
 `spell_subs.cljs` / `equipment_subs.cljs` subscription chain for the template
 (loaded onto the JVM through re-frame's JVM interop, see
 `scripts/orcpub/oracle.clj`). Nothing here was typed in by hand except the
-raw entities of the golden characters and the synthetic `.orcbrew` packs.
+raw entities of the golden characters, the synthetic `.orcbrew` packs, and
+the browser values that an `overrides` entry in `.meta.json` records in place
+of the JVM's (finding 13).
 
 Produced from engine source at commit **`bcd9d68`** (branch `engine`; the
 engine source is unchanged from `develop` at that point). Regenerate whenever
