@@ -4,7 +4,13 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "strict": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": [
+      "node"
+    ]
   },
-  "include": ["test", "types"]
+  "include": [
+    "test",
+    "types"
+  ]
 }

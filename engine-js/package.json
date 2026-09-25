@@ -20,6 +20,7 @@
     "test": "tsc --noEmit && vitest run"
   },
   "devDependencies": {
+    "@types/node": "22.20.4",
     "create-react-class": "15.7.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
