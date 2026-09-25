@@ -5,10 +5,12 @@ import {
   addInventoryItem,
   addLevel,
   addStartingEquipment,
+  decreaseAbility,
   deselect,
   emptyCharacter,
   evaluate,
   exportCharacter,
+  increaseAbility,
   removeClass,
   removeInventoryItem,
   removeLevel,
@@ -91,6 +93,8 @@ function ignoringSelectionOrder(x: unknown): unknown {
 }
 
 // Port of test/cljc/orcpub/dnd/e5/event_handlers_test.clj.
+// test-parse-name-query is not ported: it tests random-name parsing, which
+// is outside the build.
 describe("event_handlers_test", () => {
   const character = handlerFixture("character");
 
@@ -99,11 +103,18 @@ describe("event_handlers_test", () => {
     ["set-class-level--add-multiple-levels", 20],
     ["set-class-level--remove-level", 3],
     ["set-class-level--level-1", 1],
-    ["set-class-level--same-level", 4],
   ])("%s: level %i", (_, level) => {
     expect(levelKeys(setLevel(character, "barbarian", level), "barbarian")).toStrictEqual(
       levelRange(level),
     );
+  });
+
+  // The API changes one level at a time, so the same level is a level added
+  // and removed again.
+  it("set-class-level--same-level: level 4", () => {
+    const e = removeLevel(addLevel(character, "barbarian"), "barbarian");
+
+    expect(levelKeys(e, "barbarian")).toStrictEqual(levelRange(4));
   });
 
   it("test-set-level--round-trip: keeps the ids of the levels selection", () => {
@@ -280,6 +291,24 @@ describe("classes and levels", () => {
     // The fighter has no fixed starting items, so the barbarian's javelins go.
     expect(Object.keys(evaluate(e).built["levels"] as object)).toStrictEqual(["fighter"]);
     expect(JSON.stringify(e)).not.toContain("~:javelin");
+  });
+
+  it("increases an ability twice in one improvement, as the builder's plus button does", () => {
+    const fighter4 = setLevel(setClass(emptyCharacter(), 0, "fighter"), "fighter", 4);
+    const improvement = select(
+      fighter4,
+      ["class", "fighter", "levels", "level-4", "asi-or-feat"],
+      "ability-score-improvement",
+    );
+    const asi = ["class", "fighter", "levels", "level-4", "asi-or-feat", "ability-score-improvement", "asi"];
+    const plus2 = increaseAbility(increaseAbility(improvement, asi, "str"), asi, "str");
+    const str = (e: object) =>
+      (evaluate(e).built["abilities"] as Record<string, number>)["orcpub.dnd.e5.character/str"];
+
+    expect(str(plus2)).toBe(str(improvement) + 2);
+    expect(() => increaseAbility(plus2, asi, "dex")).toThrow(/no picks left/);
+    expect(str(decreaseAbility(plus2, asi, "str"))).toBe(str(improvement) + 1);
+    expect(() => select(improvement, asi, "orcpub.dnd.e5.character/str")).toThrow(/increaseAbility/);
   });
 
   it("keeps the level between 1 and 20", () => {

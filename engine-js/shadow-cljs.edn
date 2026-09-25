@@ -32,5 +32,7 @@
                                          removeClass orcpub.facade/removeClass
                                          addStartingEquipment orcpub.facade/addStartingEquipment
                                          addInventoryItem orcpub.facade/addInventoryItem
-                                         removeInventoryItem orcpub.facade/removeInventoryItem}}}
+                                         removeInventoryItem orcpub.facade/removeInventoryItem
+                                         increaseAbility orcpub.facade/increaseAbility
+                                         decreaseAbility orcpub.facade/decreaseAbility}}}
    :compiler-options {:optimizations :advanced}}}}

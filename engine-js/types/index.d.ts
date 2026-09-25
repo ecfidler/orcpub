@@ -105,7 +105,10 @@ export function emptyCharacter(): object;
  */
 export function select(entity: StrictEntity, path: Path, optionKey: string, options?: MutationOptions): object;
 
-/** Removes optionKey from the multi-select selection whose actualPath is path. */
+/**
+ * Removes optionKey from the selection whose actualPath is path. Throws where
+ * the builder cannot remove it, for example from a single-select.
+ */
 export function deselect(entity: StrictEntity, path: Path, optionKey: string, options?: MutationOptions): object;
 
 /**
@@ -146,3 +149,14 @@ export function addInventoryItem(entity: StrictEntity, selectionKey: string, ite
 
 /** Removes itemKey from an inventory selection. */
 export function removeInventoryItem(entity: StrictEntity, selectionKey: string, itemKey: string): object;
+
+/**
+ * Adds one to an ability in the ability score improvement at path, such as
+ * ["class", "fighter", "levels", "level-4", "asi-or-feat",
+ * "ability-score-improvement", "asi"]. An ability key without a namespace,
+ * such as "str", is in orcpub.dnd.e5.character.
+ */
+export function increaseAbility(entity: StrictEntity, path: Path, abilityKey: string, options?: MutationOptions): object;
+
+/** Removes one pick of an ability from the ability score improvement at path. */
+export function decreaseAbility(entity: StrictEntity, path: Path, abilityKey: string, options?: MutationOptions): object;

@@ -263,6 +263,12 @@
   [raw]
   (swap! re-frame.db/app-db assoc :character raw))
 
+(defn- build-seeded
+  "entity/build, with app-db seeded for the prerequisites that read it."
+  [raw template]
+  (seed-app-db! raw)
+  (entity/build raw template))
+
 (defn- selections
   "entity/available-selections flattened to plain data, in the order the
   engine returns them."
@@ -465,7 +471,8 @@
   :select-option, and the mutations that do the same."
   (merge {:class "setClass, addClass, removeClass, addLevel or removeLevel"
           :hit-points "setField"
-          :ability-scores "setField"}
+          :ability-scores "setField"
+          :asi "increaseAbility or decreaseAbility"}
          (zipmap char5e/equipment-keys
                  (repeat "addInventoryItem or removeInventoryItem"))))
 
@@ -494,8 +501,7 @@
   do nothing, with the reason. Also returns the option, whose select-fn
   the payload leaves out."
   [raw template path k deselect?]
-  (let [built (entity/build raw template)
-        _ (seed-app-db! raw)
+  (let [built (build-seeded raw template)
         selection (ui-selection raw built template path)
         {:keys [::t/min ::t/max ::t/multiselect? ::t/ref]} selection
         _ (when-let [instead (custom-ui-selections (::t/key selection))]
@@ -523,10 +529,11 @@
       (and (not deselect?) selected?)
       (fail! what " is already selected.")
 
-      (not view-multiselect?)
-      (when deselect?
-        (fail! "The builder cannot deselect " what
-               ". Select another option instead.")))
+      ;; The view sends a click on a selected option only for these
+      ;; (views_aux.cljc:60).
+      (and deselect? (not view-multiselect?))
+      (fail! "The builder cannot deselect " what
+             ". Select another option instead."))
     (cond
       (not (or multiselect? (not selected?) has-selections?))
       (fail! "The builder cannot deselect " what ".")
@@ -594,8 +601,8 @@
 
 (defn ^:export deselect
   "Removes option optionKey from the selection whose actualPath is path, as
-  a click on a selected option in the builder does. Only options the
-  builder can remove this way can be deselected."
+  a click on a selected option in the builder does. Throws where that
+  click would not remove the option, for example on a single-select."
   ([entity path option-key] (deselect entity path option-key nil))
   ([entity path option-key options]
    (let [path (read-path path)
@@ -632,10 +639,12 @@
    (let [{:keys [template]} (content options)
          raw (read-raw entity)
          path (read-path path)
+         _ (when (< (count path) 2)
+             (fail! "setField needs a selection path and an option key, not "
+                    (show-path path) "."))
          k (peek path)
          selection-path (pop path)
-         built (entity/build raw template)
-         _ (seed-app-db! raw)
+         built (build-seeded raw template)
          _ (ui-option (ui-selection raw built template selection-path) selection-path k)
          v (read-value value)
          current (entity/get-option template raw selection-path)]
@@ -670,9 +679,7 @@
       (fail! "The character has no class " (kw->str k) ".")))
 
 (defn- check-class-prereqs! [raw template option]
-  (let [built (entity/build raw template)
-        _ (seed-app-db! raw)
-        failed (failed-prereqs option built)]
+  (let [failed (failed-prereqs option (build-seeded raw template))]
     (when (seq failed)
       (fail! "Cannot add " (kw->str (::t/key option)) ": it requires "
              (str/join ", " failed) "."))))
@@ -735,7 +742,8 @@
 (defn ^:export addClass
   "Adds class classKey at level 1, as the builder's \"Add Levels in Another
   Class\" (:add-class) and class dropdown do. The class must meet its
-  prerequisites."
+  prerequisites. add-class is in events.cljs, which is outside the build,
+  so its body is repeated here."
   ([entity class-key] (addClass entity class-key nil))
   ([entity class-key options]
    (let [{:keys [template]} (content options)
@@ -752,7 +760,8 @@
 (defn ^:export removeClass
   "Removes class classKey, as the builder's :delete-class does
   (events.cljs:1340). Removing the first class makes the next class first:
-  it is reset to level 1 and gets that class's starting equipment."
+  it is reset to level 1 and gets that class's starting equipment.
+  events.cljs is outside the build, so delete-class is repeated here."
   ([entity class-key] (removeClass entity class-key nil))
   ([entity class-key options]
    (let [{:keys [template]} (content options)
@@ -797,3 +806,69 @@
     (check-inventory-key! k)
     (write-raw (eh/remove-inventory-item (read-raw entity)
                                          [:remove-inventory-item k (str->kw item-key)]))))
+
+(defn- ability-key
+  "An ability key. A key without a namespace, such as \"str\", is in
+  orcpub.dnd.e5.character."
+  [k]
+  (let [kw (str->kw k)]
+    (if (namespace kw) kw (keyword "orcpub.dnd.e5.character" (name kw)))))
+
+(defn- ability-increase
+  "The ability score improvement selection at path, the entity path of its
+  picks, and how often each ability is picked, as ability-increases-component
+  computes them (character_builder.cljs:830)."
+  [raw template path]
+  (let [built (build-seeded raw template)
+        selection (ui-selection raw built template path)
+        _ (when-not (= :asi (::t/key selection))
+            (fail! (show-path path) " is not an ability score improvement."))
+        increases-path (entity/get-entity-path template raw path)]
+    {:selection selection
+     :built built
+     :increases-path increases-path
+     :increases (frequencies (map ::entity/key (get-in raw increases-path)))}))
+
+(defn ^:export increaseAbility
+  "Adds one to ability abilityKey in the ability score improvement at path,
+  as the builder's plus button (:increase-ability-value) does. Throws where
+  the button is disabled: an ability the selection does not offer, no picks
+  left, a second pick when the picks must differ, or a score of 20."
+  ([entity path ability] (increaseAbility entity path ability nil))
+  ([entity path ability options]
+   (let [{:keys [template]} (content options)
+         raw (read-raw entity)
+         path (read-path path)
+         k (ability-key ability)
+         {:keys [selection built increases-path increases]} (ability-increase raw template path)
+         {:keys [::t/max ::t/different? ::t/options]} selection]
+     (cond
+       (not (some #(= k (::t/key %)) options))
+       (fail! "The improvement at " (show-path path) " does not offer " (kw->str k) ".")
+
+       (and (some? max) (<= max (apply + (vals increases))))
+       (fail! "The improvement at " (show-path path) " has no picks left.")
+
+       (and different? (pos? (increases k 0)))
+       (fail! "The improvement at " (show-path path) " needs different abilities.")
+
+       (<= 20 (get (char5e/ability-values built) k 0))
+       (fail! (kw->str k) " is already 20.")
+
+       :else
+       (write-raw (update-in raw increases-path (fnil conj []) {::entity/key k}))))))
+
+(defn ^:export decreaseAbility
+  "Removes one pick of ability abilityKey from the ability score improvement
+  at path, as the builder's minus button (:decrease-ability-value) does."
+  ([entity path ability] (decreaseAbility entity path ability nil))
+  ([entity path ability options]
+   (let [{:keys [template]} (content options)
+         raw (read-raw entity)
+         path (read-path path)
+         k (ability-key ability)
+         {:keys [increases-path increases]} (ability-increase raw template path)]
+     (when-not (pos? (increases k 0))
+       (fail! (kw->str k) " is not picked in the improvement at " (show-path path) "."))
+     (write-raw (update-in raw increases-path
+                           (fn [picks] (common/remove-first #(= k (::entity/key %)) picks)))))))

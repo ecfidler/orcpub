@@ -289,6 +289,11 @@ lein run -m clojure.main scripts/dump-built-character.clj <in.strict.json> <out.
      [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...]
 ```
 
+`scripts/event-handler-fixtures.clj` writes the entities of
+`test/cljc/orcpub/dnd/e5/event_handlers_test.clj` as Transit-JSON to
+`engine-js/test/fixtures/event-handlers/`, for the ported mutation tests
+(ORC-19). Run it the same way.
+
 Or in `lein repl`: `(load-file "scripts/golden-characters.clj")` regenerates
 everything; `(load-file "scripts/dump-template.clj")` and
 `(load-file "scripts/dump-built-character.clj")` define `dump-template` and
