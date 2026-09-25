@@ -200,7 +200,7 @@ The survey confirmed these 2014 assumptions in the source:
 - **Ability increases come from the race.** `race-option` applies
   `:abilities` through `race-ability` (`options.cljc:2268-2271`). The
   accessors `race-ability-increases` and `subrace-ability-increases`
-  (`character.cljc:381`, `:384`) and the builder's columns
+  (`character.cljc:394`, `:397`) and the builder's columns
   (`character_builder.cljs:892-926`) assume it.
 - **Backgrounds grant no ability scores or feats.** `background-option`
   (`options.cljc:2453-2506`) has fields for skills, tools, languages,

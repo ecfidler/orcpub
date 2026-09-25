@@ -28,6 +28,7 @@
             [clojure.data.json :as json]
             [clojure.spec.alpha :as spec]
             [clojure.walk :as walk]
+            [orcpub.common :as common]
             [cognitect.transit :as transit]
             [orcpub.entity :as entity]
             [orcpub.entity-spec :as es]
@@ -688,9 +689,30 @@
    expected values of the R5/R7 legacy fixtures.
    R5: a string ::char5e/xps → int (blank/invalid → 0), as routes.clj:930.
    R7: unqualified legacy keys (:str, :quantity, :character-name) →
-       namespaced, with char5e/add-namespaces (patch D1)."
+       namespaced, using the character.cljc helpers the #_-disabled
+       migration was built from."
   [raw]
-  (let [r7 char5e/add-namespaces
+  (let [r7 (fn [raw]
+             (cond-> raw
+               (get-in raw [::entity/options :ability-scores ::entity/value])
+               char5e/add-ability-namespaces
+
+               true
+               (as-> r (reduce char5e/add-equipment-namespace r char5e/equipment-keys))
+
+               (seq (::entity/values raw))
+               (update ::entity/values
+                       (fn [values]
+                         (let [values (common/add-namespaces-to-keys "orcpub.dnd.e5.character" values)]
+                           (reduce (fn [vs k]
+                                     (if (sequential? (get vs k))
+                                       (update vs k (fn [items]
+                                                      (mapv (partial common/add-namespaces-to-keys
+                                                                     "orcpub.dnd.e5.character.equipment")
+                                                            items)))
+                                       vs))
+                                   values
+                                   [::char5e/custom-equipment ::char5e/custom-treasure]))))))
         r5 (fn [raw]
              (let [xps (get-in raw [::entity/values ::char5e/xps])]
                (if (string? xps)

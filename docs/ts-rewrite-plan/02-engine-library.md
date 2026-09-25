@@ -41,7 +41,7 @@ Clojure.
 | Facade function | Backed by | Notes |
 |---|---|---|
 | `evaluate(entity, { rules, homebrew })`, returning `{ built, selections }` | `entity/build`, `entity/available-selections`, and the template built from `t5e/template` with homebrew merged in | Replaces the old subscription chain. One call, memoized on `(entity, homebrewVersion)`. `rules` defaults to `"2014"`, and any other value throws (see §Rules edition) |
-| The mutations: `select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`, and the rest | `event_handlers.cljc`, `character.cljc:752-856` | Pure. Each has an old round-trip test to port |
+| The mutations: `select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`, and the rest | `event_handlers.cljc`, `character.cljc:765-869` | Pure. Each has an old round-trip test to port |
 | `importCharacter(transitOrEdn)`, returning an entity | `char5e/from-strict` plus the R5 and R7 additions from doc 01 | See doc 03 |
 | `exportCharacter(entity)`, returning JSON | `char5e/to-strict` | The new app's own file format (doc 03) |
 | `buildTemplate(homebrew)` | The `spell_subs.cljs` chain, lifted to functions | See §De-re-framing below |
@@ -105,7 +105,7 @@ plan, that a facade author must work around.
    closure chain (`entity_spec.cljc:5-10`), which is why the old UI
    debounces builds by 500 ms. The facade memoizes `evaluate` per entity
    value and converts the built character to a plain JS object once,
-   extracting the roughly 100 accessors in `character.cljc:363-738` in one
+   extracting the roughly 100 accessors in `character.cljc:376-751` in one
    pass, so React never touches lazy ClojureScript values.
 3. **Ordering matters.** Selection order in the entity drives modifier
    order, and `from-strict-selections` uses `array-map` deliberately
@@ -145,7 +145,7 @@ fork (doc 00) and bumps the published package version.
 
 | Patch | What | Why |
 |---|---|---|
-| D1 | Re-enable the legacy unnamespaced-key migration (`character.cljc:130-165`, currently disabled with `#_`) inside `importCharacter` | Quirk R7 |
+| D1 | Re-enable the legacy unnamespaced-key migration (`character.cljc:121-178`, formerly disabled with `#_`) inside `importCharacter`. Done in ORC-20, which also fixed `add-custom-equipment-namespaces` and made the ability-score step conditional, to match `orcpub.oracle/legacy-normalize` | Quirk R7 |
 | D2 | Take the Dueling reads from the entity instead of `app-db`. Fix the `(fn [weapon _] …)` arity, which fails only in JS, and document that the bonus applies only with a one-handed melee weapon in the main hand and a non-weapon such as a shield in the off hand (`fixtures/README.md` finding 2) | Wrinkle 1 |
 | D3 | Add `:boons` to `required-fields` and `content-type-names` in `import_validation.cljs` | Doc 01 §Known quirks |
 | D4 | Extend `key-reference-map` to spells' `:spell-lists` and `level-selections` | Doc 01 §Known quirks |
