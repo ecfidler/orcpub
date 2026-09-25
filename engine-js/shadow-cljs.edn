@@ -17,5 +17,7 @@
  {:pubdoor
   {:target :esm
    :output-dir "dist"
-   :modules {:pubdoor {:exports {evaluate orcpub.facade/evaluate}}}
+   :modules {:pubdoor {:exports {evaluate orcpub.facade/evaluate
+                                         importCharacter orcpub.facade/importCharacter
+                                         exportCharacter orcpub.facade/exportCharacter}}}
    :compiler-options {:optimizations :advanced}}}}
