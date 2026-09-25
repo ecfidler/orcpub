@@ -19,5 +19,18 @@
    :output-dir "dist"
    :modules {:pubdoor {:exports {evaluate orcpub.facade/evaluate
                                          importCharacter orcpub.facade/importCharacter
-                                         exportCharacter orcpub.facade/exportCharacter}}}
+                                         exportCharacter orcpub.facade/exportCharacter
+                                         emptyCharacter orcpub.facade/emptyCharacter
+                                         select orcpub.facade/select
+                                         deselect orcpub.facade/deselect
+                                         setValue orcpub.facade/setValue
+                                         setField orcpub.facade/setField
+                                         addLevel orcpub.facade/addLevel
+                                         removeLevel orcpub.facade/removeLevel
+                                         setClass orcpub.facade/setClass
+                                         addClass orcpub.facade/addClass
+                                         removeClass orcpub.facade/removeClass
+                                         addStartingEquipment orcpub.facade/addStartingEquipment
+                                         addInventoryItem orcpub.facade/addInventoryItem
+                                         removeInventoryItem orcpub.facade/removeInventoryItem}}}
    :compiler-options {:optimizations :advanced}}}}
