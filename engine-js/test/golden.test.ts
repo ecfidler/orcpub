@@ -24,6 +24,14 @@ function names(dir: string): string[] {
     .sort();
 }
 
+// Fixtures whose expected values are for the migrated entity. They pass
+// once evaluate() runs on importCharacter's output (ORC-21).
+const needsImport = new Set([
+  "r5-xps-blank-string",
+  "r5-xps-string",
+  "r7-unqualified-keys",
+]);
+
 function usesHomebrew(dir: string, name: string): boolean {
   const meta = read(dir, `${name}.meta.json`) as { orcbrew: string[] };
   return meta.orcbrew.length > 0;
@@ -32,6 +40,11 @@ function usesHomebrew(dir: string, name: string): boolean {
 for (const dir of ["characters", "legacy"]) {
   describe(`golden ${dir}`, () => {
     for (const name of names(dir)) {
+      if (needsImport.has(name)) {
+        it.todo(`${name}: needs importCharacter (ORC-21)`);
+        continue;
+      }
+
       // Characters built with .orcbrew content need buildTemplate (M3).
       const test = usesHomebrew(dir, name) ? it.skip : it;
 

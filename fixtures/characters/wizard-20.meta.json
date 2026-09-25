@@ -39,6 +39,16 @@
   "description": "Level 20 human (standard) wizard (Evocation), every ASI, 9th-level slots, forty-four spells known, Spell Mastery and Signature Spells levels present.",
   "name": "wizard-20",
   "orcbrew": [],
+  "overrides": [
+    {
+      "browser": "Cast Alarm and Alter Self at lowest level without expending a slot if you have them prepared",
+      "field": "summary",
+      "jvm": "Cast Alter Self and Alarm at lowest level without expending a slot if you have them prepared",
+      "key": "traits",
+      "name": "Spell Mastery",
+      "reason": "The summary joins a set (classes.cljc:2342, :2414). The JVM and the compiled engine iterate that set in different orders; the browser's order is recorded."
+    }
+  ],
   "strictRoundTrip": true,
   "unfilledSelections": []
 }

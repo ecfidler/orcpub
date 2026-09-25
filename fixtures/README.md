@@ -112,7 +112,10 @@ with `min 2`); the old UI merges those.
 `to-strict(from-strict(x)) = x`, or the exception it throws), `unfilledSelections`
 (required selections the UI would still flag), `checks` (hand-written
 assertions the generator ran, with expected/actual/pass), and `quirk` for
-the legacy set.
+the legacy set. `overrides`, when present, lists the values in
+`expected.json` that record the browser's result instead of the JVM
+oracle's. Each entry names the `key`, the entry `name`, and the `field`, and
+gives the `jvm` and `browser` values and the `reason` (finding 13).
 
 ### `<pack>.template.json`
 
@@ -302,7 +305,8 @@ scripts/oracle-env.sh test      # the engine test namespaces (40 tests)
 
 Generation is deterministic; a regeneration on unchanged engine source must
 produce no diff. `dump-built-character.clj` on a checked-in `.strict.json`
-reproduces its `.expected.json` and `.selections.json` byte for byte.
+reproduces its `.expected.json` and `.selections.json` byte for byte,
+except for any values listed under `overrides` in its `.meta.json`.
 
 ## UI spot check (ORC-11)
 
@@ -496,3 +500,16 @@ Line numbers are for commit `bcd9d68`.
     record behind it (`spell_subs.cljs:169` for `:spell` level-modifiers,
     `:362` for `:cleric-spells`). The new app must show such an entry
     without a spell record, as it must for R8's unresolved options.
+13. **Set iteration order differs between the JVM and the browser.**
+    Spell Mastery stores the two chosen spell names in a set
+    (`mod/set-mod` at `classes.cljc:2342`), and its summary joins that set
+    with `common/list-print` (`:2414`). The JVM oracle iterates the set for
+    `wizard-20` as "Alter Self and Alarm". The compiled engine, which is the
+    code the old browser app runs, gives "Alarm and Alter Self". Plain
+    regeneration reproduces the JVM order, so the generator applies an
+    override: `wizard-20` carries an `:overrides` entry in
+    `scripts/golden-characters.clj`, which replaces the value in
+    `expected.json` and records itself in `meta.json`. The generator throws
+    if the oracle's value no longer matches the recorded `jvm` value. Any
+    summary built from a set can show the same difference. ORC-17 found
+    this one.

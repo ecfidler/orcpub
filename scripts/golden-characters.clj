@@ -327,7 +327,14 @@
                            ::char5e/xps 355000
                            ::char5e/prepared-spells-by-class (prepared-wizard-spells 20 20)}}
     :checks (fn [b] [[20 (char5e/total-levels b)] [6 (char5e/proficiency-bonus b)]
-                     [{1 4 2 3 3 3 4 3 5 3 6 2 7 2 8 1 9 1} (char5e/spell-slots b)]])}
+                     [{1 4 2 3 3 3 4 3 5 3 6 2 7 2 8 1 9 1} (char5e/spell-slots b)]])
+    ;; fixtures/README.md, finding 13.
+    :overrides [{"key" "traits"
+                 "name" "Spell Mastery"
+                 "field" "summary"
+                 "jvm" "Cast Alter Self and Alarm at lowest level without expending a slot if you have them prepared"
+                 "browser" "Cast Alarm and Alter Self at lowest level without expending a slot if you have them prepared"
+                 "reason" "The summary joins a set (classes.cljc:2342, :2414). The JVM and the compiled engine iterate that set in different orders; the browser's order is recorded."}]}
 
    {:name "fighter-3-wizard-2"
     :description "Multiclass: half-elf fighter 3 (Champion, Defense) / wizard 2 (Evocation). Wizard is the second class, so no wizard skill selection; spell slots from two wizard levels."
@@ -522,8 +529,21 @@
            (println "  CHECK FAILED: expected" (pr-str expected) "got" (pr-str actual)))
          {"expected" (oracle/->plain expected) "actual" (oracle/->plain actual) "pass" (= expected actual)}))))
 
+(defn apply-override
+  "Replaces one field of a named entry in a list-valued key of expected.json
+   with the value the browser computes. Throws if the oracle's value is not
+   the recorded `jvm` value, so a stale override cannot apply silently."
+  [expected {:strs [key name field jvm browser] :as override}]
+  (let [entries (get expected key)
+        i (first (keep-indexed (fn [i e] (when (= name (get e "name")) i)) entries))
+        actual (when i (get-in entries [i field]))]
+    (when (not= jvm actual)
+      (throw (ex-info (str "override does not match the oracle's value: " key " " name " " field)
+                      {:override override :actual actual})))
+    (assoc-in expected [key i field] browser)))
+
 (defn write-fixture!
-  [dir {:keys [name description quirk orcbrew raw strict checks] :or {orcbrew []}}]
+  [dir {:keys [name description quirk orcbrew raw strict checks overrides] :or {orcbrew []}}]
   (println "==" name)
   (let [strict (or strict (char5e/to-strict raw))
         strict-path (str dir "/" name ".strict.json")
@@ -534,7 +554,7 @@
                         (catch Exception e (str "throws: " (.getMessage e))))
         template (template-for orcbrew)
         {:keys [raw built]} (oracle/build-strict strict* template)
-        expected (oracle/expected-values built)
+        expected (reduce apply-override (oracle/expected-values built) overrides)
         selections (oracle/selections-summary raw built template)
         unfilled (filter #(pos? (get % "remaining")) selections)
         check-results (when checks (run-checks checks built))]
@@ -549,7 +569,8 @@
                                      "strictRoundTrip" round-trip
                                      "unfilledSelections" (mapv #(get % "actualPath") unfilled)
                                      "checks" (or check-results [])}
-                              quirk (assoc "quirk" quirk)))
+                              quirk (assoc "quirk" quirk)
+                              overrides (assoc "overrides" overrides)))
     (println (format "  levels=%s hp=%s ac=%s unfilled=%d checks=%s"
                      (pr-str (into {} (map (fn [[k v]] [k (:class-level v)])) (char5e/levels built)))
                      (char5e/max-hit-points built)
