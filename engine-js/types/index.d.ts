@@ -51,3 +51,24 @@ export interface Evaluation {
  * Throws when options.rules names an unsupported edition.
  */
 export function evaluate(entity: StrictEntity, options?: EvaluateOptions): Evaluation;
+
+export interface ImportedCharacter {
+  /** The migrated strict entity, as parsed verbose Transit-JSON. Pass it to evaluate. */
+  entity: object;
+  /** The old app's top-level :db/id as a string, or null when there was none. */
+  legacyId: string | null;
+}
+
+/**
+ * Imports a character saved by the old app. Applies the from-strict
+ * normalizations (R1 to R3, R6, R9), the legacy key migration (R7), and the
+ * xps fix (R5), and removes the old :db/id values and the owner.
+ */
+export function importCharacter(entity: StrictEntity): ImportedCharacter;
+
+/**
+ * Normalizes an entity with char5e/from-strict and serializes it with
+ * char5e/to-strict, as parsed verbose Transit-JSON. Selections stay arrays,
+ * so their order is kept.
+ */
+export function exportCharacter(entity: StrictEntity): object;

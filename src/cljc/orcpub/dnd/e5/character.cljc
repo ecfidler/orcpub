@@ -118,21 +118,28 @@
                      (meta eq))))
       raw-character)))
 
-(defn add-custom-equipment-namespaces [raw-character]
-  (if (get-in raw-character [::entity/values :custom-equipment])
-    (assoc-in raw-character [::entity/values ::custom-equipment]
-               #(mapv (partial common/add-namespaces-to-keys
-                              "orcpub.dnd.e5.character.equipment")
-                     %))
-    raw-character))
+(defn add-custom-equipment-namespaces
+  "Namespaces the keys of each ::custom-equipment and ::custom-treasure
+  item. Runs after add-namespaces-to-values has namespaced the value keys."
+  [raw-character]
+  (reduce
+   (fn [c k]
+     (if (sequential? (get-in c [::entity/values k]))
+       (update-in c
+                  [::entity/values k]
+                  (fn [items]
+                    (mapv (partial common/add-namespaces-to-keys
+                                   "orcpub.dnd.e5.character.equipment")
+                          items)))
+       c))
+   raw-character
+   [::custom-equipment ::custom-treasure]))
 
-;; dead — only caller (add-namespaces) is #_ discarded
-#_(defn add-equipment-namespaces [raw-character]
-  (-> (reduce
-       add-equipment-namespace
-       raw-character
-       equipment-keys)
-      add-custom-equipment-namespaces))
+(defn add-equipment-namespaces [raw-character]
+  (reduce
+   add-equipment-namespace
+   raw-character
+   equipment-keys))
 
 (defn add-ability-namespaces [raw-character]
   (update-in raw-character
@@ -146,8 +153,7 @@
                 ::wis (or n-wis wis)
                 ::cha (or n-cha cha)})))
 
-;; dead — only caller (add-namespaces) is #_ discarded
-#_(defn add-namespaces-to-values [raw-character]
+(defn add-namespaces-to-values [raw-character]
   (if (seq (::entity/values raw-character))
     (update raw-character
             ::entity/values
@@ -157,12 +163,19 @@
                values)))
     raw-character))
 
-;; dead — zero callers
-#_(defn add-namespaces [raw-character]
-  (-> raw-character
-      add-equipment-namespaces
-      add-ability-namespaces
-      add-namespaces-to-values))
+(defn add-namespaces
+  "Migrates a raw character saved with legacy unnamespaced keys
+  (::unnamespaced-character) to namespaced keys: ability scores, equipment
+  values, character values, and custom equipment and treasure items.
+  Patch D1 (docs/ts-rewrite-plan/02-engine-library.md): only
+  importCharacter in engine-js/ calls it."
+  [raw-character]
+  (cond-> (add-equipment-namespaces raw-character)
+    (get-in raw-character [::entity/options :ability-scores ::entity/value])
+    add-ability-namespaces
+
+    true add-namespaces-to-values
+    true add-custom-equipment-namespaces))
 
 (defn parse-int-aux [v]
   #?(:cljs (js/parseInt v))

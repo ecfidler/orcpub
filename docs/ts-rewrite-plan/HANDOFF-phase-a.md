@@ -169,7 +169,7 @@ green.
 | 3 | ORC-17 | Golden tests: every SRD golden character and legacy fixture matches its `expected.json` and `selections.json`, plus the ordering test |
 | 4 | ORC-18 | Port `warlock_test.clj` and the three `character_test.clj` round-trips |
 | 5 | ORC-19 | Mutations (`select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`) and the `event_handlers_test` port |
-| 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:130-165`), then `importCharacter` and `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
+| 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:121-178`), then `importCharacter` and `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
 | 7 | ORC-22 | Patch D2: the `app-db` reads in `options.cljc` read from the entity instead, plus the Dueling arity and off-hand condition. `fighter-5` is the test |
 | 8 | ORC-23 | `autofill(entity)`, the fixed-point loop from `events.cljs:310` |
 | 9 | ORC-24, ORC-25, ORC-26 | `types/index.d.ts` by hand, with `Rules` and the `Built2014` split, CI on `engine`, and publishing `0.1.0` with the tag `pubdoor-v0.1.0`. Record the registry choice on ORC-26 |

@@ -4,10 +4,14 @@
   Nothing lazy crosses the boundary: every function takes and returns plain
   JS data. The conversion rules are the ones fixtures/README.md documents for
   expected.json (orcpub.oracle/->plain in scripts/orcpub/oracle.clj)."
-  (:require [cognitect.transit :as transit]
+  (:require [cljs.spec.alpha :as spec]
+            [clojure.string :as str]
+            [clojure.walk :as walk]
+            [cognitect.transit :as transit]
             [goog.object :as gobj]
             [re-frame.db]
             [orcpub.entity :as entity]
+            [orcpub.entity.strict :as se]
             [orcpub.template :as t]
             [orcpub.dnd.e5.character :as char5e]
             [orcpub.facade.template :as template]))
@@ -287,6 +291,12 @@
   [text]
   (transit/read (transit/reader :json) text))
 
+(defn- entity-text
+  "The Transit-JSON text of an entity given as text or as the value
+  JSON.parse returns for it."
+  [entity]
+  (if (string? entity) entity (js/JSON.stringify entity)))
+
 (defn- evaluate* [text]
   (let [{:keys [template] :as content} @srd-template
         raw (char5e/from-strict (read-strict text))
@@ -314,10 +324,71 @@
      (when-not (contains? supported-rules rules)
        (throw (js/Error. (str "Unsupported rules edition: " rules
                               ". @dmv/pubdoor supports only \"2014\"."))))
-     (let [text (if (string? entity) entity (js/JSON.stringify entity))
+     (let [text (entity-text entity)
            {:keys [key value]} @memo]
        (if (= key text)
          value
          (let [value (evaluate* text)]
            (reset! memo {:key text :value value})
            value))))))
+
+;;; ---------------------------------------------------------------------------
+;;; importCharacter, exportCharacter (docs/ts-rewrite-plan/03-character-import-and-storage.md)
+;;; ---------------------------------------------------------------------------
+
+(defn- read-entity [entity]
+  (read-strict (entity-text entity)))
+
+(defn- write-entity
+  "A strict entity as verbose Transit-JSON, parsed: the format of the
+  fixtures' .strict.json files and of evaluate's input."
+  [strict]
+  (js/JSON.parse (transit/write (transit/writer :json-verbose) strict)))
+
+(defn- strip-ownership
+  "Removes the old app's Datomic ids, which are on nearly every map, and
+  the owner."
+  [strict]
+  (walk/postwalk #(if (map? %) (dissoc % :db/id ::se/owner) %) strict))
+
+(defn- migrate-legacy-keys
+  "R7: migrates legacy unnamespaced keys to namespaced ones (patch D1)."
+  [raw]
+  (if (spec/valid? ::char5e/unnamespaced-character raw)
+    (char5e/add-namespaces raw)
+    raw))
+
+(defn- parse-xps
+  "R5: a string xps → int, blank or invalid → 0, as the old server did
+  (routes.clj:930). to-strict drops a string xps."
+  [raw]
+  (let [xps (get-in raw [::entity/values ::char5e/xps])]
+    (if (string? xps)
+      (assoc-in raw [::entity/values ::char5e/xps] (char5e/parse-int (str/trim xps)))
+      raw)))
+
+(defn ^:export importCharacter
+  "Imports a character saved by the old app: the strict entity as
+  Transit-JSON text or its parsed value. Applies the from-strict
+  normalizations (R1 to R3, R6, R9), the legacy key migration (R7), and the
+  xps fix (R5), and removes the old ids and owner.
+
+  Returns {entity, legacyId}: entity in evaluate's input format, and
+  legacyId the old top-level :db/id as a string, or null."
+  [entity]
+  (let [strict (read-entity entity)
+        legacy-id (:db/id strict)
+        raw (-> strict
+                strip-ownership
+                char5e/from-strict
+                migrate-legacy-keys
+                parse-xps)]
+    #js {"entity" (write-entity (char5e/to-strict raw))
+         "legacyId" (some-> legacy-id str)}))
+
+(defn ^:export exportCharacter
+  "Normalizes an entity with char5e/from-strict and serializes it with
+  char5e/to-strict, as parsed verbose Transit-JSON. Selections stay arrays,
+  so their order is kept."
+  [entity]
+  (write-entity (char5e/to-strict (char5e/from-strict (read-entity entity)))))

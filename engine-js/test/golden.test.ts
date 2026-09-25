@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate } from "@dmv/pubdoor";
+import { evaluate, importCharacter } from "@dmv/pubdoor";
 
 // The M0 fixtures: fixtures/README.md describes the layout and how
 // expected.json and selections.json were generated.
@@ -30,8 +30,8 @@ function meta(dir: string, name: string): Meta {
   return read(dir, `${name}.meta.json`) as Meta;
 }
 
-// R5 and R7 fixtures expect the migrated entity. They pass once evaluate()
-// runs on importCharacter's output (ORC-21).
+// R5 and R7 fixtures expect the migrated entity, so they go through
+// importCharacter first.
 function needsImport(dir: string, name: string): boolean {
   const { quirk } = meta(dir, name);
   return quirk === "R5" || quirk === "R7";
@@ -44,17 +44,13 @@ function usesHomebrew(dir: string, name: string): boolean {
 for (const dir of ["characters", "legacy"]) {
   describe(`golden ${dir}`, () => {
     for (const name of fixtureNames(dir)) {
-      if (needsImport(dir, name)) {
-        it.todo(`${name}: needs importCharacter (ORC-21)`);
-        continue;
-      }
-
       // Characters built with .orcbrew content need buildTemplate (M3).
       const test = usesHomebrew(dir, name) ? it.skip : it;
 
       test(name, () => {
+        const strict = read(dir, `${name}.strict.json`) as object;
         const { built, selections } = evaluate(
-          read(dir, `${name}.strict.json`) as object,
+          needsImport(dir, name) ? importCharacter(strict).entity : strict,
         );
 
         expect(built).toStrictEqual(read(dir, `${name}.expected.json`));
