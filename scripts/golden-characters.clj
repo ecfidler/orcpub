@@ -79,19 +79,16 @@
   (opt :acolyte {:starting-equipment-holy-symbol (opt :amulet)
                  :starting-equipment-prayer-book-wheel (opt :prayer-book)}))
 
+;; Inventory entries hold only the fixed starting items, the ones the old UI
+;; writes when the background or first class is selected
+;; (event_handlers.cljc add-background-starting-equipment, character.cljc
+;; set-class). Items from a starting-equipment *choice* (the holy symbol, a
+;; pack, the fighter's armor and weapons, the wizard's quarterstaff) come from
+;; that option's modifiers (options.cljc starting-equipment-option,
+;; equipment-option) and never appear in the inventory (ORC-11).
 (def acolyte-items
   [(item :clothes-common 1 :bg? true) (item :pouch 1 :bg? true) (item :incense 5 :bg? true)
-   (item :vestements 1 :bg? true) (item :amulet 1 :bg? true) (item :prayer-book 1 :bg? true)])
-
-(def dungeoneers-pack-items
-  [(item :backpack 1 :class? true) (item :crowbar 1 :class? true) (item :hammer 1 :class? true)
-   (item :piton 10 :class? true) (item :torch 10 :class? true) (item :rations 10 :class? true)
-   (item :waterskin 1 :class? true) (item :rope-hempen 1 :class? true)])
-
-(def explorers-pack-items
-  [(item :backpack 1 :class? true) (item :bedroll 1 :class? true) (item :mess-kit 1 :class? true)
-   (item :tinderbox 1 :class? true) (item :torch 10 :class? true) (item :rations 10 :class? true)
-   (item :waterskin 1 :class? true) (item :rope-hempen 1 :class? true)])
+   (item :vestements 1 :bg? true)])
 
 ;;; wizard spell picking: 6 first-level spells at level 1, then two spells of
 ;;; the highest castable level at every level after, walking the SRD wizard
@@ -116,7 +113,8 @@
 
 (defn wizard-class
   "A wizard class option at `level` with a full spellbook and Evocation from
-   level 2. `first-class?` adds the skill selection (only the first class gets it)."
+   level 2. `first-class?` adds the skill and starting-equipment selections
+   (only the first class gets them; the old UI hides both for a later class)."
   [level & {:keys [first-class? per-level] :or {first-class? true}}]
   (opt :wizard
        (cond-> {:levels (class-levels level 6
@@ -127,11 +125,11 @@
                                              per-level)
                                       (not first-class?))
                 :wizard-cantrips-known (mapv opt (wizard-cantrips level))
-                :wizard-spells-known (mapv opt (wizard-spells-known level))
-                :starting-equipment-melee-weapon (opt :quarterstaff)
-                :starting-equipment-equipment-pack (opt :scholars-pack)
-                :starting-equipment-spellcasting-equipment (opt :component-pouch)}
-         first-class? (assoc :skill-proficiency [(opt :arcana) (opt :investigation)]))))
+                :wizard-spells-known (mapv opt (wizard-spells-known level))}
+         first-class? (assoc :starting-equipment-melee-weapon (opt :quarterstaff)
+                             :starting-equipment-equipment-pack (opt :scholars-pack)
+                             :starting-equipment-spellcasting-equipment (opt :component-pouch)
+                             :skill-proficiency [(opt :arcana) (opt :investigation)]))))
 
 (defn prepared-wizard-spells [level int-score]
   (let [n (+ level (int (Math/floor (/ (- int-score 10) 2))))]
@@ -151,10 +149,10 @@
                  :skill-proficiency (mapv opt skills)
                  :levels (class-levels level 10 per-level)}))
 
+;; The fighter has no fixed starting items: its chain mail, longsword, shield,
+;; handaxes and dungeoneer's pack all come from fighter-base's choices.
 (def fighter-items
-  {:armor [(item :chain-mail 1 :class? true) (item :shield 1 :class? true)]
-   :weapons [(item :longsword 1 :class? true) (item :handaxe 2 :class? true)]
-   :equipment (into dungeoneers-pack-items acolyte-items)
+  {:equipment acolyte-items
    :treasure [(item :gp 15 :bg? true)]})
 
 (def golden-characters
@@ -216,7 +214,7 @@
                                             6 {:asi-or-feat (asi C C)}
                                             8 {:asi-or-feat (asi A D)}}
                                         :style :great-weapon-fighting :skills [:athletics :survival])]}
-                 (assoc fighter-items :weapons [(item :longsword 1 :class? true) (item :handaxe 2 :class? true) (item :greataxe 1)]))
+                 (assoc fighter-items :weapons [(item :greataxe 1)]))
           ::entity/values {::char5e/character-name "Ghorbash"
                            ::char5e/xps 85000
                            ::char5e/worn-armor :chain-mail
@@ -242,7 +240,7 @@
                                             19 {:asi-or-feat (asi W CH)}}
                                         :style :protection :skills [:athletics :perception])]}
                  (assoc fighter-items
-                        :armor [(item :chain-mail 1 :class? true :equipped? false) (item :shield 1 :class? true) (item :plate 1)]
+                        :armor [(item :plate 1)]
                         :magic-weapons [(item :longsword-1 1)]
                         :other-magic-items [(item :amulet-of-health 1)]))
           ::entity/values {::char5e/character-name "Ser Aldric"
@@ -262,8 +260,7 @@
            :languages [(opt :draconic) (opt :sylvan) (opt :gnomish)]
            :background acolyte
            :class [(wizard-class 1)]
-           :weapons [(item :quarterstaff 1 :class? true)]
-           :equipment (into [(item :spellbook 1 :class? true) (item :component-pouch 1 :class? true)] acolyte-items)
+           :equipment (into [(item :spellbook 1 :class? true)] acolyte-items)
            :treasure [(item :gp 15 :bg? true)]}
           ::entity/values {::char5e/character-name "Ilyana Starweave"
                            ::char5e/xps 0
@@ -282,8 +279,8 @@
            :languages [(opt :dwarvish) (opt :elvish)]
            :background acolyte
            :class [(wizard-class 5 :per-level {4 {:asi-or-feat (asi I I)}})]
-           :weapons [(item :quarterstaff 1 :class? true) (item :dagger 2)]
-           :equipment (into [(item :spellbook 1 :class? true) (item :component-pouch 1 :class? true)] acolyte-items)
+           :weapons [(item :dagger 2)]
+           :equipment (into [(item :spellbook 1 :class? true)] acolyte-items)
            :treasure [(item :gp 40)]}
           ::entity/values {::char5e/character-name "Fimble Nackle"
                            ::char5e/xps 6500
@@ -301,9 +298,8 @@
            :languages [(opt :abyssal) (opt :celestial)]
            :background acolyte
            :class [(wizard-class 11 :per-level {4 {:asi-or-feat (asi I I)} 8 {:asi-or-feat (asi I C)}})]
-           :weapons [(item :quarterstaff 1 :class? true)]
            :armor []
-           :equipment (into [(item :spellbook 1 :class? true) (item :component-pouch 1 :class? true)] acolyte-items)
+           :equipment (into [(item :spellbook 1 :class? true)] acolyte-items)
            :other-magic-items [(item :cloak-of-protection 1)]
            :treasure [(item :gp 120) (item :pp 4)]}
           ::entity/values {::char5e/character-name "Zariel Ashenwright"
@@ -325,8 +321,7 @@
            :class [(wizard-class 20 :per-level {4 {:asi-or-feat (asi I I)} 8 {:asi-or-feat (asi I I)}
                                                 12 {:asi-or-feat (asi C C)} 16 {:asi-or-feat (asi D W)}
                                                 19 {:asi-or-feat (asi W CH)}})]
-           :weapons [(item :quarterstaff 1 :class? true)]
-           :equipment (into [(item :spellbook 1 :class? true) (item :component-pouch 1 :class? true)] acolyte-items)
+           :equipment (into [(item :spellbook 1 :class? true)] acolyte-items)
            :treasure [(item :gp 1500)]}
           ::entity/values {::char5e/character-name "Archmage Veyra"
                            ::char5e/xps 355000
@@ -414,8 +409,11 @@
   (char5e/to-strict (:raw (first (filter #(= "wizard-5" (:name %)) golden-characters)))))
 
 (defn update-selection
-  "Update the strict selection with key k (top-level) via f."
+  "Update the strict selection with key k (top-level) via f. Throws if the
+   entity has no such selection, so a quirk cannot silently go missing."
   [strict k f]
+  (when-not (some #(= k (:orcpub.entity.strict/key %)) (:orcpub.entity.strict/selections strict))
+    (throw (ex-info (str "no top-level selection " k) {:key k})))
   (update strict :orcpub.entity.strict/selections
           (fn [sels] (mapv #(if (= k (:orcpub.entity.strict/key %)) (f %) %) sels))))
 
@@ -462,11 +460,11 @@
     :strict (assoc-in (fighter-5-strict) [:orcpub.entity.strict/values ::char5e/xps] " ")}
    {:name "r6-quantity-string"
     :quirk "R6"
-    :description "An equipment quantity stored as the string \"2\" (fix-quantities parses it on save; the importer applies it on import too)."
-    :strict (update-selection (fighter-5-strict) :weapons
+    :description "An equipment quantity stored as the string \"5\" (fix-quantities parses it on save; the importer applies it on import too)."
+    :strict (update-selection (fighter-5-strict) :equipment
                               (fn [sel] (update sel :orcpub.entity.strict/options
-                                                (fn [opts] (mapv #(if (= :handaxe (:orcpub.entity.strict/key %))
-                                                                    (assoc-in % [:orcpub.entity.strict/map-value ::equip/quantity] "2")
+                                                (fn [opts] (mapv #(if (= :incense (:orcpub.entity.strict/key %))
+                                                                    (assoc-in % [:orcpub.entity.strict/map-value ::equip/quantity] "5")
                                                                     %)
                                                                  opts)))))}
    {:name "r7-unqualified-keys"
@@ -476,12 +474,12 @@
                 (update-selection :ability-scores
                                   (fn [sel] (assoc-in sel [:orcpub.entity.strict/option :orcpub.entity.strict/map-value]
                                                       {:str 16 :dex 12 :con 15 :int 10 :wis 13 :cha 8})))
-                (update-selection :weapons
+                (update-selection :equipment
                                   (fn [sel] (update sel :orcpub.entity.strict/options
                                                     (fn [opts] (mapv #(assoc % :orcpub.entity.strict/map-value
                                                                             {:quantity (get-in % [:orcpub.entity.strict/map-value ::equip/quantity])
                                                                              :equipped? true
-                                                                             :class-starting-equipment? true})
+                                                                             :background-starting-equipment? true})
                                                                      opts)))))
                 (assoc :orcpub.entity.strict/values {:character-name "Durga Anvilmar" :xps 6500
                                                      :worn-armor :chain-mail :wielded-shield :shield

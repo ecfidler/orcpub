@@ -29,24 +29,20 @@
   "alignment": "Lawful Good",
   "all-armor-inventory": {
     "chain-mail": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "shield": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     }
   },
   "armor": {
     "chain-mail": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "shield": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     }
@@ -120,7 +116,6 @@
   "description": null,
   "equipment": {
     "amulet": {
-      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
@@ -156,7 +151,6 @@
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "prayer-book": {
-      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },

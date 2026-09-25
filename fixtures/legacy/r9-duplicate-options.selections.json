@@ -802,7 +802,6 @@
     ],
     "remaining": 0,
     "selected": [
-      "quarterstaff",
       "dagger"
     ]
   },
@@ -870,13 +869,10 @@
     "remaining": 0,
     "selected": [
       "spellbook",
-      "component-pouch",
       "clothes-common",
       "pouch",
       "incense",
-      "vestements",
-      "amulet",
-      "prayer-book"
+      "vestements"
     ]
   },
   {
