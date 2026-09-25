@@ -350,8 +350,8 @@ The other differences are intentional:
 - **Selections left unfilled.** The UI characters leave out skill
   proficiencies, the background's holy symbol and prayer book, the
   equipment pack, and the human's extra language. The fixtures fill every
-  required selection (`unfilledSelections` is empty). `fighter-1` fills the
-  human's extra language with `:common`, which the option list allows.
+  required selection (`unfilledSelections` is empty). `fighter-1` fills its
+  three language picks with Dwarvish, Elvish and Giant (finding 14).
 - **Sibling order.** Every `selections` and `options` vector in the
   responses is in ascending `:db/id` order, which is creation order. The
   fixtures use the generator's order. `entity/from-strict-selections`
@@ -515,3 +515,14 @@ Line numbers are for commit `bcd9d68`.
     if the oracle's value no longer matches the recorded `jvm` value. Any
     summary built from a set can show the same difference. ORC-17 found
     this one.
+14. **Some fixtures pick a language that the builder refuses.** A language
+    option has the prerequisite "You already have this language", so the
+    builder does not let a human or half-elf pick Common, which the race
+    already grants. The option list includes it, and the generator does not
+    check prerequisites. `fighter-1` picked Common, and ORC-19 found this
+    when a scripted sequence of the builder's own steps could not rebuild
+    it. `fighter-1` now picks Giant instead, and regenerating changed only
+    its language list. `fighter-20`, `wizard-20` and `fighter-3-wizard-2`
+    still pick Common, and `ironwrought-artificer-3` picks it for a
+    homebrew race. They still build as the old engine builds them, but the
+    builder could not have produced them.
