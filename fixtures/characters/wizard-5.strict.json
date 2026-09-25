@@ -4,14 +4,6 @@
       "~:orcpub.entity.strict/key": "~:weapons",
       "~:orcpub.entity.strict/options": [
         {
-          "~:orcpub.entity.strict/key": "~:quarterstaff",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
           "~:orcpub.entity.strict/key": "~:dagger",
           "~:orcpub.entity.strict/map-value": {
             "~:orcpub.dnd.e5.character.equipment/equipped?": true,
@@ -86,14 +78,6 @@
           }
         },
         {
-          "~:orcpub.entity.strict/key": "~:component-pouch",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
           "~:orcpub.entity.strict/key": "~:clothes-common",
           "~:orcpub.entity.strict/map-value": {
             "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
@@ -119,22 +103,6 @@
         },
         {
           "~:orcpub.entity.strict/key": "~:vestements",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:amulet",
-          "~:orcpub.entity.strict/map-value": {
-            "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
-            "~:orcpub.dnd.e5.character.equipment/quantity": 1
-          }
-        },
-        {
-          "~:orcpub.entity.strict/key": "~:prayer-book",
           "~:orcpub.entity.strict/map-value": {
             "~:orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
             "~:orcpub.dnd.e5.character.equipment/equipped?": true,

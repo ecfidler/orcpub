@@ -35,24 +35,20 @@
   "alignment": "Chaotic Neutral",
   "all-armor-inventory": {
     "chain-mail": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "shield": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     }
   },
   "armor": {
     "chain-mail": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "shield": {
-      "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     }
@@ -129,7 +125,6 @@
   "description": null,
   "equipment": {
     "amulet": {
-      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
@@ -137,20 +132,8 @@
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
-    "bag-of-sand": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
-    "book": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
     "clothes-common": {
       "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
-    "component-pouch": {
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
@@ -167,22 +150,6 @@
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 5
     },
-    "ink": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
-    "ink-pen": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
-    "knife-small": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
-    "parchment": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 10
-    },
     "piton": {
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 10
@@ -193,7 +160,6 @@
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "prayer-book": {
-      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
@@ -613,22 +579,6 @@
       },
       "dual-wield?": false,
       "has-prof?": true
-    },
-    "quarterstaff": {
-      "attack": {
-        "finesse": 6,
-        "standard": 6
-      },
-      "best-attack": 6,
-      "best-damage": 3,
-      "best-damage-off-hand": 0,
-      "damage": {
-        "finesse": 3,
-        "off-hand": 0,
-        "standard": 3
-      },
-      "dual-wield?": false,
-      "has-prof?": true
     }
   },
   "weapon-profs": [
@@ -641,10 +591,6 @@
       "orcpub.dnd.e5.character.equipment/quantity": 2
     },
     "longsword": {
-      "orcpub.dnd.e5.character.equipment/equipped?": true,
-      "orcpub.dnd.e5.character.equipment/quantity": 1
-    },
-    "quarterstaff": {
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     }

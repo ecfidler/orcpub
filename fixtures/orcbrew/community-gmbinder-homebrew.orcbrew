@@ -1,0 +1,217 @@
+{:orcpub.dnd.e5/spells
+ {:razor-wind
+  {:key :razor-wind
+   :name "Razor Wind"
+   :option-pack "GM Binder Homebrew"
+   :level 4
+   :school "conjuration"
+   :casting-time "1 Action"
+   :range "Self (60ft line)"
+   :components {:verbal true :somatic true}
+   :duration "Instantaneous"
+   :description "A needle-like gust of wind blasts from you in a direction you choose in a 10ft wide, 60ft long line. Each creature in the line must make a Strength saving throw. A creature takes 5d8 piercing damage and is pushed 15ft away from you, on a successful save a creature takes half as much damage and is not moved.\n\nThe gust disperses gas or vapor, and it extinguishes candles, torches, and similar unprotected flames in the area. It causes protected flames, such as those of lanterns, to dance wildly and has a 50 percent chance to extinguish them.\n\nAt Higher Levels: When you cast this spell using a spell slot of 5th level or higher, the piercing damage increases by 1d8 for each slot level above 4th."
+   :spell-lists {:bard false :cleric false :druid true :paladin false :ranger true :sorcerer true :warlock false :wizard true}}
+  :finishing-touch
+  {:key :finishing-touch
+   :name "Finishing Touch"
+   :option-pack "GM Binder Homebrew"
+   :level 3
+   :school "necromancy"
+   :attack-roll? true
+   :casting-time "1 Bonus Action"
+   :range "5ft"
+   :components {:verbal true :somatic true :material true :material-component "an ink pen or melee weapon"}
+   :duration "Instantaneous"
+   :description "You make one final blow to target within range. Make a ranged spell attack against the target. On a hit, the target takes 2d6 Necrotic damage. If the target is reduced to 0 hit points as a result of this attack, you regain the spell slot that was expended during the casting of the spell.\n\nAt Higher Levels: When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3."
+   :spell-lists {:bard true :cleric false :druid false :paladin false :ranger true :sorcerer true :warlock true :wizard true}}
+  :roccos-static-surge
+  {:key :roccos-static-surge
+   :name "Rocco's Static Surge"
+   :option-pack "GM Binder Homebrew"
+   :level 2
+   :school "evocation"
+   :casting-time "1 Action"
+   :range "30ft"
+   :components {:verbal true :somatic true :material true :material-component "a sapphire worth 50gp"}
+   :duration "1 Round"
+   :description "A spark of blue lightning lashes out at a target within range, the target must Succeed on a Constitution saving throw or take 2d12 lightning damage and be stunned until the start of your next turn. On a success the target takes half as much damage and is not stunned.\n\nAt Higher Levels: When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d12 for each slot level above 2."
+   :spell-lists {:bard false :cleric false :druid true :paladin false :ranger false :sorcerer true :warlock false :wizard true}}
+  :shooting-star
+  {:key :shooting-star
+   :name "Shooting Star"
+   :option-pack "GM Binder Homebrew"
+   :level 0
+   :school "conjuration"
+   :attack-roll? true
+   :casting-time "1 Action"
+   :range "90ft"
+   :components {:verbal true :somatic true :material true :material-component "a pinch of gem dust"}
+   :duration "Instantaneous"
+   :description "In a flash of light, a thin line of white energy bursts out towards a target in range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 radiant damage. Additionally on a hit, until the start of your next turn the target emits dim light for 5ft and has disadvantage on stealth checks.\n\nAt Higher Levels: This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8)."
+   :spell-lists {:bard false :cleric false :druid false :paladin false :ranger false :sorcerer true :warlock true :wizard true}}
+  :wilmasteads-light-rock
+  {:key :wilmasteads-light-rock
+   :name "Wilmastead's Light Rock"
+   :option-pack "GM Binder Homebrew"
+   :level 1
+   :school "evocation"
+   :casting-time "1 Action"
+   :range "Self"
+   :components {:verbal true :somatic true}
+   :duration "8 Hours"
+   :description "You pick up a pebble from the ground and it begins to emit bright light in a 20-foot radius and dim light for an additional 20 feet. During the duration of the spell, you may throw the rock (range 40/80). On impact with a target, the rock bursts in blinding light. All creatures within 5ft of the point of impact must Succeed on a Constitution saving throw or take 1d10 radiant damage and be blinded until the end of their next turn. Additionally from the point of impact for one round bright light shines out in a 50ft radius and dim light for another 50ft. On a Success a target is not blinded and takes half damage. Once the rock is thrown the spell ends.\n\nAt Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1."
+   :spell-lists {:bard false :cleric true :druid false :paladin false :ranger false :sorcerer false :warlock true :wizard false}}
+  :constances-comet-shot
+  {:key :constances-comet-shot
+   :name "Constance's Comet Shot"
+   :option-pack "GM Binder Homebrew"
+   :level 4
+   :school "conjuration"
+   :attack-roll? true
+   :casting-time "1 Action"
+   :range "120ft"
+   :components {:verbal true :somatic true :material true :material-component "a pebble"}
+   :duration "Instantaneous"
+   :description "You hurl a ball of ice with a long misty trail through the air toward a target within range. Make a ranged spell attack against the target. On a hit, the target takes 3d12 bludgeoning damage. Hit or miss, the ball then explodes. The target and all creatures within 10ft of the point of explosion must Succeed on a Dexterity saving throw or take 2d12 cold damage. On a successful save the target takes half damage.\n\nAt Higher Levels: When you cast this spell using a spell slot of 5th level or higher, the cold damage increases by 1d12 for each slot level above 4."
+   :spell-lists {:bard false :cleric false :druid false :paladin false :ranger false :sorcerer true :warlock true :wizard true}}
+  :penumbral-ray
+  {:key :penumbral-ray
+   :name "Penumbral Ray"
+   :option-pack "GM Binder Homebrew"
+   :level 3
+   :school "evocation"
+   :attack-roll? true
+   :casting-time "1 Action"
+   :range "90ft"
+   :components {:verbal true :somatic true :material true :material-component "a small patch of bioluminescent moss"}
+   :duration "1 Round"
+   :description "In a flash of light, a frigid beam of light is shot toward a target. Make a ranged spell attack against the target. On a hit, the target takes 3d8 cold damage and 3d8 radiant damage, additionally on a hit, the target is blinded for the duration.\n\nAt Higher Levels: When you cast this spell using a spell slot of 5th level or higher, the radiant damage increases by 1d8 for each slot level above 4."
+   :spell-lists {:bard false :cleric false :druid true :paladin false :ranger false :sorcerer true :warlock true :wizard true}}}
+
+ :orcpub.dnd.e5/subclasses
+ {:waves-domain
+  {:key :waves-domain
+   :name "Waves Domain"
+   :class :cleric
+   :option-pack "GM Binder Homebrew"
+   :cleric-spells {1 {0 :create-or-destroy-water 1 :fog-cloud}
+                   2 {0 :protection-from-poison 1 :snilloc-s-snowball-swarm}
+                   3 {0 :wall-of-water 1 :water-walk}
+                   4 {0 :control-water 1 :watery-sphere}
+                   5 {0 :cone-of-cold 1 :maelstrom}}
+   :level-modifiers [{:type :spell :level 1 :value {:level 0 :ability :orcpub.dnd.e5.character/wis :key :shape-water}}
+                     {:type :swimming-speed :level 1 :value 30}
+                     {:type :spell :level 17 :value {:level 4 :ability :orcpub.dnd.e5.character/wis :key :control-water}}]
+   :traits [{:name "Bonus Cantrip"
+             :level 1
+             :description "When you choose this domain at 1st level, you gain the Shape Water cantrip if you don't already know it."}
+            {:name "Blessing of the Depths"
+             :level 1
+             :description "When you choose this domain at 1st level, you gain a swim speed equal to your walking speed, even when wearing armor. Additionally, you can breathe water as if it was air."}
+            {:name "Channel Divinity: Soothing Waters"
+             :level 2
+             :type :action
+             :description "Starting at 2nd level, you can use Channel Divinity to emanate a wave of healing water. All creatures of your choice within 30ft heal an amount of hit points equal to your Wisdom modifier (minimum of 1). Additionally it ends any effects of Frightened or Charmed conditions on them."}
+            {:name "Striking Tide"
+             :level 6
+             :type :action
+             :description "Starting at 6th level, you can lash out with a splash of water to strike enemies. As an action, choose one creature within 15ft of you to make a Dexterity saving throw. On a failure they take 1d8 bludgeoning damage and are knocked prone. On a success they take half damage and suffer no other effect. The damage increases by 1d8 when you reach certain cleric levels, 5th level (2d8), 11th level (3d8), and 17th level (4d8).\n\nYou can use this feature a number of times equal to your Wisdom modifier (a minimum of once). You regain all expended uses when you finish a long rest."}
+            {:name "Divine Strike"
+             :level 8
+             :description "At 8th level, you gain the ability to infuse your weapon strikes with divine energy. Once on each of your turns when you hit a creature with a weapon attack, you can cause the attack to deal an extra 1d8 bludgeoning or cold damage to the target. When you reach 14th level, the extra damage increases to 2d8."}
+            {:name "One with the Waves"
+             :level 17
+             :description "When you reach 17th level, you can cast the spell Control Water at will, without expending a spell slot."}]}
+
+  :divergent-soul
+  {:key :divergent-soul
+   :name "Divergent Soul"
+   :class :sorcerer
+   :option-pack "GM Binder Homebrew"
+   :level-modifiers [{:type :spell :level 1 :value {:level 1 :ability :orcpub.dnd.e5.character/cha :key :bane}}
+                     {:type :spell :level 1 :value {:level 1 :ability :orcpub.dnd.e5.character/cha :key :gift-of-alacrity}}
+                     {:type :spell :level 3 :value {:level 2 :ability :orcpub.dnd.e5.character/cha :key :fortunes-favor}}
+                     {:type :spell :level 3 :value {:level 2 :ability :orcpub.dnd.e5.character/cha :key :gift-of-gab}}
+                     {:type :spell :level 5 :value {:level 3 :ability :orcpub.dnd.e5.character/cha :key :haste}}
+                     {:type :spell :level 5 :value {:level 3 :ability :orcpub.dnd.e5.character/cha :key :slow}}
+                     {:type :spell :level 7 :value {:level 4 :ability :orcpub.dnd.e5.character/cha :key :banishment}}
+                     {:type :spell :level 7 :value {:level 4 :ability :orcpub.dnd.e5.character/cha :key :dimension-door}}
+                     {:type :spell :level 9 :value {:level 5 :ability :orcpub.dnd.e5.character/cha :key :temporal-shunt}}
+                     {:type :spell :level 9 :value {:level 5 :ability :orcpub.dnd.e5.character/cha :key :modify-memory}}
+                     {:type :spell :level 14 :value {:level 4 :ability :orcpub.dnd.e5.character/cha :key :divination}}]
+   :level-selections [{:type :divergent-soul-quirks :level 1 :num 1}]
+   :traits [{:name "Dunamancy Spells"
+             :level 1
+             :description "Starting at 1st level, you learn additional spells when you reach certain levels in this class, as shown on the Dunamancy Spells table. Each of these spells counts as a sorcerer spell for you, but it doesn't count against the number of sorcerer spells you know.\n\nWhenever you learn a new sorcerer spell, you can choose a spell from the dunamancy spell list instead of from the sorcerer spell list. It counts as a sorcerer spell for you.\n\n1st: Bane, Gift of Alacrity. 3rd: Fortune's Favor, Gift of Gab. 5th: Haste, Slow. 7th: Banishment, Dimension Door. 9th: Temporal Shunt, Modify Memory."}
+            {:name "Convergence"
+             :level 1
+             :description "Starting at 1st level, whenever you make an ability check or attack roll, you may choose to roll the appropriate dice and view the outcome of the roll before you follow through, and you may choose to not take the action if you are not happy with the result, with none of the positive or negative effects of the action occurring. You may use this feature a number of times equal to your proficiency modifier.\n\nYou regain all uses of this feature when you finish a long rest.\n\nRule Tip: Trying Again. Your dungeon master will probably not let you view a roll, not follow through, then just try again, the appropriate thing would be for the roll to be the same as before. If you want to get a different outcome, you would need to find a different way to approach the check, ie: taking a different route to stealth, or attacking a target from a different angle."}
+            {:name "Spatial Anomaly"
+             :level 6
+             :type :reaction
+             :description "Beginning at 6th level, whenever you would be hit by an attack or fail a dexterity saving throw that would cause damage, as a reaction you may spend 3 (maybe 2?) sorcery points to teleport up to 15ft away to attempt to avoid the attack. If you would still be within range of the attack after teleporting, then no sorcery points are expended, you remain in place, and you take full damage."}
+            {:name "Entanglement"
+             :level 14
+             :description "At 14th level, you learn the spell Divination, and may cast it as a ritual without material components. When you cast this spell you contact versions of yourself from a different point in time, or from a different timeline altogether, who would be able to properly answer your questions. All other properties of the spell are the same."}
+            {:name "Singularity"
+             :level 18
+             :type :reaction
+             :description "Starting at 18th level, whenever a creature within 30ft of you makes an attack roll or ability check, after the outcome is resolved, as a reaction you may expend a use of your Convergence ability to undo the action and return to just before the action occurred with no creatures other than yourself remembering the events."}]}
+
+  :ethereal-soul
+  {:key :ethereal-soul
+   :name "Ethereal Soul"
+   :class :sorcerer
+   :option-pack "GM Binder Homebrew"
+   :level-modifiers [{:type :spell :level 1 :value {:level 1 :ability :orcpub.dnd.e5.character/cha :key :fog-cloud}}
+                     {:type :spell :level 1 :value {:level 1 :ability :orcpub.dnd.e5.character/cha :key :find-familiar}}
+                     {:type :spell :level 3 :value {:level 2 :ability :orcpub.dnd.e5.character/cha :key :spiritual-weapon}}
+                     {:type :spell :level 3 :value {:level 2 :ability :orcpub.dnd.e5.character/cha :key :misty-step}}
+                     {:type :spell :level 5 :value {:level 3 :ability :orcpub.dnd.e5.character/cha :key :spirit-guardians}}
+                     {:type :spell :level 5 :value {:level 3 :ability :orcpub.dnd.e5.character/cha :key :speak-with-dead}}
+                     {:type :spell :level 7 :value {:level 4 :ability :orcpub.dnd.e5.character/cha :key :banishment}}
+                     {:type :spell :level 7 :value {:level 4 :ability :orcpub.dnd.e5.character/cha :key :private-sanctum}}
+                     {:type :spell :level 9 :value {:level 5 :ability :orcpub.dnd.e5.character/cha :key :animate-objects}}
+                     {:type :spell :level 9 :value {:level 5 :ability :orcpub.dnd.e5.character/cha :key :contact-other-plane}}]
+   :level-selections [{:type :ethereal-soul-quirks :level 1 :num 1}]
+   :traits [{:name "Ethereal Magic"
+             :level 1
+             :description "Starting at 1st level, your affinity to the Ethereal plane has given you abilities not normally available to sorcerers. You learn additional spells when you reach certain levels in this class, as shown on the table. The spell counts as a sorcerer spell for you, but it doesn't count against the number of sorcerer spells you know.\n\n1st: Fog Cloud, Find Familiar*. 3rd: Spiritual Weapon, Misty Step. 5th: Spirit Guardians, Speak with Dead. 7th: Banishment, Private Sanctum. 9th: Animate Objects, Contact Other Plane."}
+            {:name "Spirit Companion"
+             :level 1
+             :description "*When you cast the Find Familiar spell, rather than the familiar being a fey, celestial or fiend, it is an undead and takes on a spectral appearance."}
+            {:name "Spirit Vision"
+             :level 1
+             :description "Starting at first level, you can see into the Ethereal Plane within 60 feet of you. You can hear sounds originating from the Ethereal plane but they sound distant and echoed."}
+            {:name "Incorporeality"
+             :level 6
+             :type :b-action
+             :description "Starting at 6th level, as a bonus action, you may expend 3 sorcery points to take on a semi-incorporeal form for 1 minute or until your concentration ends (as if you were concentrating on a spell). You may move through creatures or objects as if they were difficult terrain. You take 1d10 force damage if you end your turn inside a creature or an object and are moved to the closest available space. Additionally, while under the effect of this ability you have resistance to bludgeoning, piercing and slashing damage from nonmagical sources."}
+            {:name "Improved Incorporeality"
+             :level 14
+             :description "Starting at 14th level, you are immune to the paralyzed, grappled and restrained conditions. Additionally, when under the effects of your Incorporeality feature, you gain a flying speed of 30ft (hover)."}
+            {:name "Ethereal Sequester"
+             :level 18
+             :description "Starting at 18th level, you can banish away a creature to the ethereal plane. (Unfinished ability.)"}]}}
+
+ :orcpub.dnd.e5/selections
+ {:divergent-soul-quirks
+  {:key :divergent-soul-quirks
+   :name "Divergent Soul Quirks"
+   :option-pack "GM Binder Homebrew"
+   :options [{:name "You age at an accelerated rate"}
+             {:name "You age at a slowed rate"}
+             {:name "One day you awoke and the world was slightly different from what you remember"}
+             {:name "Sometimes you have visions of a terrible fate"}
+             {:name "Clocks around you always show the wrong time"}
+             {:name "Sometimes you find yourself reliving memories"}]}
+  :ethereal-soul-quirks
+  {:key :ethereal-soul-quirks
+   :name "Ethereal Soul Quirks"
+   :option-pack "GM Binder Homebrew"
+   :options [{:name "Your dreams consist of memories of long forgotten unrecognizable lands and societies"}
+             {:name "Wandering spirits are attracted to you, and can be very irritating"}
+             {:name "Sometimes you have a sudden feeling of weightlessness"}
+             {:name "Periodically you hear your name or the name of an ally called quietly in the distance"}
+             {:name "You have a poor sense of time, sometimes a few minutes can feel like hours or vice versa"}
+             {:name "You sometimes walk into things not realizing that they're real"}]}}}

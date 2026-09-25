@@ -1412,10 +1412,7 @@
       "weapons"
     ],
     "remaining": 0,
-    "selected": [
-      "longsword",
-      "handaxe"
-    ]
+    "selected": []
   },
   {
     "actualPath": [
@@ -1450,8 +1447,6 @@
     ],
     "remaining": 0,
     "selected": [
-      "chain-mail",
-      "shield",
       "plate"
     ]
   },
@@ -1486,20 +1481,10 @@
     ],
     "remaining": 0,
     "selected": [
-      "backpack",
-      "crowbar",
-      "hammer",
-      "piton",
-      "torch",
-      "rations",
-      "waterskin",
-      "rope-hempen",
       "clothes-common",
       "pouch",
       "incense",
-      "vestements",
-      "amulet",
-      "prayer-book"
+      "vestements"
     ]
   },
   {
