@@ -291,6 +291,12 @@
   [text]
   (transit/read (transit/reader :json) text))
 
+(defn- entity-text
+  "The Transit-JSON text of an entity given as text or as the value
+  JSON.parse returns for it."
+  [entity]
+  (if (string? entity) entity (js/JSON.stringify entity)))
+
 (defn- evaluate* [text]
   (let [{:keys [template] :as content} @srd-template
         raw (char5e/from-strict (read-strict text))
@@ -318,7 +324,7 @@
      (when-not (contains? supported-rules rules)
        (throw (js/Error. (str "Unsupported rules edition: " rules
                               ". @dmv/pubdoor supports only \"2014\"."))))
-     (let [text (if (string? entity) entity (js/JSON.stringify entity))
+     (let [text (entity-text entity)
            {:keys [key value]} @memo]
        (if (= key text)
          value
@@ -330,11 +336,8 @@
 ;;; importCharacter, exportCharacter (docs/ts-rewrite-plan/03-character-import-and-storage.md)
 ;;; ---------------------------------------------------------------------------
 
-(defn- read-entity
-  "A strict entity from Transit-JSON: the text, or the value JSON.parse
-  returns for it."
-  [entity]
-  (read-strict (if (string? entity) entity (js/JSON.stringify entity))))
+(defn- read-entity [entity]
+  (read-strict (entity-text entity)))
 
 (defn- write-entity
   "A strict entity as verbose Transit-JSON, parsed: the format of the
@@ -349,7 +352,7 @@
   (walk/postwalk #(if (map? %) (dissoc % :db/id ::se/owner) %) strict))
 
 (defn- migrate-legacy-keys
-  "R7: unnamespaced legacy keys → namespaced (patch D1)."
+  "R7: migrates legacy unnamespaced keys to namespaced ones (patch D1)."
   [raw]
   (if (spec/valid? ::char5e/unnamespaced-character raw)
     (char5e/add-namespaces raw)
@@ -367,7 +370,7 @@
 (defn ^:export importCharacter
   "Imports a character saved by the old app: the strict entity as
   Transit-JSON text or its parsed value. Applies the from-strict
-  normalizations (R1-R3, R6, R9), the legacy key migration (R7), and the
+  normalizations (R1 to R3, R6, R9), the legacy key migration (R7), and the
   xps fix (R5), and removes the old ids and owner.
 
   Returns {entity, legacyId}: entity in evaluate's input format, and
@@ -384,7 +387,8 @@
          "legacyId" (some-> legacy-id str)}))
 
 (defn ^:export exportCharacter
-  "Serializes an entity with char5e/to-strict, as verbose Transit-JSON,
-  parsed. Selections stay arrays, so their order is kept."
+  "Normalizes an entity with char5e/from-strict and serializes it with
+  char5e/to-strict, as parsed verbose Transit-JSON. Selections stay arrays,
+  so their order is kept."
   [entity]
   (write-entity (char5e/to-strict (char5e/from-strict (read-entity entity)))))

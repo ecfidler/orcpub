@@ -689,8 +689,8 @@
    expected values of the R5/R7 legacy fixtures.
    R5: a string ::char5e/xps → int (blank/invalid → 0), as routes.clj:930.
    R7: unqualified legacy keys (:str, :quantity, :character-name) →
-       namespaced, using the character.cljc helpers the #_-disabled
-       migration was built from."
+       namespaced. This stays independent of char5e/add-namespaces
+       (patch D1), so that regenerating the R7 fixture checks the patch."
   [raw]
   (let [r7 (fn [raw]
              (cond-> raw

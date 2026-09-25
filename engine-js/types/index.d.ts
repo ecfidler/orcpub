@@ -67,7 +67,8 @@ export interface ImportedCharacter {
 export function importCharacter(entity: StrictEntity): ImportedCharacter;
 
 /**
- * Serializes an entity with char5e/to-strict as parsed verbose
- * Transit-JSON. Selections stay arrays, so their order is kept.
+ * Normalizes an entity with char5e/from-strict and serializes it with
+ * char5e/to-strict, as parsed verbose Transit-JSON. Selections stay arrays,
+ * so their order is kept.
  */
 export function exportCharacter(entity: StrictEntity): object;
