@@ -57,8 +57,8 @@ for (const dir of ["characters", "legacy"]) {
           read(dir, `${name}.strict.json`) as object,
         );
 
-        expect(built).toEqual(read(dir, `${name}.expected.json`));
-        expect(selections).toEqual(read(dir, `${name}.selections.json`));
+        expect(built).toStrictEqual(read(dir, `${name}.expected.json`));
+        expect(selections).toStrictEqual(read(dir, `${name}.selections.json`));
       });
     }
   });
@@ -71,7 +71,12 @@ describe("selection order", () => {
     const strict = read("characters", "fighter-1.strict.json") as Strict;
     const reordered = { ...strict, [SELECTIONS]: [...strict[SELECTIONS]].reverse() };
 
-    expect(evaluate(reordered).built).not.toEqual(evaluate(strict).built);
+    const before = evaluate(strict).built as Record<string, unknown>;
+    const after = evaluate(reordered).built as Record<string, unknown>;
+
+    expect(after).not.toEqual(before);
+    // For fighter-1 the difference is the order of the traits list.
+    expect(after["traits"]).not.toEqual(before["traits"]);
   });
 
   it("changes the multiclass result when the class order is reversed", () => {
