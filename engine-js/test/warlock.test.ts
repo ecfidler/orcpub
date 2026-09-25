@@ -15,40 +15,61 @@ const strict = JSON.parse(
 
 type SpellsKnown = Record<string, { __entries: [[string, string], unknown][] }>;
 
-function hasSpell(built: Record<string, unknown>, level: number, className: string, spell: string) {
+function hasSpell(
+  built: Record<string, unknown>,
+  level: number,
+  className: string,
+  spell: string,
+): boolean {
   const entries = (built["spells-known"] as SpellsKnown)[level]?.__entries ?? [];
   return entries.some(([[c, s]]) => c === className && s === spell);
 }
 
 describe("warlock_test", () => {
-  const built = () => evaluate(strict).built as Record<string, unknown>;
+  const built = evaluate(strict).built as Record<string, unknown>;
 
   it("build-smoke-test: builds without throwing", () => {
-    expect(built()).toBeTruthy();
+    expect(built).toBeTruthy();
   });
 
   it("warlock-class-levels: warlock has 10 levels", () => {
-    expect(built()["levels"]).toMatchObject({ warlock: { "class-level": 10 } });
+    expect(built["levels"]).toMatchObject({ warlock: { "class-level": 10 } });
   });
 
   it("warlock-race-and-subrace: race is Elf", () => {
-    expect(built()["race"]).toBe("Elf");
+    expect(built["race"]).toBe("Elf");
   });
 
   it("warlock-speed: elf base speed is 30", () => {
-    expect(built()["base-land-speed"]).toBe(30);
+    expect(built["base-land-speed"]).toBe(30);
   });
 
   it("warlock-spells: invocations and pacts add spells", () => {
     // Book of Ancient Secrets ritual
-    expect(hasSpell(built(), 1, "Warlock", "illusory-script")).toBe(true);
+    expect(hasSpell(built, 1, "Warlock", "illusory-script")).toBe(true);
     // Book of Shadows cantrip
-    expect(hasSpell(built(), 0, "Warlock", "spare-the-dying")).toBe(true);
+    expect(hasSpell(built, 0, "Warlock", "spare-the-dying")).toBe(true);
     // Beast Speech invocation
-    expect(hasSpell(built(), 1, "Warlock", "speak-with-animals")).toBe(true);
+    expect(hasSpell(built, 1, "Warlock", "speak-with-animals")).toBe(true);
   });
 
-  it.todo("warlock-ability-scores: INT 16 and CHA 16 need Keen Mind and Drow (ORC-27, buildTemplate)");
+  it("warlock-ability-scores: the scores without a pack bonus", () => {
+    expect(built["abilities"]).toMatchObject({
+      "orcpub.dnd.e5.character/str": 10,
+      // 11 base + 2 elf
+      "orcpub.dnd.e5.character/dex": 13,
+      "orcpub.dnd.e5.character/con": 11,
+      "orcpub.dnd.e5.character/wis": 14,
+    });
+  });
+
+  it("warlock-skill-proficiencies: elf and warlock skills", () => {
+    expect(Object.keys(built["skill-profs"] as object)).toEqual(
+      expect.arrayContaining(["perception", "intimidation", "history"]),
+    );
+  });
+
+  it.todo("warlock-ability-scores: INT 16 (Keen Mind) and CHA 16 (Drow) need the pack (ORC-27, buildTemplate)");
   it.todo("warlock-race-and-subrace: subrace Dark Elf (Drow) needs the pack (ORC-27, buildTemplate)");
-  it.todo("warlock-skill-proficiencies: Spy's deception and stealth need the pack (ORC-27, buildTemplate)");
+  it.todo("warlock-skill-proficiencies: Spy's deception and stealth, and the count of 5, need the pack (ORC-27, buildTemplate)");
 });
