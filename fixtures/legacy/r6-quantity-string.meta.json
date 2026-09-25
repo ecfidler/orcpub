@@ -1,6 +1,6 @@
 {
   "checks": [],
-  "description": "An equipment quantity stored as the string \"2\" (fix-quantities parses it on save; the importer applies it on import too).",
+  "description": "An equipment quantity stored as the string \"5\" (fix-quantities parses it on save; the importer applies it on import too).",
   "name": "r6-quantity-string",
   "orcbrew": [],
   "quirk": "R6",

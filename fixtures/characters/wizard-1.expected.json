@@ -64,7 +64,6 @@
   "description": null,
   "equipment": {
     "amulet": {
-      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
@@ -116,7 +115,6 @@
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
     "prayer-book": {
-      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
     },
