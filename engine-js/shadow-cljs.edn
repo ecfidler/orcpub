@@ -1,0 +1,21 @@
+;; Build for @dmv/pubdoor. See docs/ts-rewrite-plan/HANDOFF-phase-a.md §5.1.
+;;
+;; The engine compiles in place from ../src/cljc and ../src/cljs. Only the
+;; namespaces the facade requires are compiled, so the old UI (orcpub.core,
+;; views, events) and the excluded namespaces (pdf_spec, character/random,
+;; char_decision_tree, templates/*) stay out as long as nothing requires them.
+{:source-paths ["src" "../src/cljc" "../src/cljs"]
+
+ ;; Versions match project.clj.
+ :dependencies [[re-frame "1.4.4"]
+                [reagent "2.0.1"]
+                [cljs-http "0.1.49"]
+                [bidi "2.1.6"]
+                [com.cognitect/transit-cljs "0.8.280"]]
+
+ :builds
+ {:pubdoor
+  {:target :esm
+   :output-dir "dist"
+   :modules {:pubdoor {:exports {hello orcpub.facade/hello}}}
+   :compiler-options {:optimizations :advanced}}}}
