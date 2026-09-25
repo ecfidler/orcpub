@@ -1,0 +1,59 @@
+{
+  "~:db/id": 17592186055294,
+  "~:orcpub.entity.strict/selections": [
+    {
+      "~:db/id": 17592186055298,
+      "~:orcpub.entity.strict/key": "~:class",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:db/id": 17592186055299,
+          "~:orcpub.entity.strict/key": "~:barbarian",
+          "~:orcpub.entity.strict/selections": [
+            {
+              "~:db/id": 17592186055300,
+              "~:orcpub.entity.strict/key": "~:levels",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:db/id": 17592186055301,
+                  "~:orcpub.entity.strict/key": "~:level-1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "~:db/id": 17592186055302,
+      "~:orcpub.entity.strict/key": "~:weapons",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:db/id": 17592186055303,
+          "~:orcpub.entity.strict/key": "~:javelin",
+          "~:orcpub.entity.strict/map-value": {
+            "~:db/id": 17592186055304,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 4,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true
+          }
+        }
+      ]
+    },
+    {
+      "~:db/id": 17592186055305,
+      "~:orcpub.entity.strict/key": "~:equipment",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:db/id": 17592186055306,
+          "~:orcpub.entity.strict/key": "~:explorers-pack",
+          "~:orcpub.entity.strict/map-value": {
+            "~:db/id": 17592186055307,
+            "~:orcpub.dnd.e5.character.equipment/quantity": 1,
+            "~:orcpub.dnd.e5.character.equipment/equipped?": true,
+            "~:orcpub.dnd.e5.character.equipment/class-starting-equipment?": true
+          }
+        }
+      ]
+    }
+  ]
+}

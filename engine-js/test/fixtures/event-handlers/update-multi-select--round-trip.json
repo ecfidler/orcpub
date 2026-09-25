@@ -1,0 +1,14 @@
+{
+  "~:db/id": 17592186055379,
+  "~:orcpub.entity.strict/selections": [
+    {
+      "~:db/id": 17592186055393,
+      "~:orcpub.entity.strict/key": "~:skill-profs",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:orcpub.entity.strict/key": "~:arcana"
+        }
+      ]
+    }
+  ]
+}

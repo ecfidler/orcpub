@@ -198,7 +198,8 @@
   "languages": [
     "common",
     "dwarvish",
-    "elvish"
+    "elvish",
+    "giant"
   ],
   "levels": {
     "fighter": {

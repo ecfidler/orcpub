@@ -538,7 +538,9 @@
   Returns
     {:template        what @(subscribe [::char5e/template]) yields
      :all-weapons-map what @(subscribe [::mi5e/all-weapons-map]) yields
-     :all-armor-map   what @(subscribe [::mi5e/all-armor-map]) yields}"
+     :all-armor-map   what @(subscribe [::mi5e/all-armor-map]) yields
+     :backgrounds     what @(subscribe [::bg5e/backgrounds]) yields, the raw
+                      configs that :add-background-starting-equipment takes}"
   [plugins]
   (let [;; roots
         plugins (plugins-sub {:plugins plugins})
@@ -600,4 +602,5 @@
                                      feats
                                      language-map))
      :all-weapons-map all-weapons-map
-     :all-armor-map all-armor-map}))
+     :all-armor-map all-armor-map
+     :backgrounds backgrounds}))
