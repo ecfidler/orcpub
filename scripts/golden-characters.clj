@@ -162,7 +162,7 @@
           (merge {:ability-scores (val-opt :standard-scores (abilities 15 14 13 12 10 8))
                   :alignment (opt :lawful-good)
                   :race (opt :human {:subrace (opt :damaran) :variant (opt :standard-human)})
-                  :languages [(opt :common) (opt :dwarvish) (opt :elvish)]
+                  :languages [(opt :dwarvish) (opt :elvish) (opt :giant)]
                   :background acolyte
                   :class [(fighter-base 1 {})]}
                  fighter-items)
