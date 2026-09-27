@@ -865,3 +865,230 @@
        (fail! (kw->str k) " is not picked in the improvement at " (show-path path) "."))
      (write-raw (update-in raw increases-path
                            (fn [picks] (common/remove-first #(= k (::entity/key %)) picks)))))))
+
+;;; ---------------------------------------------------------------------------
+;;; autofill (the builder's random character, events.cljs:311)
+;;; ---------------------------------------------------------------------------
+
+(defn- mulberry32
+  "A seeded generator of floats in [0, 1). The old app uses Math.random,
+  which cannot be seeded."
+  [seed]
+  (let [state (volatile! (bit-or seed 0))]
+    (fn []
+      (let [a (vswap! state #(bit-or (+ % 0x6D2B79F5) 0))
+            t (js/Math.imul (bit-xor a (unsigned-bit-shift-right a 15)) (bit-or a 1))
+            t (bit-xor (+ t (js/Math.imul (bit-xor t (unsigned-bit-shift-right t 7))
+                                          (bit-or t 61)))
+                       t)]
+        (/ (unsigned-bit-shift-right (bit-xor t (unsigned-bit-shift-right t 14)) 0)
+           4294967296)))))
+
+(defn- random-generator
+  "rand for options.seed, or Math.random without a seed."
+  [seed]
+  (cond (nil? seed) js/Math.random
+        (and (int? seed) (<= -2147483648 seed 4294967295)) (mulberry32 seed)
+        :else (fail! "autofill: seed must be a 32-bit integer, not " seed ".")))
+
+(defn- rand-below [rand n]
+  (js/Math.floor (* (rand) n)))
+
+(defn- shuffle-with
+  "Fisher-Yates, drawing from rand."
+  [rand coll]
+  (let [a (to-array coll)]
+    (loop [i (dec (alength a))]
+      (when (pos? i)
+        (let [j (rand-below rand (inc i))
+              x (aget a i)]
+          (aset a i (aget a j))
+          (aset a j x)
+          (recur (dec i)))))
+    (vec a)))
+
+(defn- die-roll [rand sides]
+  (inc (rand-below rand sides)))
+
+(defn- standard-ability-rolls
+  "4d6, dropping the lowest, for each ability (char5e/standard-ability-rolls)."
+  [rand]
+  (zipmap char5e/ability-keys
+          (repeatedly 6 #(apply + (rest (sort (repeatedly 4 (fn [] (die-roll rand 6)))))))))
+
+(defn- selection-randomizer
+  "events.cljs selection-randomizers: the value-setting selections."
+  [rand {:keys [::t/key ::entity/path]} built]
+  (case key
+    :ability-scores (fn [_] {::entity/key :standard-roll
+                             ::entity/value (standard-ability-rolls rand)})
+    :hit-points (let [[_ class-kw] path]
+                  (fn [_] {::entity/key :roll
+                           ::entity/value (die-roll rand (-> (char5e/levels built)
+                                                             class-kw
+                                                             :hit-die))}))
+    nil))
+
+(defn- random-sequential-selection
+  "events.cljs random-sequential-selection: the first n options, n random."
+  [rand template raw {:keys [::t/options] :as selection}]
+  (let [n (inc (rand-below rand (count options)))]
+    (entity/update-option template raw (entity/actual-path selection)
+                          (fn [_] (mapv (fn [{:keys [::t/key]}] {::entity/key key})
+                                        (take n options))))))
+
+(defn- candidates
+  "The options random-selection may pick: prerequisites pass, not <none>
+  or Custom (events.cljs), and, unlike the old loop, not already selected
+  and not banned by a backtrack."
+  [template raw built banned selection]
+  (let [path (entity/actual-path selection)
+        selected (set (selected-option-keys template raw selection))]
+    (filter (fn [{:keys [::t/key] :as option}]
+              (and (not (#{:none :custom} key))
+                   (not (selected key))
+                   (not (banned [path key]))
+                   (entity/meets-prereqs? option built)))
+            (entity/selection-options selection))))
+
+(defn- random-selection
+  "events.cljs random-selection: as many candidates as picks remain. A
+  class selection with no candidate gets the fighter."
+  [rand template banned raw {:keys [::t/key ::t/multiselect?] :as selection}]
+  (let [built (entity/build raw template)
+        picks (take (entity/count-remaining template raw selection)
+                    (shuffle-with rand (candidates template raw built banned selection)))]
+    (reduce (fn [raw {:keys [::t/key]}]
+              (let [option {::entity/key key}]
+                (entity/update-option template raw (conj (entity/actual-path selection) key)
+                                      #(if multiselect? (conj (or % []) option) option))))
+            raw
+            (if (and (= :class key) (empty? picks))
+              [{::t/key :fighter}]
+              picks))))
+
+(defn- fill-selection [rand template built banned raw {:keys [::t/sequential?] :as selection}]
+  (if-let [f (selection-randomizer rand selection built)]
+    (entity/update-option template raw (entity/actual-path selection) f)
+    (if sequential?
+      (random-sequential-selection rand template raw selection)
+      (random-selection rand template banned raw selection))))
+
+(defn- fillable?
+  "Whether a selection with picks remaining has anything to pick."
+  [template raw built banned {:keys [::t/key ::t/sequential?] :as selection}]
+  (or (#{:ability-scores :hit-points :class} key)
+      sequential?
+      (seq (candidates template raw built banned selection))))
+
+(defn- remove-option
+  "raw without option k of the selection at path."
+  [template raw path k]
+  (let [p (entity/get-entity-path template raw path)
+        v (get-in raw p)]
+    (cond (and (map? v) (= k (::entity/key v)))
+          (update-in raw (pop p) dissoc (peek p))
+
+          (sequential? v)
+          (assoc-in raw p (with-meta (vec (remove #(= k (::entity/key %)) v)) (meta v)))
+
+          :else raw)))
+
+(defn- backtrack
+  "Undoes the choice that opened a selection nothing can fill: the option
+  above one occurrence of it, such as the feat option of an ability score
+  improvement when no feat is left, taking the last occurrence that
+  autofill opened. The option is removed and banned, so the next step
+  picks another. Only options autofill picked are undone, never those in
+  the start entity (start-paths). nil when there is none."
+  [template raw selections start-paths banned dead]
+  (let [by-path (group-by ::entity/path selections)
+        undo (distinct
+              (keep (fn [s]
+                      (let [path (entity/actual-path s)]
+                        (first
+                         (for [occurrence (reverse selections)
+                               :when (and (= path (entity/actual-path occurrence))
+                                          (pos? (or (::t/min occurrence) 0))
+                                          (< 2 (count (::entity/path occurrence))))
+                               :let [option-path (pop (::entity/path occurrence))
+                                     parent (first (by-path (pop option-path)))
+                                     parent-path (some-> parent entity/actual-path)
+                                     k (peek option-path)]
+                               :when (and parent
+                                          (not (start-paths (conj parent-path k)))
+                                          (some #{k} (selected-option-keys template raw parent)))]
+                           [parent-path k]))))
+                    dead))]
+    (when (seq undo)
+      {:raw (reduce (fn [raw [path k]] (remove-option template raw path k)) raw undo)
+       :banned (into banned undo)})))
+
+(defn- autofill-step
+  "One step of the loop. Fills every combined selection with picks
+  remaining that is not kept and has something to pick, as a round of the
+  old loop does. When only selections with nothing to pick remain, it
+  backtracks instead. nil when nothing is left to do."
+  [rand template kept-paths start-paths {:keys [raw banned] :as state}]
+  (let [built (entity/build raw template)
+        selections (entity/available-selections raw built template)
+        pending (filter #(and (pos? (entity/count-remaining template raw %))
+                              (not (kept-paths (::entity/path %))))
+                        (entity/combine-selections selections))
+        {fill true dead false} (group-by #(boolean (fillable? template raw built banned %))
+                                         pending)]
+    (cond (seq fill)
+          (assoc state :raw (reduce (partial fill-selection rand template built banned) raw fill))
+
+          (seq dead)
+          (backtrack template raw selections start-paths banned dead))))
+
+(def ^:private autofill-steps
+  "The old loop stops after 10 rounds (events.cljs:314). Each backtrack
+  takes a step too, so this allows more."
+  20)
+
+(defn- keep-options
+  "events.cljs keep-options: a new entity with only the options at paths."
+  [template raw paths]
+  (reduce (fn [kept path]
+            (if-some [option (entity/get-option template raw path)]
+              (entity/update-option template kept path (constantly option))
+              kept))
+          {}
+          paths))
+
+(defn- option-paths
+  "The paths of every option in raw, as selection paths end in an option key."
+  [raw]
+  (set (map ::t/path (entity/flatten-options (::entity/options raw)))))
+
+(defn ^:export autofill
+  "Fills a character at random, as the builder's random character button
+  does (events.cljs:311). Each round builds the character and fills every
+  selection with picks remaining. Filling can open new selections, such as
+  a class's, so it repeats, at most 10 rounds.
+
+  options is {seed?, keep?, keepAll?, rules?, homebrew?}. By default the old
+  button's behaviour: the result keeps only the options at the keep paths
+  (the builder's locked components, such as [\"race\"]) and fills the rest,
+  including the class and level, and drops the values such as the name.
+  With keepAll, it keeps every option and value and fills only the
+  selections with picks remaining. seed is a 32-bit integer; the same seed
+  and entity give the same result. Without one, it uses Math.random.
+
+  Names are not generated: character/random.cljc is not in the package."
+  ([entity] (autofill entity nil))
+  ([entity options]
+   (let [{:keys [template]} (content options)
+         rand (random-generator (some-> options (gobj/get "seed")))
+         kept-paths (set (map read-path (some-> options (gobj/get "keep"))))
+         raw (read-raw entity)
+         start (if (some-> options (gobj/get "keepAll"))
+                 raw
+                 (keep-options template raw kept-paths))
+         step (partial autofill-step rand template kept-paths (option-paths start))]
+     (write-raw (loop [state {:raw start :banned #{}}, n 0]
+                  (if-let [next-state (and (< n autofill-steps) (step state))]
+                    (recur next-state (inc n))
+                    (:raw state)))))))
