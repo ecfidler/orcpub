@@ -119,7 +119,12 @@ plan, that a facade author must work around.
 4. **Availability depends on the build.** `available-selections` takes the
    built character, because prerequisites depend on it. `evaluate` builds
    first, then resolves. The old `random-character` fixed-point loop
-   (`events.cljs:310`, at most 10 rounds) becomes `autofill`.
+   (`events.cljs:311`, at most 10 rounds) becomes `autofill`. With SRD
+   content alone the old loop leaves some characters incomplete: the SRD
+   has one feat, so a second feat pick, or one with STR below 13, has
+   nothing to pick. `autofill` backtracks from such a choice to its parent
+   option and picks another, but never undoes an option the input entity
+   already had (ORC-23).
 5. **`ref` selections** store data at a global path and merge `min` and
    `max` across tree occurrences (`entity.cljc:423-514`). The facade
    exposes each selection's `actualPath` so the UI writes to the right

@@ -160,3 +160,31 @@ export function increaseAbility(entity: StrictEntity, path: Path, abilityKey: st
 
 /** Removes one pick of an ability from the ability score improvement at path. */
 export function decreaseAbility(entity: StrictEntity, path: Path, abilityKey: string, options?: MutationOptions): object;
+
+export interface AutofillOptions extends MutationOptions {
+  /** A 32-bit integer. The same seed and entity give the same result. Without one, Math.random. */
+  seed?: number;
+  /** Selection paths to keep, as the builder's locked components, such as [["race"]]. */
+  keep?: Path[];
+  /** Keep every option and value, and fill only the selections with picks remaining. */
+  keepAll?: boolean;
+}
+
+/**
+ * Fills a character at random, as the builder's random character button
+ * does. By default it keeps only the options at options.keep and the
+ * enabled plugins (optional-content), fills the rest, including the class
+ * and level, and drops the values such as the name. With keepAll, it fills only what is unfilled. Names are not
+ * generated.
+ *
+ * Unlike the old button, it backtracks from a choice that opens a
+ * selection nothing can fill, such as a feat when the SRD's one feat is
+ * taken, and picks another. It never undoes an option the entity already
+ * had, so with keepAll such a selection can stay unfilled.
+ *
+ * Count a ref selection's remaining across its occurrences, as
+ * entity/combine-selections does: each occurrence in evaluate's selections
+ * counts every pick at the shared path, so a filled ref selection reports
+ * zero or less there.
+ */
+export function autofill(entity: StrictEntity, options?: AutofillOptions): object;

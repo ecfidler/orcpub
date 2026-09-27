@@ -34,5 +34,6 @@
                                          addInventoryItem orcpub.facade/addInventoryItem
                                          removeInventoryItem orcpub.facade/removeInventoryItem
                                          increaseAbility orcpub.facade/increaseAbility
-                                         decreaseAbility orcpub.facade/decreaseAbility}}}
+                                         decreaseAbility orcpub.facade/decreaseAbility
+                                         autofill orcpub.facade/autofill}}}
    :compiler-options {:optimizations :advanced}}}}
