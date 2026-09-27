@@ -83,7 +83,7 @@ log, conflicts, skipped }`, `validateForExport(plugins)`,
 ## Behavior details to keep
 
 - Subrace `:speed` and `:darkvision` are deltas against the race, applied
-  only when they differ (`options.cljc:1981`).
+  only when they differ (`options.cljc:1978`).
 - Plugin classes skip the built-in ASI and HP selections when `:plugin?` is
   set (`level-option`). Verify whether that is intended before changing it.
 - The class display name becomes `"Name (Source)"` when the source is not

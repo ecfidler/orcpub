@@ -188,8 +188,8 @@ M1. Leave them out entirely rather than shipping stubs.
 - `ref` selections store data at a global path (`entity/actual-path`),
   not their tree position.
 - `options.cljc` requires re-frame, so the namespace must load even though
-  nothing subscribes. The `re-frame.db/app-db` reads inside modifiers are
-  patch D2.
+  nothing subscribes. Patch D2 (ORC-22) replaced the `re-frame.db/app-db`
+  reads inside modifiers.
 - Multi-select option paths carry no index (`entity.cljc:299`).
 - `:advanced` renames everything that is not marked `^:export` or listed
   in `:exports`.

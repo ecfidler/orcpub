@@ -551,7 +551,7 @@
 
 (defn- background-config
   "The raw background config that background option k was built from
-  (options.cljc:2474 derives the key from the name)."
+  (options.cljc:2469 derives the key from the name)."
   [{:keys [backgrounds]} k]
   (or (some #(when (= k (common/name-to-kw (:name %))) %) backgrounds)
       (fail! "No background " (kw->str k) ".")))
@@ -563,7 +563,7 @@
 
 (defn- click
   "Applies a click on option k at path. A background option's select-fn
-  (options.cljc:2488) dispatches :add-background-starting-equipment, which
+  (options.cljc:2483) dispatches :add-background-starting-equipment, which
   runs after the selection; this applies it directly."
   [raw content path k deselect?]
   (let [{:keys [option payload]} (option-click raw (:template content) path k deselect?)

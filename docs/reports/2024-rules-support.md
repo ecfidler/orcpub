@@ -127,7 +127,7 @@ new formula in `template_base.cljc`, or new `.orcbrew` fields.
 | 339 spells: 20 new, 2 renamed, 23 with a new school, and same-name spells with new mechanics (Cure Wounds is 2d8) | New spell data. Same-name spells need keys scoped by edition | Spell maps in `spells.cljc`, lists in `spell_lists.cljc` |
 | Species with lineage, legacy, or ancestry choices, size as a choice for some species, and traits that scale with character level | A lineage is a nested selection, like a subrace | `race-option` with nested selections |
 | Every subclass at level 3, and new level-1 choices such as Divine Order and Primal Order | Class data | `:subclass-level` and per-level `:selections` |
-| Warlock invocations from level 1, pact boons as invocations, and invocations that require other invocations | Invocation data | Trait-name prerequisites already exist (`options.cljc:3104-3111`) |
+| Warlock invocations from level 1, pact boons as invocations, and invocations that require other invocations | Invocation data | Trait-name prerequisites already exist (`options.cljc:3099-3106`) |
 | Languages: Common plus two choices, Draconic becomes standard, and species grant none | One top-level language selection | `language-selection` with `:ref [:languages]` |
 | Weapon and armor table changes, and armor renamed ("Padded Armor") | Item data. A renamed item gets a new key | `weapons.cljc`, `armor.cljc` |
 | Full-caster and Pact Magic slot tables, hit points, the proficiency bonus, passive Perception, and carrying capacity | Nothing. These are unchanged | |
@@ -136,12 +136,12 @@ new formula in `template_base.cljc`, or new `.orcbrew` fields.
 
 | 2024 change | What the engine needs | The 2014 engine today |
 |---|---|---|
-| The background grants +2 and +1, or +1 to three, among three listed abilities, plus an Origin feat | A new background constructor, and an ability selection with a per-ability cap | `background-option` has no ability or feat field (`options.cljc:2453-2506`) |
-| Feat categories (Origin, General, Fighting Style, Epic Boon), level and class-feature prerequisites, repeatable feats, the Ability Score Improvement as a feat, and a cap of 30 for Epic Boons | A new feat model, and feat selections filtered by category | `feat-prereqs` handles ability 13, spellcasting, armor, and race (`options.cljc:3190-3217`). All feats share one `:ref [:feats]` pool |
-| An Epic Boon at level 19 for every class, and Fighting Style as a feat that can change on each level | Category-filtered feat selections inside class levels | "ASI or feat" at `:ability-increase-levels`. A fixed fighting-style list (`options.cljc:1717-1778`) |
+| The background grants +2 and +1, or +1 to three, among three listed abilities, plus an Origin feat | A new background constructor, and an ability selection with a per-ability cap | `background-option` has no ability or feat field (`options.cljc:2448-2501`) |
+| Feat categories (Origin, General, Fighting Style, Epic Boon), level and class-feature prerequisites, repeatable feats, the Ability Score Improvement as a feat, and a cap of 30 for Epic Boons | A new feat model, and feat selections filtered by category | `feat-prereqs` handles ability 13, spellcasting, armor, and race (`options.cljc:3185-3212`). All feats share one `:ref [:feats]` pool |
+| An Epic Boon at level 19 for every class, and Fighting Style as a feat that can change on each level | Category-filtered feat selections inside class levels | "ASI or feat" at `:ability-increase-levels`. A fixed fighting-style list (`options.cljc:1715-1775`) |
 | Weapon Mastery: 2 to 6 weapon kinds by class and level, changeable on a Long Rest, one mastery property per weapon | A selection over weapon kinds, a weapon property, and attack output that reports the mastery | Weapons are open maps. Nothing reads a mastery key |
-| Every caster prepares a fixed number of spells from a table, and the swap rules differ by class | A prepared-count table in place of the formula and the three "known" modes | `:known-mode`, and the ability modifier plus `level / factor` (`template_base.cljc:274-284`) |
-| Paladins and Rangers get slots at level 1, and the multiclass caster level rounds their half levels up | A new half-caster table and multiclass formula | The factor-2 table starts at level 2, and `int` truncates (`template_base.cljc:263-269`) |
+| Every caster prepares a fixed number of spells from a table, and the swap rules differ by class | A prepared-count table in place of the formula and the three "known" modes | `:known-mode`, and the ability modifier plus `level / factor` (`template_base.cljc:278-288`) |
+| Paladins and Rangers get slots at level 1, and the multiclass caster level rounds their half levels up | A new half-caster table and multiclass formula | The factor-2 table starts at level 2, and `int` truncates (`template_base.cljc:267-273`) |
 | Starting equipment is a whole package or gold, per class and per background | A new equipment-choice shape. The `addStartingEquipment` mutation (ORC-19) changes meaning | Item-by-item choices (`event_handlers.cljc:37-43`) |
 | Wild Shape keeps a list of known beast forms | A selection over monsters. Plan Set 2 keeps monsters out of the engine chunk (doc 02 wrinkle 8) | A trait with a CR limit (`classes.cljc:781-801`) |
 
@@ -162,14 +162,14 @@ designing level 2 mixing.
 
 The generic core has no notion of abilities, classes, or levels. It
 provides selections, options, and refs (`template.cljc:37-87`), the
-modifier fold with a dependency sort (`entity.cljc:597-621`), plugin
-merging (`entity.cljc:627-694`), prerequisites (`entity.cljc:482-494`),
+modifier fold with a dependency sort (`entity.cljc:597-622`), plugin
+merging (`entity.cljc:628-695`), prerequisites (`entity.cljc:482-494`),
 and `ref` pooling (`entity.cljc:423-443`). A modifier is a function from
 entity to entity plus the set of attributes it reads. The `make-entity`
 and `modifier` macros extract that set from the `?name` symbols in the body
 (`entity_spec.cljc:68-102`). The top-level template is a two-key map,
 `{::t/base template-base ::t/selections selections}`
-(`dnd/e5/template.cljc:1565-1567`). A 2024 template beside it needs no core
+(`dnd/e5/template.cljc:1565-1573`). A 2024 template beside it needs no core
 change.
 
 The model is also portable. Nothing in it depends on Clojure beyond the
@@ -198,33 +198,34 @@ form without the ClojureScript compiler.
 The survey confirmed these 2014 assumptions in the source:
 
 - **Ability increases come from the race.** `race-option` applies
-  `:abilities` through `race-ability` (`options.cljc:2268-2271`). The
+  `:abilities` through `race-ability` (`options.cljc:2263-2266`). The
   accessors `race-ability-increases` and `subrace-ability-increases`
   (`character.cljc:394`, `:397`) and the builder's columns
   (`character_builder.cljs:892-926`) assume it.
 - **Backgrounds grant no ability scores or feats.** `background-option`
-  (`options.cljc:2453-2506`) has fields for skills, tools, languages,
+  (`options.cljc:2448-2501`) has fields for skills, tools, languages,
   equipment, and traits. Built-in content can pass compiled `:selections`
   and `:modifiers` through it. A homebrew background cannot, and plugin
   backgrounds get no `:props` processing (`spell_subs.cljs:90-97`).
 - **Feats have no category or level prerequisite.** `feat-prereqs`
-  (`options.cljc:3190-3217`) supports ability 13 or higher, spellcasting,
+  (`options.cljc:3185-3212`) supports ability 13 or higher, spellcasting,
   armor proficiency, and race. Any other prerequisite falls through to
   `armor-prereq`. All feat choices share one `:ref [:feats]` pool.
 - **"ASI or feat" is a class-level choice.** `level-option` inserts it at
-  each class's `:ability-increase-levels` (`options.cljc:2814-2815`), for
+  each class's `:ability-increase-levels` (`options.cljc:2809-2810`), for
   example `[4 6 8 12 14 16 19]` for the Fighter (`classes.cljc:1055`).
 - **Subclass level is data, and it varies.** `:subclass-level` defaults to
-  1 (`options.cljc:2784`). Cleric, Sorcerer, and Warlock use 1, Druid and
+  1 (`options.cljc:2779`). Cleric, Sorcerer, and Warlock use 1, Druid and
   Wizard use 2, and the rest use 3. This part fits 2024 already.
 - **Spellcasting has three "known" modes.** `:known-mode` is `:schedule`,
   `:all`, or `:acquire`, and the prepared count is the ability modifier
-  plus `level / factor` (`template_base.cljc:274-284`). The multiclass
+  plus `level / factor` (`template_base.cljc:278-288`). The multiclass
   caster level truncates `level / factor` with `int`
-  (`template_base.cljc:263-269`).
-- **Fighting styles are a fixed option list** (`options.cljc:1717-1778`).
-  Dueling is code that reads `re-frame.db/app-db` (`options.cljc:1746`,
-  patch D2).
+  (`template_base.cljc:267-273`).
+- **Fighting styles are a fixed option list** (`options.cljc:1715-1775`).
+  Dueling is code that looks the wielded weapons up in the template's
+  `?all-weapons-map` (`options.cljc:1743`). Patch D2 replaced its
+  `re-frame.db/app-db` read.
 - **Weapons are open maps.** A `::mastery` key can be added as data, but
   nothing reads it (`weapons.cljc`).
 - **Most of the 107 built-character keys are edition-neutral sheet
@@ -266,9 +267,9 @@ Clojure at several thousand lines.
 
 An `.orcbrew` file is EDN, so it cannot hold functions. Homebrew can
 express only what the conversion code interprets: 22 `:props` keys in
-`make-feat-modifiers` (`options.cljc:3282-3348`), 12 `level-modifier`
+`make-feat-modifiers` (`options.cljc:3277-3343`), 12 `level-modifier`
 types (`spell_subs.cljs:156-177`), 6 selection keys
-(`options.cljc:3256-3271`), and the per-type fields. That vocabulary has
+(`options.cljc:3251-3266`), and the per-type fields. That vocabulary has
 no background ability increases, no background feat, no feat category or
 level prerequisite, and no weapon mastery. The homebrew class builder
 writes only `:known-mode :schedule` (`views.cljs:5749-5755`).

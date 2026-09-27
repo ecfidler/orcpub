@@ -67,11 +67,11 @@ only the engine.
   `spell_subs.cljs`, a `.cljs` file with re-frame subscriptions, not in
   `src/cljc`. The library must include that namespace and rewrite its
   subscriptions as plain functions (doc 02 §De-re-framing).
-- `options.cljc` requires `re-frame`, and a few modifiers read the global
-  `app-db`, for example the Dueling fighting style
-  (`options.cljc:1739-1758`). The library bundle therefore carries re-frame
-  as a dependency, and the facade must provide whatever those reads expect.
-  See doc 02 §Wrinkles.
+- `options.cljc` requires `re-frame`, so the library bundle carries it as
+  a dependency. Two modifier conditions and one prerequisite read the
+  global `app-db`, for example the Dueling fighting style
+  (`options.cljc:1737-1755`). Patch D2 (ORC-22) made them read the
+  character instead. See doc 02 §Wrinkles.
 - The engine has known behaviors a facade author must respect. Doc 02
   §Wrinkles lists them: lazy attributes with no caching (the reason for the
   old 500 ms debounce), ordering through `array-map`, the dependency of

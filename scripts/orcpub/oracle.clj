@@ -191,7 +191,7 @@
   "Runtime replacements for engine fns that only work because JavaScript
    treats null leniently. Each keeps the browser's behaviour on the JVM; the
    engine source is untouched (see fixtures/README.md, findings).
-   - options.cljc:848 proficiency-help: (> nil 1) — a homebrew subclass whose
+   - options.cljc:847 proficiency-help: (> nil 1) — a homebrew subclass whose
      skill-options has no :choose. JS: null > 1 is false."
   []
   (when-not @js-semantics-installed?

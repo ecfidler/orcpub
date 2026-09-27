@@ -13,7 +13,7 @@ The generic machinery is in `src/cljc/orcpub/`:
 - `template.cljc`. A template is a tree of selections and options: what
   can be chosen, and what each choice does through its attached modifiers.
 - `entity.cljc`. An entity is a set of choices against a template. The key
-  functions are `build` (entity.cljc:620), which folds choices into a built
+  functions are `build` (entity.cljc:621), which folds choices into a built
   character, `available-selections`, which computes what can currently be
   picked, and `to-strict` and `from-strict`, which convert to and from the
   wire format.

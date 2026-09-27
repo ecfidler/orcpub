@@ -93,14 +93,17 @@ no change.
 The engine investigation found eight behaviors, called wrinkles in this
 plan, that a facade author must work around.
 
-1. **`options.cljc` requires re-frame** (`options.cljc:26-27`), and a few
-   modifiers read the global `re-frame.db/app-db` inside conditions, for
-   example Dueling (`options.cljc:1739-1758`). The bundle carries re-frame
-   as a dependency, which is small. The facade must either seed `app-db`
-   with the keys those reads expect or patch the reads to take their input
-   from the entity. First audit every `@re-frame.db/app-db`, `subscribe`,
-   and `dispatch` in `src/cljc`. There are few. Then patch them (D2 in the
-   patch list below).
+1. **`options.cljc` requires re-frame** (`options.cljc:25`), so the
+   bundle carries re-frame as a dependency, which is small. Two modifier
+   conditions and one prerequisite read the global `re-frame.db/app-db`:
+   Dueling, the Dual Wielder AC bonus, and the homebrew `<none>` option.
+   Patch D2 (ORC-22, in the patch list below) made them read the character
+   instead, so the facade seeds nothing. Dueling (`options.cljc:1737-1755`)
+   and Dual Wielder look weapons up in the template attribute
+   `?all-weapons-map` (`template_base.cljc:70`). `t5e/template` takes an
+   optional map that replaces it. The prerequisite reads
+   `::entity/homebrew-paths`, which `entity/build` copies from the raw
+   entity (`entity.cljc:609`).
 2. **Lazy attributes with no caching.** Every attribute read re-runs its
    closure chain (`entity_spec.cljc:5-10`), which is why the old UI
    debounces builds by 500 ms. The facade memoizes `evaluate` per entity
@@ -146,7 +149,7 @@ fork (doc 00) and bumps the published package version.
 | Patch | What | Why |
 |---|---|---|
 | D1 | Re-enable the legacy unnamespaced-key migration (`character.cljc:121-178`, formerly disabled with `#_`) inside `importCharacter`. Done in ORC-20, which also fixed `add-custom-equipment-namespaces` and made the ability-score step conditional, to match `orcpub.oracle/legacy-normalize` | Quirk R7 |
-| D2 | Take the Dueling reads from the entity instead of `app-db`. Fix the `(fn [weapon _] …)` arity, which fails only in JS, and document that the bonus applies only with a one-handed melee weapon in the main hand and a non-weapon such as a shield in the off hand (`fixtures/README.md` finding 2) | Wrinkle 1 |
+| D2 | Take the Dueling reads from the entity instead of `app-db`. Fix the `(fn [weapon _] …)` arity, which fails only on the JVM, and document that the bonus applies only with a one-handed melee weapon in the main hand and a non-weapon such as a shield in the off hand (`fixtures/README.md` finding 2). Done in ORC-22, which also moved the Dual Wielder and `<none>` prerequisite reads, as wrinkle 1 describes | Wrinkle 1 |
 | D3 | Add `:boons` to `required-fields` and `content-type-names` in `import_validation.cljs` | Doc 01 §Known quirks |
 | D4 | Extend `key-reference-map` to spells' `:spell-lists` and `level-selections` | Doc 01 §Known quirks |
 
