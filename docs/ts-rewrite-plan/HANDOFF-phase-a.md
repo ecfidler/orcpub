@@ -171,7 +171,7 @@ green.
 | 5 | ORC-19 | Mutations (`select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`) and the `event_handlers_test` port |
 | 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:121-178`), then `importCharacter` and `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
 | 7 | ORC-22 | Patch D2: the `app-db` reads in `options.cljc` read from the entity instead, plus the Dueling arity and off-hand condition. `fighter-5` is the test |
-| 8 | ORC-23 | `autofill(entity)`, the fixed-point loop from `events.cljs:310` |
+| 8 | ORC-23 | `autofill(entity)`, the fixed-point loop from `events.cljs:311` |
 | 9 | ORC-24, ORC-25, ORC-26 | `types/index.d.ts` by hand, with `Rules` and the `Built2014` split, CI on `engine`, and publishing `0.1.0` with the tag `pubdoor-v0.1.0`. Record the registry choice on ORC-26 |
 
 `buildTemplate`, `parseOrcbrew`, `orcbrewToEdn`, `reconcileMissingContent`,

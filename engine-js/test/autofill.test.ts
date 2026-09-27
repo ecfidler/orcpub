@@ -88,6 +88,18 @@ describe("autofill", { timeout: 60_000 }, () => {
     }
   });
 
+  it("keeps the enabled plugins, :optional-content, as the old button does", () => {
+    const SELECTIONS = "~:orcpub.entity.strict/selections";
+    const start = emptyCharacter() as Node;
+    const plugins = {
+      "~:orcpub.entity.strict/key": "~:optional-content",
+      "~:orcpub.entity.strict/options": [{ "~:orcpub.entity.strict/key": "~:my-plugin" }],
+    };
+    const withPlugins = { ...start, [SELECTIONS]: [...(start[SELECTIONS] as unknown[]), plugins] };
+    const kept = (autofill(withPlugins, { seed: 1 }) as Node)[SELECTIONS] as Node[];
+    expect(kept.filter((s) => s["~:orcpub.entity.strict/key"] === "~:optional-content")).toEqual([plugins]);
+  });
+
   it("drops the values unless keepAll is set", () => {
     const named = setValue(emptyCharacter(), "character-name", "Brak");
     const name = (e: object) => ((e as Node)[VALUES] as Node | undefined)?.["~:orcpub.dnd.e5.character/character-name"];

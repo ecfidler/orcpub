@@ -868,6 +868,10 @@
 
 ;;; ---------------------------------------------------------------------------
 ;;; autofill (the builder's random character, events.cljs:311)
+;;;
+;;; events.cljs is outside the build, so its random character code is
+;;; repeated here. Every random draw goes through rand, a seeded generator,
+;;; so the dice and the shuffle are repeated too.
 ;;; ---------------------------------------------------------------------------
 
 (defn- mulberry32
@@ -911,26 +915,25 @@
   (inc (rand-below rand sides)))
 
 (defn- standard-ability-rolls
-  "4d6, dropping the lowest, for each ability (char5e/standard-ability-rolls)."
+  "4d6, dropping the lowest, for each ability (character.cljc:358)."
   [rand]
   (zipmap char5e/ability-keys
           (repeatedly 6 #(apply + (rest (sort (repeatedly 4 (fn [] (die-roll rand 6)))))))))
 
-(defn- selection-randomizer
-  "events.cljs selection-randomizers: the value-setting selections."
-  [rand {:keys [::t/key ::entity/path]} built]
-  (case key
-    :ability-scores (fn [_] {::entity/key :standard-roll
-                             ::entity/value (standard-ability-rolls rand)})
-    :hit-points (let [[_ class-kw] path]
-                  (fn [_] {::entity/key :roll
-                           ::entity/value (die-roll rand (-> (char5e/levels built)
-                                                             class-kw
-                                                             :hit-die))}))
-    nil))
+(def ^:private selection-randomizers
+  "The selections that take a value, not an option pick
+  (events.cljs:288). Each gives the update-fn for the selection."
+  {:ability-scores (fn [rand _ _]
+                     (fn [_] {::entity/key :standard-roll
+                              ::entity/value (standard-ability-rolls rand)}))
+   :hit-points (fn [rand {[_ class-kw] ::entity/path} built]
+                 (fn [_] {::entity/key :roll
+                          ::entity/value (die-roll rand (-> (char5e/levels built)
+                                                            class-kw
+                                                            :hit-die))}))})
 
 (defn- random-sequential-selection
-  "events.cljs random-sequential-selection: the first n options, n random."
+  "The first n options, n random (events.cljs:250)."
   [rand template raw {:keys [::t/options] :as selection}]
   (let [n (inc (rand-below rand (count options)))]
     (entity/update-option template raw (entity/actual-path selection)
@@ -939,8 +942,8 @@
 
 (defn- candidates
   "The options random-selection may pick: prerequisites pass, not <none>
-  or Custom (events.cljs), and, unlike the old loop, not already selected
-  and not banned by a backtrack."
+  or Custom (events.cljs:268), and, unlike the old loop, not already
+  selected and not banned by a backtrack."
   [template raw built banned selection]
   (let [path (entity/actual-path selection)
         selected (set (selected-option-keys template raw selection))]
@@ -952,8 +955,8 @@
             (entity/selection-options selection))))
 
 (defn- random-selection
-  "events.cljs random-selection: as many candidates as picks remain. A
-  class selection with no candidate gets the fighter."
+  "As many candidates as picks remain (events.cljs:263). A class selection
+  with no candidate gets the fighter."
   [rand template banned raw {:keys [::t/key ::t/multiselect?] :as selection}]
   (let [built (entity/build raw template)
         picks (take (entity/count-remaining template raw selection)
@@ -967,9 +970,10 @@
               [{::t/key :fighter}]
               picks))))
 
-(defn- fill-selection [rand template built banned raw {:keys [::t/sequential?] :as selection}]
-  (if-let [f (selection-randomizer rand selection built)]
-    (entity/update-option template raw (entity/actual-path selection) f)
+(defn- fill-selection [rand template built banned raw {:keys [::t/key ::t/sequential?] :as selection}]
+  (if-let [randomizer (selection-randomizers key)]
+    (entity/update-option template raw (entity/actual-path selection)
+                          (randomizer rand selection built))
     (if sequential?
       (random-sequential-selection rand template raw selection)
       (random-selection rand template banned raw selection))))
@@ -977,8 +981,9 @@
 (defn- fillable?
   "Whether a selection with picks remaining has anything to pick."
   [template raw built banned {:keys [::t/key ::t/sequential?] :as selection}]
-  (or (#{:ability-scores :hit-points :class} key)
+  (or (contains? selection-randomizers key)
       sequential?
+      (= :class key) ; random-selection falls back to the fighter
       (seq (candidates template raw built banned selection))))
 
 (defn- remove-option
@@ -1000,9 +1005,14 @@
   improvement when no feat is left, taking the last occurrence that
   autofill opened. The option is removed and banned, so the next step
   picks another. Only options autofill picked are undone, never those in
-  the start entity (start-paths). nil when there is none."
+  the start entity (start-paths). nil when there is none.
+
+  An occurrence's path interleaves selection and option keys, so the
+  option above it is its path without the last key, and that option's
+  selection is the path without the last two. Under a ref selection the
+  path starts from the ref, so the parent is found by actual path."
   [template raw selections start-paths banned dead]
-  (let [by-path (group-by ::entity/path selections)
+  (let [by-actual-path (group-by entity/actual-path selections)
         undo (distinct
               (keep (fn [s]
                       (let [path (entity/actual-path s)]
@@ -1010,9 +1020,10 @@
                          (for [occurrence (reverse selections)
                                :when (and (= path (entity/actual-path occurrence))
                                           (pos? (or (::t/min occurrence) 0))
+                                          ;; A top-level selection has no option above it.
                                           (< 2 (count (::entity/path occurrence))))
                                :let [option-path (pop (::entity/path occurrence))
-                                     parent (first (by-path (pop option-path)))
+                                     parent (first (by-actual-path (pop option-path)))
                                      parent-path (some-> parent entity/actual-path)
                                      k (peek option-path)]
                                :when (and parent
@@ -1045,11 +1056,17 @@
 
 (def ^:private autofill-steps
   "The old loop stops after 10 rounds (events.cljs:314). Each backtrack
-  takes a step too, so this allows more."
+  takes a step too, so this allows more. At the limit, autofill returns
+  what it has filled, as the old loop does."
   20)
 
+(def ^:private always-kept
+  "The old button keeps :optional-content, the enabled plugins, with the
+  locked components (events.cljs:342)."
+  [[:optional-content]])
+
 (defn- keep-options
-  "events.cljs keep-options: a new entity with only the options at paths."
+  "A new entity with only the options at paths (events.cljs:299)."
   [template raw paths]
   (reduce (fn [kept path]
             (if-some [option (entity/get-option template raw path)]
@@ -1065,16 +1082,20 @@
 
 (defn ^:export autofill
   "Fills a character at random, as the builder's random character button
-  does (events.cljs:311). Each round builds the character and fills every
+  does (events.cljs:311). Each step builds the character and fills every
   selection with picks remaining. Filling can open new selections, such as
-  a class's, so it repeats, at most 10 rounds.
+  a class's, so it repeats, at most 20 steps. When a choice opens a
+  selection nothing can fill, such as a feat when the SRD's one feat is
+  taken, it undoes that choice and picks another, unlike the old button.
+  It never undoes an option the entity already had.
 
   options is {seed?, keep?, keepAll?, rules?, homebrew?}. By default the old
   button's behaviour: the result keeps only the options at the keep paths
-  (the builder's locked components, such as [\"race\"]) and fills the rest,
-  including the class and level, and drops the values such as the name.
-  With keepAll, it keeps every option and value and fills only the
-  selections with picks remaining. seed is a 32-bit integer; the same seed
+  (the builder's locked components, such as [\"race\"]) and the enabled
+  plugins (:optional-content). It fills the rest, including the class and
+  level, and drops the values such as the name. With keepAll, it keeps
+  every option and value and fills only the selections with picks
+  remaining. seed is a 32-bit integer; the same seed
   and entity give the same result. Without one, it uses Math.random.
 
   Names are not generated: character/random.cljc is not in the package."
@@ -1086,7 +1107,7 @@
          raw (read-raw entity)
          start (if (some-> options (gobj/get "keepAll"))
                  raw
-                 (keep-options template raw kept-paths))
+                 (keep-options template raw (concat kept-paths always-kept)))
          step (partial autofill-step rand template kept-paths (option-paths start))]
      (write-raw (loop [state {:raw start :banned #{}}, n 0]
                   (if-let [next-state (and (< n autofill-steps) (step state))]

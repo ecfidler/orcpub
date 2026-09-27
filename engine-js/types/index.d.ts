@@ -172,9 +172,9 @@ export interface AutofillOptions extends MutationOptions {
 
 /**
  * Fills a character at random, as the builder's random character button
- * does. By default it keeps only the options at options.keep, fills the
- * rest, including the class and level, and drops the values such as the
- * name. With keepAll, it fills only what is unfilled. Names are not
+ * does. By default it keeps only the options at options.keep and the
+ * enabled plugins (optional-content), fills the rest, including the class
+ * and level, and drops the values such as the name. With keepAll, it fills only what is unfilled. Names are not
  * generated.
  *
  * Unlike the old button, it backtracks from a choice that opens a
