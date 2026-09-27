@@ -162,7 +162,7 @@ describe("event_handlers_test", () => {
   });
 
   // The original toggles options of [:skill-profs], but no selection refers
-  // to that path since options.cljc:865 commented out the ref, so the
+  // to that path since options.cljc:864 commented out the ref, so the
   // builder cannot reach it. The port runs the same toggles on the human's
   // language selection, with the original's selection id.
   it("update-multi-select--round-trip", () => {

@@ -9,7 +9,6 @@
             [clojure.walk :as walk]
             [cognitect.transit :as transit]
             [goog.object :as gobj]
-            [re-frame.db]
             [orcpub.entity :as entity]
             [orcpub.entity.strict :as se]
             [orcpub.template :as t]
@@ -257,23 +256,10 @@
           (map? selected) (if-let [k (::entity/key selected)] [k] [])
           :else [])))
 
-(defn- seed-app-db!
-  "The none-option prerequisite reads (:character @app-db)
-  (options.cljc:2077). Seed it until patch D2 (ORC-22) reads the entity."
-  [raw]
-  (swap! re-frame.db/app-db assoc :character raw))
-
-(defn- build-seeded
-  "entity/build, with app-db seeded for the prerequisites that read it."
-  [raw template]
-  (seed-app-db! raw)
-  (entity/build raw template))
-
 (defn- selections
   "entity/available-selections flattened to plain data, in the order the
   engine returns them."
   [raw built template]
-  (seed-app-db! raw)
   (mapv (fn [{:keys [::t/key ::t/name ::t/min ::t/max ::t/ref ::t/options
                      ::t/multiselect? ::t/sequential? ::t/require-value?
                      ::entity/path] :as s}]
@@ -337,6 +323,13 @@
   JSON.parse returns for it. options is {rules?, homebrew?}. rules defaults
   to \"2014\", the only edition 0.1 supports. homebrew is accepted and
   ignored until buildTemplate (ORC-27).
+
+  Weapon bonuses read the hand slots in the entity's values,
+  :orcpub.dnd.e5.character/main-hand-weapon and off-hand-weapon, each a
+  weapon or item key. The Dueling fighting style's +2 damage applies only
+  when the main hand holds a one-handed melee weapon and the off hand is
+  set to something that is not a weapon, such as :shield. An empty off hand
+  gives no bonus.
 
   The result is memoized on the entity's JSON text, so calling evaluate
   again with an unchanged entity returns the same object."
@@ -501,7 +494,7 @@
   do nothing, with the reason. Also returns the option, whose select-fn
   the payload leaves out."
   [raw template path k deselect?]
-  (let [built (build-seeded raw template)
+  (let [built (entity/build raw template)
         selection (ui-selection raw built template path)
         {:keys [::t/min ::t/max ::t/multiselect? ::t/ref]} selection
         _ (when-let [instead (custom-ui-selections (::t/key selection))]
@@ -558,7 +551,7 @@
 
 (defn- background-config
   "The raw background config that background option k was built from
-  (options.cljc:2474 derives the key from the name)."
+  (options.cljc:2469 derives the key from the name)."
   [{:keys [backgrounds]} k]
   (or (some #(when (= k (common/name-to-kw (:name %))) %) backgrounds)
       (fail! "No background " (kw->str k) ".")))
@@ -570,7 +563,7 @@
 
 (defn- click
   "Applies a click on option k at path. A background option's select-fn
-  (options.cljc:2488) dispatches :add-background-starting-equipment, which
+  (options.cljc:2483) dispatches :add-background-starting-equipment, which
   runs after the selection; this applies it directly."
   [raw content path k deselect?]
   (let [{:keys [option payload]} (option-click raw (:template content) path k deselect?)
@@ -644,7 +637,7 @@
                     (show-path path) "."))
          k (peek path)
          selection-path (pop path)
-         built (build-seeded raw template)
+         built (entity/build raw template)
          _ (ui-option (ui-selection raw built template selection-path) selection-path k)
          v (read-value value)
          current (entity/get-option template raw selection-path)]
@@ -679,7 +672,7 @@
       (fail! "The character has no class " (kw->str k) ".")))
 
 (defn- check-class-prereqs! [raw template option]
-  (let [failed (failed-prereqs option (build-seeded raw template))]
+  (let [failed (failed-prereqs option (entity/build raw template))]
     (when (seq failed)
       (fail! "Cannot add " (kw->str (::t/key option)) ": it requires "
              (str/join ", " failed) "."))))
@@ -819,7 +812,7 @@
   picks, and how often each ability is picked, as ability-increases-component
   computes them (character_builder.cljs:830)."
   [raw template path]
-  (let [built (build-seeded raw template)
+  (let [built (entity/build raw template)
         selection (ui-selection raw built template path)
         _ (when-not (= :asi (::t/key selection))
             (fail! (show-path path) " is not an ability score improvement."))

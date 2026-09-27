@@ -605,7 +605,8 @@
               {}
               modifiers)
         base (merge (::t/base template)
-                    (::values raw-entity))
+                    (::values raw-entity)
+                    (select-keys raw-entity [::homebrew-paths]))
         base-deps (::es/deps base)
         all-deps (merge-with union deps base-deps)
         mod-order (rseq (kahn-sort all-deps))

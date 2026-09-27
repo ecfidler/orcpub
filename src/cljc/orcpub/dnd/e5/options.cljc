@@ -22,8 +22,7 @@
             [orcpub.dnd.e5.magic-items :as mi]
             [orcpub.dnd.e5.event-handlers :as eh]
             [orcpub.components :as comps]
-            [re-frame.core :refer [dispatch subscribe]]
-            [re-frame.db])
+            [re-frame.core :refer [dispatch subscribe]])
   #?(:cljs (:require-macros [orcpub.dnd.e5.modifiers :as modifiers])))
 
 #?(:cljs (enable-console-print!))
@@ -1163,8 +1162,7 @@
                 nil
                 [(let [main-hand-weapon ?orcpub.dnd.e5.character/main-hand-weapon
                        off-hand-weapon ?orcpub.dnd.e5.character/off-hand-weapon
-                       all-weapons-map (mi/compute-all-weapons-map
-                                        (get @re-frame.db/app-db ::mi/custom-items))]
+                       all-weapons-map ?all-weapons-map]
                    (and main-hand-weapon
                         (-> all-weapons-map
                             main-hand-weapon
@@ -1736,14 +1734,13 @@
         :page 72
         :description "When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon."})
                 (mods/vec-mod ?damage-bonus-fns ;vec-mod prop
-                              (fn [weapon _] (if (or (weapon ::weapons/two-handed?)
-                                                     (weapon ::weapons/ranged?)) 0 2)) ;vec-mod val ... maybe?
+                              (fn [weapon & _] (if (or (weapon ::weapons/two-handed?)
+                                                       (weapon ::weapons/ranged?)) 0 2)) ;vec-mod val ... maybe?
                               nil ;vec-mod nm
                               nil ;vec-mod value ... maybe?
                               [(let [main-hand-weapon ?orcpub.dnd.e5.character/main-hand-weapon
                                      off-hand-weapon ?orcpub.dnd.e5.character/off-hand-weapon
-                                     all-weapons-map (mi/compute-all-weapons-map
-                                                      (get @re-frame.db/app-db ::mi/custom-items))]
+                                     all-weapons-map ?all-weapons-map]
                                  (and main-hand-weapon
                                       (-> all-weapons-map
                                           main-hand-weapon
@@ -2071,11 +2068,9 @@
     :order 1001
     :prereqs [(t/option-prereq
                nil
-               (fn [_]
-                 ;; Read homebrew flag from raw character in app-db;
-                 ;; built entity doesn't carry ::homebrew-paths.
-                 (get-in (:character @re-frame.db/app-db)
-                         [::entity/homebrew-paths path]))
+               (fn [c]
+                 ;; entity/build copies ::homebrew-paths from the raw entity.
+                 (get-in c [::entity/homebrew-paths path]))
                true)]}))
 
 

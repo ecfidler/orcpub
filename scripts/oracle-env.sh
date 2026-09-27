@@ -85,7 +85,8 @@ case "${1:-}" in
     exec java -cp "$CP" clojure.main -e "
       (require 'clojure.test)
       (def nss '[orcpub.dnd.e5.warlock-test orcpub.dnd.e5.character-test
-                 orcpub.dnd.e5.event-handlers-test orcpub.entity-test orcpub.template-test])
+                 orcpub.dnd.e5.event-handlers-test orcpub.dnd.e5.options-test
+                 orcpub.entity-test orcpub.template-test])
       (doseq [n nss] (require n))
       (let [r (apply clojure.test/run-tests nss)]
         (System/exit (if (zero? (+ (:fail r) (:error r))) 0 1)))" "$@" ;;

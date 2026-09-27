@@ -30,3 +30,33 @@ describe("evaluate", () => {
     expect(() => evaluate(strict, { rules: "2024" as never })).toThrow(/2024/);
   });
 });
+
+describe("evaluate: the hand slots Dueling reads", () => {
+  // fighter-5 has Dueling, a longsword in the main hand and a shield in the
+  // off hand.
+  const fighter5 = fixture("fighter-5.strict.json") as {
+    "~:orcpub.entity.strict/values": Record<string, unknown>;
+  };
+  const offHand = "~:orcpub.dnd.e5.character/off-hand-weapon";
+
+  function longswordDamage(offHandValue: string | undefined): unknown {
+    const values = { ...fighter5["~:orcpub.entity.strict/values"] };
+    if (offHandValue === undefined) delete values[offHand];
+    else values[offHand] = offHandValue;
+    const { built } = evaluate({ ...fighter5, "~:orcpub.entity.strict/values": values });
+    const modifiers = built["weapon-modifiers"] as Record<string, { "best-damage": number }>;
+    return modifiers["longsword"]!["best-damage"];
+  }
+
+  it("adds +2 with a non-weapon in the off hand", () => {
+    expect(longswordDamage("~:shield")).toBe(6);
+  });
+
+  it("adds nothing with an empty off hand", () => {
+    expect(longswordDamage(undefined)).toBe(4);
+  });
+
+  it("adds nothing with a weapon in the off hand", () => {
+    expect(longswordDamage("~:handaxe")).toBe(4);
+  });
+});

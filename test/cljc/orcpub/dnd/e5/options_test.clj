@@ -3,6 +3,9 @@
             [clojure.spec.alpha :as spec]
             [orcpub.dnd.e5.options :as opt]
             [orcpub.dnd.e5.character :as char5e]
+            [orcpub.dnd.e5.magic-items :as mi5e]
+            [orcpub.dnd.e5.template :as t5e]
+            [orcpub.dnd.e5.weapons :as weapons]
             [orcpub.template :as t]
             [orcpub.entity :as entity]))
 
@@ -61,3 +64,71 @@
           result (opt/feat-prereqs [::char5e/str] path-prereqs race-map)]
       ;; 1 ability + 1 race
       (is (= 2 (count result))))))
+
+;; -- patch D2: no app-db reads --
+
+(def ^:private test-blade
+  "A one-handed melee weapon that only a custom weapons map knows."
+  {:name "Test Blade"
+   :key :test-blade
+   ::weapons/type :martial
+   ::weapons/melee? true
+   ::weapons/damage-type :slashing
+   ::weapons/damage-die 8
+   ::weapons/damage-die-count 1})
+
+(def ^:private custom-weapons-map
+  (assoc mi5e/all-weapons-map :test-blade test-blade))
+
+(defn- fighter [fighting-style main-hand off-hand]
+  {::entity/options {:class [{::entity/key :fighter
+                              ::entity/options {:fighting-style [{::entity/key fighting-style}]}}]}
+   ::entity/values {::char5e/main-hand-weapon main-hand
+                    ::char5e/off-hand-weapon off-hand}})
+
+(defn- damage [raw template weapon]
+  ((char5e/weapon-damage-modifier-fn (entity/build raw template)) weapon false))
+
+(deftest dueling-damage-bonus
+  (let [template (t5e/template [(opt/fighting-style-selection :fighter)])
+        longsword (weapons/weapons-map :longsword)
+        without (damage (fighter :defense :longsword :shield) template longsword)]
+    (testing "+2 with a one-handed melee weapon and a shield in the off hand"
+      (is (= (+ without 2)
+             (damage (fighter :dueling :longsword :shield) template longsword))))
+    (testing "no bonus with a weapon in the off hand"
+      (is (= without
+             (damage (fighter :dueling :longsword :dagger) template longsword))))
+    (testing "no bonus with a two-handed weapon"
+      (let [maul (weapons/weapons-map :maul)]
+        (is (= (damage (fighter :defense :maul :shield) template maul)
+               (damage (fighter :dueling :maul :shield) template maul)))))))
+
+(deftest dueling-looks-weapons-up-in-the-template
+  (let [selections [(opt/fighting-style-selection :fighter)]
+        raw (fighter :dueling :test-blade :shield)
+        custom (damage raw (t5e/template selections custom-weapons-map) test-blade)
+        static (damage raw (t5e/template selections) test-blade)]
+    (is (= (+ static 2) custom))))
+
+(deftest dual-wield-ac-looks-weapons-up-in-the-template
+  (let [selections [(t/selection-cfg
+                     {:name "Feat"
+                      :options [(t/option-cfg {:name "Dual Wielder"
+                                               :modifiers [opt/dual-wield-ac-mod]})]})]
+        raw {::entity/options {:feat {::entity/key :dual-wielder}}
+             ::entity/values {::char5e/main-hand-weapon :test-blade
+                              ::char5e/off-hand-weapon :test-blade}}
+        ac (fn [template]
+             ((char5e/armor-class-with-armor (entity/build raw template)) nil nil))]
+    (is (= (inc (ac (t5e/template selections)))
+           (ac (t5e/template selections custom-weapons-map))))))
+
+(deftest none-option-reads-homebrew-paths-from-the-built-character
+  (let [path [:race :custom :subrace]
+        prereq-fn (-> (opt/none-option path) ::t/prereqs first ::t/prereq-fn)
+        template (t5e/template [])]
+    (testing "passes when the path is homebrew"
+      (is (prereq-fn (entity/build {::entity/homebrew-paths {path true}} template))))
+    (testing "fails otherwise"
+      (is (not (prereq-fn (entity/build {} template)))))))

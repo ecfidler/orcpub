@@ -191,7 +191,7 @@
   "Runtime replacements for engine fns that only work because JavaScript
    treats null leniently. Each keeps the browser's behaviour on the JVM; the
    engine source is untouched (see fixtures/README.md, findings).
-   - options.cljc:848 proficiency-help: (> nil 1) — a homebrew subclass whose
+   - options.cljc:847 proficiency-help: (> nil 1) — a homebrew subclass whose
      skill-options has no :choose. JS: null > 1 is false."
   []
   (when-not @js-semantics-installed?
@@ -517,7 +517,10 @@
   "entity/available-selections flattened to plain data: key, name, path,
    actualPath (doc 02 wrinkle 5), min/max, remaining, selected option keys."
   [raw built template]
-  (swap! rfdb/app-db assoc :character raw) ; `none-option` prereq reads it
+  ;; The unpatched `none-option` prereq read the raw character from app-db.
+  ;; Patch D2 reads it from the built character. The seed keeps the oracle
+  ;; independent of the patch.
+  (swap! rfdb/app-db assoc :character raw)
   (mapv (fn [{:keys [::t/key ::t/name ::t/min ::t/max ::t/ref ::t/options
                      ::t/multiselect? ::t/sequential? ::t/require-value?
                      ::entity/path] :as s}]
@@ -749,12 +752,13 @@
   [:damage-bonus-fns :attack-modifier-fns :ac-bonus-fns :ac-fns :default-skill-bonus-fns])
 
 (defn with-js-arity
-  "The old engine relies on JavaScript's lenient arity in places: the Dueling
-   fighting style adds a 2-parameter fn to ?damage-bonus-fns, which
-   template_base.cljc calls with one argument (options.cljc:1748,
-   template_base.cljc:227). Evaluate those fn lists once and replace them with
-   JS-lenient wrappers so the JVM computes what the browser does. This is
-   patch D2 territory; the engine source is left untouched here."
+  "The unpatched engine relies on JavaScript's lenient arity in places: the
+   Dueling fighting style added a 2-parameter fn to ?damage-bonus-fns, which
+   template_base.cljc calls with one argument. Evaluate those fn lists once
+   and replace them with JS-lenient wrappers so the JVM computes what the
+   browser does. Patch D2 fixed the Dueling arity in the engine source. The
+   wrapper stays so that the oracle does not depend on the patch, as
+   legacy-normalize does not depend on D1."
   [built]
   (reduce (fn [b k]
             (let [v (es/entity-val b k)]

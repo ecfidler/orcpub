@@ -522,9 +522,9 @@
                            feats
                            language-map))
 
-;; ::char5e/template — equipment_subs.cljs:328-332
-(defn- template [template-selections]
-  (t5e/template template-selections))
+;; ::char5e/template — equipment_subs.cljs:328-333
+(defn- template [template-selections all-weapons-map]
+  (t5e/template template-selections all-weapons-map))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Public
@@ -600,7 +600,8 @@
                                      races
                                      classes
                                      feats
-                                     language-map))
+                                     language-map)
+                all-weapons-map)
      :all-weapons-map all-weapons-map
      :all-armor-map all-armor-map
      :backgrounds backgrounds}))
