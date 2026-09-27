@@ -328,5 +328,6 @@
 (reg-sub
  ::char5e/template
  :<- [::char5e/template-selections]
- (fn [template-selections _]
-   (t5e/template template-selections)))
+ :<- [::mi5e/all-weapons-map]
+ (fn [[template-selections all-weapons-map] _]
+   (t5e/template template-selections all-weapons-map)))

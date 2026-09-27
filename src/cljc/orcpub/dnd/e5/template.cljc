@@ -1562,6 +1562,12 @@
    (inventory-selection "Equipment" "backpack" equip5e/equipment mod5e/deferred-equipment)
    (magic-item-selection "Other Magic Items" "orb-wand" other-magic-item-options mod5e/deferred-magic-item magic-item-details)])
 
-(defn template [selections]
-  {::t/base t-base/template-base
+(defn template
+  "all-weapons-map, when given, replaces the base's ?all-weapons-map, the
+  static map the Dueling and Dual Wielder conditions look up the wielded
+  weapons in. The old app passes a map that includes the user's custom
+  magic items."
+  [selections & [all-weapons-map]]
+  {::t/base (cond-> t-base/template-base
+              all-weapons-map (assoc :all-weapons-map all-weapons-map))
    ::t/selections selections})
