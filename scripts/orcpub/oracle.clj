@@ -20,7 +20,7 @@
      → `clojure.spec.alpha`.
 
    Everything here is a fixture-generation concern; nothing in this file is
-   engine source and none of it ships in `@dmv/pubdoor`. The JSON encoding
+   engine source and none of it ships in `@pubdoor/dmv`. The JSON encoding
    rules (`->plain`) are documented in fixtures/README.md and must be
    mirrored by the facade's one-pass extraction in M1."
   (:require [clojure.string :as str]

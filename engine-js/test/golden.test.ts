@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate, importCharacter } from "@dmv/pubdoor";
+import { evaluate, importCharacter } from "@pubdoor/dmv";
 
 // The M0 fixtures: fixtures/README.md describes the layout and how
 // expected.json and selections.json were generated.

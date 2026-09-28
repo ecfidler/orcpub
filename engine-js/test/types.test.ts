@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, expectTypeOf, it } from "vitest";
-import { evaluate } from "@dmv/pubdoor";
-import type { Built2014, BuiltCharacter, Rules } from "@dmv/pubdoor";
+import { evaluate } from "@pubdoor/dmv";
+import type { Built2014, BuiltCharacter, Rules } from "@pubdoor/dmv";
 
 const characters = new URL("../../fixtures/characters/", import.meta.url);
 

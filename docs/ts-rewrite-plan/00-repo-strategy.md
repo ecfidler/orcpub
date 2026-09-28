@@ -19,8 +19,8 @@ So the split is:
 
 | Phase | Where | What |
 |---|---|---|
-| A | This fork (`ecfidler/orcpub`), on the `engine` branch | M0 fixtures and the built-value dump script. The engine library at `engine-js/`: shadow-cljs build, facade, `.d.ts`, and golden tests. The engine patches as ordinary commits. Publishing `@dmv/pubdoor` |
-| B | A new repository, working name `dmv-next` | Everything from M2 onward: the app, local-first storage, homebrew UI, import tooling, and backend. It consumes `@dmv/pubdoor` from a package registry and never has a Clojure toolchain |
+| A | This fork (`ecfidler/orcpub`), on the `engine` branch | M0 fixtures and the built-value dump script. The engine library at `engine-js/`: shadow-cljs build, facade, `.d.ts`, and golden tests. The engine patches as ordinary commits. Publishing `@pubdoor/dmv` |
+| B | A new repository, working name `dmv-next` | Everything from M2 onward: the app, local-first storage, homebrew UI, import tooling, and backend. It consumes `@pubdoor/dmv` from a package registry and never has a Clojure toolchain |
 
 The engine package is the boundary because it is a build artifact with a
 typed interface. The app repo depends on it exactly as it would on any npm
@@ -53,17 +53,17 @@ layout and the regeneration commands. M1 adds:
 engine-js/
   shadow-cljs.edn          ; :esm target, :advanced; source-paths ["src" "../src/cljc" "../src/cljs"]
   src/orcpub/facade.cljs   ; the exported API (doc 02)
-  package.json             ; name @dmv/pubdoor; publishes dist/ and types/
+  package.json             ; name @pubdoor/dmv; publishes dist/ and types/
   types/index.d.ts         ; hand-written
   test/                    ; golden tests (vitest) against ../fixtures/
 ```
 
-The package name is `@dmv/pubdoor`, chosen at the Phase A decision review
-on 2026-09-20, where all 24 Phase A decisions were approved.
-
-For publishing, GitHub Packages under the fork's owner needs the least
-setup: `npm publish` with a `publishConfig.registry`. Public npm is also
-fine. Version the package with semver from `0.1.0`. Every engine patch or
+The Phase A decision review on 2026-09-20, where all 24 Phase A decisions
+were approved, named the package `@dmv/pubdoor`. ORC-26 renamed it to
+`@pubdoor/dmv` and publishes it to the public npm registry under the
+`pubdoor` org: PubDoor is the project, and this package is its DMV engine.
+GitHub Packages was rejected because its scope must match the repository
+owner. Version the package with semver from `0.1.0`. Every engine patch or
 facade addition bumps the version, and the app repo pins exact versions. CI
 in this fork builds the package and runs the golden tests on every push to
 `engine`.
@@ -75,7 +75,7 @@ must stay self-contained, so it carries a snapshot under its own
 
 ## Phase B: the app repository
 
-Create the app repository once `@dmv/pubdoor@0.1.x` exists with `evaluate`,
+Create the app repository once `@pubdoor/dmv@0.1.x` exists with `evaluate`,
 the mutations, `importCharacter`, and `parseOrcbrew`, that is, after M1 and
 the engine half of M3. Its initial contents:
 
@@ -92,7 +92,7 @@ dmv-next/
 `CLAUDE.md` in the app repo states four things:
 
 - The plan is `docs/plan/`, and Plan Set 2 is active.
-- The engine comes from `@dmv/pubdoor`, built in the `ecfidler/orcpub` fork
+- The engine comes from `@pubdoor/dmv`, built in the `ecfidler/orcpub` fork
   under `engine-js/`, which is also the test oracle.
 - The current milestone.
 - The app never imports Clojure or the engine source.

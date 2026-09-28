@@ -14,10 +14,10 @@ everything the old app holds. 2024 content has its own data format and key
 scheme (ORC-96) and no contract with the old app, because the old app has
 no 2024 rules.
 
-The contracts hold by construction while `@dmv/pubdoor` evaluates 2014
+The contracts hold by construction while `@pubdoor/dmv` evaluates 2014
 characters. When a later engine replaces it (ORC-97), the bar for C1
 mechanics fidelity and for C2 changes. Every character must import and
-evaluate, and a difference report against `@dmv/pubdoor` lists every sheet
+evaluate, and a difference report against `@pubdoor/dmv` lists every sheet
 value that changed. Identical values are not required then. C3 does not
 change: engine keys stay as they are, and the app qualifies the keys it
 stores or routes by rules edition. See `docs/reports/2024-rules-support.md`

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { addLevel, autofill, emptyCharacter, evaluate, exportCharacter, select, setValue } from "@dmv/pubdoor";
-import type { AvailableSelection } from "@dmv/pubdoor";
+import { addLevel, autofill, emptyCharacter, evaluate, exportCharacter, select, setValue } from "@pubdoor/dmv";
+import type { AvailableSelection } from "@pubdoor/dmv";
 
 const VALUES = "~:orcpub.entity.strict/values";
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

@@ -13,7 +13,7 @@
 | # | Milestone | Project | Proof |
 |---|-----------|---------|-------|
 | M0 | Reference and fixtures | PubDoor | Fixture set committed under `fixtures/`. Done (PR #4) |
-| M1 | Engine package 0.1 | PubDoor | Golden characters evaluate identically in TypeScript tests, and `@dmv/pubdoor` is installable |
+| M1 | Engine package 0.1 | PubDoor | Golden characters evaluate identically in TypeScript tests, and `@pubdoor/dmv` is installable |
 | M2 | Local-first viewer | Alchemy 5e | Read-only sheet from `evaluate`, with a Playwright smoke test |
 | M3 | Homebrew, engine path and in the app | Both | Lossless and old-spec-acceptance tests green, and homebrew golden characters match |
 | M4 | Builder | Alchemy 5e | Golden characters rebuilt from scratch round-trip identically |
@@ -71,7 +71,7 @@ project *2024 engine* (ORC-95 to ORC-97). See the decision record below.
   `all-content.orcbrew`, run the exporter bookmarklet, import both into the
   new app, and see every character evaluate to the same sheet values.
 
-The same sheet values are required while `@dmv/pubdoor` evaluates 2014
+The same sheet values are required while `@pubdoor/dmv` evaluates 2014
 characters. When the later engine takes over 2014 (ORC-97), the bar
 becomes the difference report in doc 01 §Scope.
 

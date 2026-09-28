@@ -1,5 +1,5 @@
 {
-  "name": "@dmv/pubdoor",
+  "name": "@pubdoor/dmv",
   "version": "0.0.2",
   "description": "The Dungeon Master's Vault 5e rules engine, compiled from ClojureScript",
   "license": "EPL-2.0",
