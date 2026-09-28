@@ -15,7 +15,11 @@ of the JVM's (finding 13).
 
 Produced from engine source at commit **`bcd9d68`** (branch `engine`; the
 engine source is unchanged from `develop` at that point). Regenerate whenever
-`src/cljc` or the two `src/cljs` namespaces above change (see *Regenerating*).
+`src/cljc` or one of the three `src/cljs` files the engine reads changes (see
+*Regenerating*): `orcpub/dnd/e5.cljc`, `spell_subs.cljs` and
+`equipment_subs.cljs`, the last copied into `engine-js/src/orcpub/facade/template.cljs`.
+`import_validation.cljs` and `content_reconciliation.cljs` join them when the
+facade takes on the homebrew path in M3.
 
 ## Layout
 
