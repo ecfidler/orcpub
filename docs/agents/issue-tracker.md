@@ -14,7 +14,7 @@ in `CLAUDE.md`:
 
 | Project | What it tracks | Repo |
 | --- | --- | --- |
-| PubDoor | Phase A: the compiled engine package `@dmv/pubdoor` | this repo |
+| PubDoor | Phase A: the compiled engine package `@pubdoor/dmv` | this repo |
 | Alchemy 5e | Phase B: the new TypeScript and React app | its own repo |
 
 New issues for work in this repo go in PubDoor unless the user says

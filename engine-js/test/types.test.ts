@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, expectTypeOf, it } from "vitest";
-import { evaluate } from "@dmv/pubdoor";
-import type { Built2014, BuiltCharacter, Rules } from "@dmv/pubdoor";
+import { evaluate } from "@pubdoor/dmv";
+import type { Built2014, BuiltCharacter, Rules } from "@pubdoor/dmv";
 
 const characters = new URL("../../fixtures/characters/", import.meta.url);
 
@@ -18,6 +18,7 @@ const neutralKeys = [
   "initiative", "armor-profs", "weapon-profs", "tool-profs", "tool-bonus", "languages",
   "armor-class", "armor-class-with-armor", "max-hit-points", "current-hit-points",
   "base-land-speed", "base-flying-speed", "base-swimming-speed", "unarmored-speed-bonus",
+  "speed-with-armor",
   "darkvision", "weapon-modifiers",
   "number-of-attacks", "attacks", "spell-slots", "spells-known", "spell-modifiers",
   "spell-save-dc", "spell-attack-modifier", "prepares-spells", "prepare-spell-count", "traits",

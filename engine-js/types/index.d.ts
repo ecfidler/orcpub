@@ -175,6 +175,12 @@ export interface BuiltCharacter {
   "base-swimming-speed": number;
   /** Added to the land speed without armor, such as the monk's Unarmored Movement. */
   "unarmored-speed-bonus": number | null;
+  /**
+   * Land speed without armor (armor null), then in each carried armor that
+   * is not a shield. null unless a feature makes the speed depend on armor,
+   * such as the barbarian's Fast Movement.
+   */
+  "speed-with-armor": { armor: string | null; speed: number }[] | null;
   /** Darkvision range, 0 without darkvision. */
   darkvision: number;
 

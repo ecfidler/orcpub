@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { exportCharacter } from "@dmv/pubdoor";
+import { exportCharacter } from "@pubdoor/dmv";
 
 // Port of the strict-round-trip tests in
 // test/cljc/orcpub/dnd/e5/character_test.clj: to-strict(from-strict(x)) = x.

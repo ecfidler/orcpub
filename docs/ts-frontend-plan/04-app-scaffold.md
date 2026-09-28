@@ -14,7 +14,7 @@ character list against the real backend.
 | Server state | TanStack Query | Caching and retries for the API endpoints. Replaces the ad-hoc ajax in `events.cljs` |
 | Client state | Zustand or Redux Toolkit | One store: the current entity, the auth token, and UI state |
 | Wire | transit-js codec (doc 02) | |
-| Rules | `@dmv/pubdoor` (doc 03) | An async-loaded chunk |
+| Rules | `@pubdoor/dmv` (doc 03) | An async-loaded chunk |
 | Tests | vitest and Playwright | Golden files and a few end-to-end flows |
 
 Redux Toolkit is the closest match to re-frame if you ever need to
@@ -28,7 +28,7 @@ Zustand needs less boilerplate. Either works.
 web-ts/
   src/
     api/          # transit codec + typed endpoint functions (doc 02)
-    engine/       # thin wrapper around @dmv/pubdoor: async load, debounced build
+    engine/       # thin wrapper around @pubdoor/dmv: async load, debounced build
     state/        # store: auth slice, character slice, homebrew slice
     routes/       # route table; one dir per page (doc 05)
     components/   # shared UI (option cards, ability blocks, modals)
