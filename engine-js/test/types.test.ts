@@ -18,6 +18,7 @@ const neutralKeys = [
   "initiative", "armor-profs", "weapon-profs", "tool-profs", "tool-bonus", "languages",
   "armor-class", "armor-class-with-armor", "max-hit-points", "current-hit-points",
   "base-land-speed", "base-flying-speed", "base-swimming-speed", "unarmored-speed-bonus",
+  "speed-with-armor",
   "darkvision", "weapon-modifiers",
   "number-of-attacks", "attacks", "spell-slots", "spells-known", "spell-modifiers",
   "spell-save-dc", "spell-attack-modifier", "prepares-spells", "prepare-spell-count", "traits",

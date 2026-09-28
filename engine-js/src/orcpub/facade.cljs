@@ -75,7 +75,6 @@
   [["base-swimming-speed" char5e/base-swimming-speed]
    ["base-flying-speed" char5e/base-flying-speed]
    ["base-land-speed" char5e/base-land-speed]
-   ["speed-with-armor" char5e/land-speed-with-armor]
    ["unarmored-speed-bonus" char5e/unarmored-speed-bonus]
    ["max-hit-points" char5e/max-hit-points]
    ["current-hit-points" char5e/current-hit-points]
@@ -200,6 +199,20 @@
         "shield" (some-> shield-key kw->str)
         "ac" (ac-fn armor-item shield-item)}))))
 
+(defn- armor-speeds
+  "speed-with-armor evaluated unarmored (nil) and then with each carried
+  non-shield armor, as speed-section-2 in views.cljs shows it. nil when
+  nothing sets the attribute, such as the barbarian's Fast Movement."
+  [built all-armor-map]
+  (when-let [speed-fn (char5e/land-speed-with-armor built)]
+    (let [armor (->> (sort (keys (char5e/all-armor-inventory built)))
+                     (map (fn [k] [k (get all-armor-map k)]))
+                     (remove #(= :shield (:type (second %)))))]
+      (vec
+       (for [[armor-key armor-item] (cons [nil nil] armor)]
+         {"armor" (some-> armor-key kw->str)
+          "speed" (speed-fn armor-item)})))))
+
 (defn- weapon-table [built all-weapons-map]
   (let [attack (char5e/weapon-attack-modifier-fn built)
         damage (char5e/weapon-damage-modifier-fn built)
@@ -234,6 +247,7 @@
         prepares (char5e/prepares-spells built)]
     (-> (into {} (map (fn [[k f]] [k (->plain (f built))])) plain-accessors)
         (assoc "armor-class-with-armor" (armor-combos built all-armor-map)
+               "speed-with-armor" (armor-speeds built all-armor-map)
                "weapon-modifiers" (weapon-table built all-weapons-map)
                "spell-save-dc" (keyed-table char5e/ability-keys
                                             (char5e/spell-save-dc-fn built))
