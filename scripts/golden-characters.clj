@@ -274,9 +274,9 @@
                            ::char5e/worn-armor :hide
                            ::char5e/main-hand-weapon :greataxe}}
     :checks (fn [b] (let [speed (char5e/land-speed-with-armor b)
-                          armor armor5e/armor-map]
+                          armor-map armor5e/armor-map]
                       [[5 (char5e/total-levels b)] [2 (char5e/number-of-attacks b)] [30 (char5e/base-land-speed b)]
-                       [40 (speed nil)] [40 (speed (:hide armor))] [30 (speed (:chain-mail armor))]]))}
+                       [40 (speed nil)] [40 (speed (:hide armor-map))] [30 (speed (:chain-mail armor-map))]]))}
 
    {:name "wizard-1"
     :description "Level 1 high elf wizard, Acolyte, three cantrips + the High Elf cantrip, six spells known, four prepared."
