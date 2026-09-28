@@ -453,9 +453,10 @@
 
 (defn- armor-speeds
   "speed-with-armor evaluated unarmored (nil) and then with each carried
-   non-shield armor, as views.cljs `speed-section-2` shows it (items
-   resolved through ::mi5e/all-armor-map, sorted by key). nil when nothing
-   sets the attribute, such as the barbarian's Fast Movement."
+   armor, sorted by key. Like views.cljs `speed-section-2`, but it skips
+   every item with :type :shield, as `armor-combos` does, and resolves
+   homebrew armor through ::mi5e/all-armor-map. nil when nothing sets the
+   attribute, such as the barbarian's Fast Movement."
   [built]
   (when-let [speed-fn (char5e/land-speed-with-armor built)]
     (let [all-armor-map (sub [:orcpub.dnd.e5.magic-items/all-armor-map])
@@ -463,6 +464,7 @@
                      (map (fn [k] [k (get all-armor-map k)]))
                      (remove #(= :shield (:type (second %)))))]
       (vec
+       ;; nil first on purpose: the old UI shows the unarmored speed first.
        (for [[armor-key armor-item] (cons [nil nil] armor)]
          {"armor" (some-> armor-key kw->str)
           "speed" (speed-fn armor-item)})))))

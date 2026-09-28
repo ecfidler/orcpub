@@ -182,6 +182,11 @@
        sort
        (map (fn [k] [k (get all-weapons-map k)]))))
 
+(defn- shield?
+  "True for an [item-key item] pair whose item is a shield."
+  [[_ item]]
+  (= :shield (:type item)))
+
 (defn- armor-combos
   "Every carried armor × carried shield, each side also nil, as
   armor-calculations in subs.cljs does for ::char5e/best-armor-combo."
@@ -189,7 +194,6 @@
   (let [ac-fn (char5e/armor-class-with-armor built)
         items (map (fn [k] [k (get all-armor-map k)])
                    (sort (keys (char5e/all-armor-inventory built))))
-        shield? #(= :shield (:type (second %)))
         shields (filter shield? items)
         armor (remove shield? items)]
     (vec
@@ -201,14 +205,17 @@
 
 (defn- armor-speeds
   "speed-with-armor evaluated unarmored (nil) and then with each carried
-  non-shield armor, as speed-section-2 in views.cljs shows it. nil when
-  nothing sets the attribute, such as the barbarian's Fast Movement."
+  armor. Like speed-section-2 in views.cljs, but it skips every item with
+  :type :shield, as armor-combos does, and resolves homebrew armor through
+  ::mi5e/all-armor-map. nil when nothing sets the attribute, such as the
+  barbarian's Fast Movement."
   [built all-armor-map]
   (when-let [speed-fn (char5e/land-speed-with-armor built)]
     (let [armor (->> (sort (keys (char5e/all-armor-inventory built)))
                      (map (fn [k] [k (get all-armor-map k)]))
-                     (remove #(= :shield (:type (second %)))))]
+                     (remove shield?))]
       (vec
+       ;; nil first on purpose: the old UI shows the unarmored speed first.
        (for [[armor-key armor-item] (cons [nil nil] armor)]
          {"armor" (some-> armor-key kw->str)
           "speed" (speed-fn armor-item)})))))
