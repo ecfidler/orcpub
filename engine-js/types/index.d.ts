@@ -44,9 +44,8 @@ export interface ClassLevels {
 }
 
 /**
- * An inventory entry, keyed by item key. quantity is a string only when
- * evaluate is given an old entity that did not go through importCharacter
- * (quirk R6).
+ * An inventory entry, keyed by item key. The type describes entities that
+ * went through importCharacter, which parses a string quantity (quirk R6).
  */
 export interface InventoryItem {
   "orcpub.dnd.e5.character.equipment/quantity": number;
@@ -174,6 +173,10 @@ export interface BuiltCharacter {
   "base-land-speed": number;
   "base-flying-speed": number;
   "base-swimming-speed": number;
+  /** Added to the land speed without armor, such as the monk's Unarmored Movement. */
+  "unarmored-speed-bonus": number | null;
+  /** Darkvision range, 0 without darkvision. */
+  darkvision: number;
 
   // Attacks
   /** Keyed by carried weapon key. null for a weapon key the content does not have. */
@@ -295,7 +298,7 @@ export function exportCharacter(entity: StrictEntity): object;
 export type MutationOptions = EvaluateOptions;
 
 /**
- * A key path as evaluate's selections report it, such as
+ * A key path the mutations accept, such as a selection's actualPath:
  * ["class", "fighter", "skill-proficiency"].
  */
 export type Path = (string | number)[];
