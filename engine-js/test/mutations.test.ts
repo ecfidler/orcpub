@@ -18,7 +18,7 @@ import {
   setClass,
   setField,
   setValue,
-} from "@dmv/pubdoor";
+} from "@pubdoor/dmv";
 
 const SELECTIONS = "~:orcpub.entity.strict/selections";
 const OPTIONS = "~:orcpub.entity.strict/options";

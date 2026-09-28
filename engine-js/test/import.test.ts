@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { exportCharacter, importCharacter } from "@dmv/pubdoor";
+import { exportCharacter, importCharacter } from "@pubdoor/dmv";
 
 const fixtures = new URL("../../fixtures/", import.meta.url);
 

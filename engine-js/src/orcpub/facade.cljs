@@ -1,5 +1,5 @@
 (ns orcpub.facade
-  "The exported API of @dmv/pubdoor. See docs/ts-rewrite-plan/02-engine-library.md.
+  "The exported API of @pubdoor/dmv. See docs/ts-rewrite-plan/02-engine-library.md.
 
   Nothing lazy crosses the boundary: every function takes and returns plain
   JS data. The conversion rules are the ones fixtures/README.md documents for
@@ -333,7 +333,7 @@
   (let [rules (or (some-> options (gobj/get "rules")) "2014")]
     (when-not (contains? supported-rules rules)
       (throw (js/Error. (str "Unsupported rules edition: " rules
-                             ". @dmv/pubdoor supports only \"2014\"."))))))
+                             ". @pubdoor/dmv supports only \"2014\"."))))))
 
 (def ^:private memo (atom {:key nil :value nil}))
 

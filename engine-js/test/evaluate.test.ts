@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate } from "@dmv/pubdoor";
+import { evaluate } from "@pubdoor/dmv";
 
 const characters = new URL("../../fixtures/characters/", import.meta.url);
 

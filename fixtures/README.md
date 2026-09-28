@@ -1,7 +1,7 @@
 # Fixtures: Phase A, M0
 
 Real inputs and oracle-produced expected outputs for the engine package
-(`@dmv/pubdoor`, M1) and the homebrew engine path (M3). The plan is
+(`@pubdoor/dmv`, M1) and the homebrew engine path (M3). The plan is
 `docs/ts-rewrite-plan/`; the milestone is `HANDOFF-phase-a.md` §4.
 
 The oracle is the **old app's own code** running on the JVM, unmodified:
