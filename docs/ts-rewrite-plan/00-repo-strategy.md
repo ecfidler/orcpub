@@ -61,12 +61,13 @@ engine-js/
 The Phase A decision review on 2026-09-20, where all 24 Phase A decisions
 were approved, named the package `@dmv/pubdoor`. ORC-26 renamed it to
 `@pubdoor/dmv` and publishes it to the public npm registry under the
-`pubdoor` org: PubDoor is the project, and this package is its DMV engine.
-GitHub Packages was rejected because its scope must match the repository
-owner. Version the package with semver from `0.1.0`. Every engine patch or
-facade addition bumps the version, and the app repo pins exact versions. CI
-in this fork builds the package and runs the golden tests on every push to
-`engine`.
+`pubdoor` org. PubDoor is the project, and this package is its DMV engine.
+A rename was needed either way, because the `dmv` GitHub account belongs
+to someone else. GitHub Packages was rejected because its scope must match
+the repository owner. Version the package with semver from `0.1.0`. Every
+engine patch or facade addition bumps the version, and the app repo pins
+exact versions. CI in this fork builds the package and runs the golden
+tests on every push to `engine`.
 
 Fixtures are generated here and copied to the app repo because generating
 them needs the old app and consuming them does not. The app repo's tests

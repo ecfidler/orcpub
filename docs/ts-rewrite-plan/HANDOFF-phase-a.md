@@ -48,11 +48,11 @@ Skim later: `06-milestones-and-risks.md` (the M0 and M1 rows),
 - The engine you are packaging is unmodified upstream code. The only
   intended source changes are the four patches in doc 02 §Patches.
 - These decisions are already made. Do not reopen them without the user:
-  the package name `@pubdoor/dmv`, shadow-cljs with `:esm` and `:advanced`,
-  the build scope and exclusions, a plain-JS boundary with one-pass
-  extraction, a hand-written `.d.ts`, fixtures generated here and
-  snapshot-copied to the app repo, CI on the `engine` branch, and a manual
-  tagged publish. Also decided, on 2026-09-23 (ORC-94): `evaluate` takes a
+  the package name `@dmv/pubdoor` (renamed `@pubdoor/dmv` in ORC-26),
+  shadow-cljs with `:esm` and `:advanced`, the build scope and exclusions,
+  a plain-JS boundary with one-pass extraction, a hand-written `.d.ts`,
+  fixtures generated here and snapshot-copied to the app repo, CI on the
+  `engine` branch, and a manual tagged publish. Also decided, on 2026-09-23 (ORC-94): `evaluate` takes a
   `rules` option that defaults to `"2014"` and rejects any other value, and
   the `.d.ts` splits the built character into an edition-neutral part and a
   `Built2014` extension. 2024 rules are out of scope for Phase A.

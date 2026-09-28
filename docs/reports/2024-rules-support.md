@@ -44,14 +44,15 @@ survey of this repository. File and line citations are for commit
   *Changes to make during M1 and M2*). Build 2024 support as a new
   TypeScript engine after the 2014 app works, reusing the choice-tree
   model of the current core. Port 2014 onto that engine last, with
-  `@pubdoor/dmv` as the test oracle. This is option E. One answer changes
-  the recommendation: if a 2024 character must use 2014 content from the
-  first release, option C is the better path. Option C is a second rules
+  `@dmv/pubdoor` (renamed `@pubdoor/dmv` in ORC-26) as the test oracle.
+  This is option E. One answer changes the recommendation: if a 2024
+  character must use 2014 content from the first release, option C is the
+  better path. Option C is a second rules
   edition written in ClojureScript on the compiled engine.
 
 ## Decision (2026-09-23): option E
 
-The owner chose option E. The compiled engine, `@pubdoor/dmv`, serves 2014
+The owner chose option E. The compiled engine, `@dmv/pubdoor`, serves 2014
 rules. A later TypeScript engine adds 2024 rules, and 2014 moves onto it
 last so that the Clojure build can be retired. The answers to *Questions to
 answer before deciding*:
