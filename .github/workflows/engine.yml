@@ -1,0 +1,80 @@
+# Builds and tests @dmv/pubdoor (engine-js/). See
+# docs/ts-rewrite-plan/HANDOFF-phase-a.md. The Leiningen CI is
+# continuous-integration.yml.
+
+name: Engine
+
+on:
+  push:
+    branches: [engine]
+  pull_request:
+    branches: [engine, pubdoor, develop]
+    # The engine compiles from src/cljc and, from src/cljs, dnd/e5.cljc and
+    # spell_subs.cljs. equipment_subs.cljs is copied into
+    # engine-js/src/orcpub/facade/template.cljs and loaded by the fixture
+    # oracle, so a change to it can move a golden value.
+    paths:
+      - engine-js/**
+      - src/cljc/**
+      - src/cljs/orcpub/dnd/e5.cljc
+      - src/cljs/orcpub/dnd/e5/spell_subs.cljs
+      - src/cljs/orcpub/dnd/e5/equipment_subs.cljs
+      - fixtures/**
+      - scripts/oracle-env.sh
+      - scripts/dump-built-character.clj
+      - scripts/orcpub/**
+      - .github/workflows/engine.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  engine:
+    name: Build & test engine-js
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engine-js
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: engine-js/package-lock.json
+
+      - name: Cache shadow-cljs Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: m2-shadow-${{ hashFiles('engine-js/shadow-cljs.edn', 'engine-js/package-lock.json') }}
+
+      - name: Install
+        run: npm ci
+
+      - name: Build (shadow-cljs release)
+        run: npm run build
+
+      - name: Test (tsc --noEmit, vitest)
+        run: npm test
+
+      # Rebuilds one golden character with the JVM oracle and fails if the
+      # checked-in fixture differs: an engine change moved a golden value.
+      - name: Regenerate a golden fixture
+        working-directory: .
+        run: |
+          scripts/oracle-env.sh scripts/dump-built-character.clj \
+            fixtures/characters/fighter-3-wizard-2.strict.json \
+            fixtures/characters/fighter-3-wizard-2.expected.json \
+            --selections fixtures/characters/fighter-3-wizard-2.selections.json
+          git diff --exit-code fixtures/
