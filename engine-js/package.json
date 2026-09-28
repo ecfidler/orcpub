@@ -21,8 +21,9 @@
   },
   "types": "./types/index.d.ts",
   "files": [
-    "dist/",
-    "types/"
+    "dist/pubdoor.js",
+    "types/index.d.ts",
+    "THIRD-PARTY-NOTICES"
   ],
   "publishConfig": {
     "access": "public"
