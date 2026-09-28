@@ -1,7 +1,8 @@
 /**
  * A strict entity (orcpub.entity.strict/entity) as Transit-JSON: the text,
  * or the value JSON.parse returns for it. The fixtures under
- * fixtures/characters/*.strict.json use this format.
+ * fixtures/characters/*.strict.json use this format. Treat it as opaque:
+ * store it and pass it back, and change it only with the functions below.
  */
 export type StrictEntity = string | object;
 
@@ -15,35 +16,258 @@ export interface EvaluateOptions {
   homebrew?: unknown;
 }
 
+// The built character is plain JSON data keyed by the old app's
+// character-subs names, converted as fixtures/README.md §expected.json
+// describes: a keyword becomes "ns/name", a set becomes a sorted array, and
+// a map keyed by vectors becomes { __entries: [[key, value], ...] }. A key
+// whose accessor returns nothing is null.
+//
+// The types split it in two. BuiltCharacter is the edition-neutral sheet, the
+// part an app's adapter should depend on. Built2014 adds the 2014-shaped
+// keys and every other accessor. evaluate returns a Built2014, which is also
+// a BuiltCharacter. The object itself is not split.
+
+/** An ability key, such as "orcpub.dnd.e5.character/str". */
+export type AbilityKey = `orcpub.dnd.e5.character/${"str" | "dex" | "con" | "int" | "wis" | "cha"}`;
+
+/** A value for each ability. */
+export type Abilities = Record<AbilityKey, number>;
+
+/** A class's entry in levels, keyed by class key. */
+export interface ClassLevels {
+  "class-level": number;
+  "class-name": string;
+  "hit-die": number;
+  /** The subclass key, once one is chosen. */
+  subclass?: string;
+  "subclass-name"?: string;
+}
+
 /**
- * The built character as plain JSON data, keyed by the old app's
- * character-subs names. See fixtures/README.md §expected.json.
- * ORC-24 replaces this with typed fields.
+ * An inventory entry, keyed by item key. The type describes entities that
+ * went through importCharacter, which parses a string quantity (quirk R6).
  */
-export type BuiltCharacter = Record<string, unknown>;
+export interface InventoryItem {
+  "orcpub.dnd.e5.character.equipment/quantity": number;
+  "orcpub.dnd.e5.character.equipment/equipped?": boolean;
+  "orcpub.dnd.e5.character.equipment/background-starting-equipment?"?: boolean;
+  "orcpub.dnd.e5.character.equipment/class-starting-equipment?"?: boolean;
+}
+
+/** Items keyed by item key, or null when there are none. */
+export type Inventory = Record<string, InventoryItem> | null;
+
+/** The attack and damage bonuses of one carried weapon. */
+export interface WeaponModifiers {
+  attack: { standard: number; finesse: number };
+  "best-attack": number;
+  damage: { standard: number; finesse: number; "off-hand": number };
+  "best-damage": number;
+  "best-damage-off-hand": number;
+  "dual-wield?": boolean;
+  "has-prof?": boolean;
+}
+
+/** A special attack, such as the dragonborn Breath Weapon or the monk's Martial Arts. */
+export interface Attack {
+  name: string;
+  summary?: string;
+  page?: number;
+  /** For example "melee" or "area". */
+  "attack-type"?: string;
+  "damage-type"?: string;
+  "damage-die"?: number;
+  "damage-die-count"?: number;
+  "damage-modifier"?: number;
+  save?: AbilityKey;
+  "save-dc"?: number;
+}
+
+/** An amount of a unit, such as { amount: 1, units: "long-rest" }. */
+export interface Amount {
+  amount: number;
+  units: string;
+}
+
+/** A trait, action, bonus action, or reaction. */
+export interface Feature {
+  name: string;
+  summary?: string;
+  description?: string;
+  page?: number;
+  source?: string | null;
+  /** The class the feature comes from, for a class feature. */
+  "class-key"?: string | null;
+  /** The level the feature starts at. */
+  level?: number;
+  frequency?: Amount;
+  duration?: Amount;
+}
+
+/** A known spell. */
+export interface KnownSpell {
+  key: string;
+  /** The class or race name the spell is known through, such as "Wizard". */
+  class: string;
+  /** The spellcasting ability. */
+  ability: AbilityKey;
+  qualifier?: string | null;
+}
+
+/** A class's or race's spellcasting numbers, keyed by its name. */
+export interface SpellModifiers {
+  class: string;
+  ability: AbilityKey;
+  "spell-save-dc": number;
+  "spell-attack-modifier": number;
+}
+
+/**
+ * The edition-neutral part of the built character: what a character sheet
+ * reads. A proficiency map's inner keys name each source, "nil" when it has
+ * none.
+ */
+export interface BuiltCharacter {
+  // Identity
+  "character-name": string | null;
+  race: string | null;
+  subrace: string | null;
+  background: string | null;
+  /** Class keys, the first class first. */
+  classes: string[];
+  levels: Record<string, ClassLevels>;
+  "total-levels": number;
+  "class-level": Record<string, number>;
+
+  // Abilities, saves, and skills
+  abilities: Abilities;
+  "ability-bonuses": Abilities;
+  "proficiency-bonus": number;
+  /** Proficient saves, as ability keys. */
+  "saving-throws": AbilityKey[];
+  "save-bonuses": Abilities;
+  /** Skill key to its sources. */
+  "skill-profs": Record<string, Record<string, boolean>> | null;
+  "skill-bonuses": Record<string, number>;
+  "skill-expertise": string[] | null;
+  "passive-perception": number;
+  initiative: number;
+
+  // Other proficiencies
+  "armor-profs": string[];
+  "weapon-profs": string[];
+  /** Tool key to its sources. */
+  "tool-profs": Record<string, Record<string, boolean>>;
+  "tool-bonus": Record<string, number>;
+  languages: string[] | null;
+
+  // Armor class and hit points
+  /** Armor class without armor or shield. */
+  "armor-class": number;
+  /** Armor class for every carried armor and shield, each also null. */
+  "armor-class-with-armor": { armor: string | null; shield: string | null; ac: number }[];
+  "max-hit-points": number;
+  "current-hit-points": number | null;
+
+  // Speed, in feet
+  "base-land-speed": number;
+  "base-flying-speed": number;
+  "base-swimming-speed": number;
+  /** Added to the land speed without armor, such as the monk's Unarmored Movement. */
+  "unarmored-speed-bonus": number | null;
+  /**
+   * Land speed without armor (armor null), then in each carried armor that
+   * is not a shield. null unless a feature makes the speed depend on armor,
+   * such as the barbarian's Fast Movement.
+   */
+  "speed-with-armor": { armor: string | null; speed: number }[] | null;
+  /** Darkvision range, 0 without darkvision. */
+  darkvision: number;
+
+  // Attacks
+  /** Keyed by carried weapon key. null for a weapon key the content does not have. */
+  "weapon-modifiers": Record<string, WeaponModifiers | null>;
+  "number-of-attacks": number;
+  attacks: Attack[] | null;
+
+  // Spells
+  /** Spell level to slot count, such as { "1": 4, "2": 3 }. */
+  "spell-slots": Record<string, number>;
+  /** Spell level to the spells known at that level, keyed by [class name, spell key]. */
+  "spells-known": Record<string, { __entries: [[string, string], KnownSpell][] }>;
+  "spell-modifiers": Record<string, SpellModifiers>;
+  "spell-save-dc": Abilities;
+  "spell-attack-modifier": Abilities;
+  /** Class name to true for each class that prepares spells. */
+  "prepares-spells": Record<string, boolean> | null;
+  /** Class name to the number of spells it can prepare. */
+  "prepare-spell-count": Record<string, number>;
+
+  // Features
+  traits: Feature[];
+  actions: Feature[];
+  "bonus-actions": Feature[];
+  reactions: Feature[];
+  feats: string[] | null;
+
+  // Equipment
+  weapons: Inventory;
+  armor: Inventory;
+  equipment: Inventory;
+  treasure: Inventory;
+  "magic-weapons": Inventory;
+  "magic-armor": Inventory;
+  "magic-items": Inventory;
+}
+
+/**
+ * The whole built character for the 2014 rules: the sheet, the keys shaped
+ * by the 2014 rules, and every other accessor in fixtures/README.md
+ * §expected.json as unknown. When a sheet needs another edition-neutral
+ * accessor, such as darkvision, name it in BuiltCharacter.
+ */
+export interface Built2014 extends BuiltCharacter {
+  /**
+   * Ability key to increase. Homebrew can use unqualified keys such as
+   * "con" (drift form 10), so the keys are not always AbilityKeys.
+   */
+  "race-ability-increases": Record<string, number> | null;
+  "subrace-ability-increases": Record<string, number> | null;
+  /** Class key to its spellcaster level factor, for multiclass spell slots. */
+  "spell-slot-factors": Record<string, number> | null;
+  "total-spellcaster-levels": number;
+  /** Class name to how it learns spells, such as "schedule". */
+  "spells-known-modes": Record<string, string> | null;
+  "pact-magic?": boolean | null;
+  /** The content sources the character's options may come from. */
+  "option-sources": string[] | null;
+  /** Adventurers League: why the character is not legal, or null. */
+  "al-illegal-reasons": string[] | null;
+  [key: string]: unknown;
+}
 
 /** One entry of entity/available-selections, flattened. */
-export interface Selection {
+export interface AvailableSelection {
   key: string;
   name: string;
-  path: unknown[];
+  path: string[];
   /** The path where the selection's data is stored. Differs from path for ref selections. */
-  actualPath: unknown[];
+  actualPath: string[];
   min: number | null;
   max: number | null;
   remaining: number;
   optionCount: number;
   /** Keys of the options currently chosen. */
   selected: string[];
-  ref?: unknown[];
+  ref?: string[];
   multiselect?: true;
   sequential?: true;
   requireValue?: true;
 }
 
 export interface Evaluation {
-  built: BuiltCharacter;
-  selections: Selection[];
+  built: Built2014;
+  selections: AvailableSelection[];
 }
 
 /**
@@ -80,7 +304,7 @@ export function exportCharacter(entity: StrictEntity): object;
 export type MutationOptions = EvaluateOptions;
 
 /**
- * A key path as evaluate's selections report it, such as
+ * A key path the mutations accept, such as a selection's actualPath:
  * ["class", "fighter", "skill-proficiency"].
  */
 export type Path = (string | number)[];

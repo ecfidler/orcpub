@@ -20,7 +20,7 @@
      → `clojure.spec.alpha`.
 
    Everything here is a fixture-generation concern; nothing in this file is
-   engine source and none of it ships in `@dmv/pubdoor`. The JSON encoding
+   engine source and none of it ships in `@pubdoor/dmv`. The JSON encoding
    rules (`->plain`) are documented in fixtures/README.md and must be
    mirrored by the facade's one-pass extraction in M1."
   (:require [clojure.string :as str]
@@ -319,7 +319,6 @@
   [["base-swimming-speed" char5e/base-swimming-speed]
    ["base-flying-speed" char5e/base-flying-speed]
    ["base-land-speed" char5e/base-land-speed]
-   ["speed-with-armor" char5e/land-speed-with-armor]
    ["unarmored-speed-bonus" char5e/unarmored-speed-bonus]
    ["max-hit-points" char5e/max-hit-points]
    ["current-hit-points" char5e/current-hit-points]
@@ -452,6 +451,24 @@
         "shield" (some-> shield-key kw->str)
         "ac" (ac-fn armor-item shield-item)}))))
 
+(defn- armor-speeds
+  "speed-with-armor evaluated unarmored (nil) and then with each carried
+   armor, sorted by key. Like views.cljs `speed-section-2`, but it skips
+   every item with :type :shield, as `armor-combos` does, and resolves
+   homebrew armor through ::mi5e/all-armor-map. nil when nothing sets the
+   attribute, such as the barbarian's Fast Movement."
+  [built]
+  (when-let [speed-fn (char5e/land-speed-with-armor built)]
+    (let [all-armor-map (sub [:orcpub.dnd.e5.magic-items/all-armor-map])
+          armor (->> (sort (keys (char5e/all-armor-inventory built)))
+                     (map (fn [k] [k (get all-armor-map k)]))
+                     (remove #(= :shield (:type (second %)))))]
+      (vec
+       ;; nil first on purpose: the old UI shows the unarmored speed first.
+       (for [[armor-key armor-item] (cons [nil nil] armor)]
+         {"armor" (some-> armor-key kw->str)
+          "speed" (speed-fn armor-item)})))))
+
 (defn- weapon-table [built]
   (let [attack (char5e/weapon-attack-modifier-fn built)
         damage (char5e/weapon-damage-modifier-fn built)
@@ -495,6 +512,7 @@
               (map (fn [[k f]] [k (->plain (f built))]))
               plain-accessors)
         (assoc "armor-class-with-armor" (armor-combos built)
+               "speed-with-armor" (armor-speeds built)
                "weapon-modifiers" (weapon-table built)
                "spell-save-dc" (keyed-table char5e/ability-keys save-dc)
                "spell-attack-modifier" (keyed-table char5e/ability-keys spell-attack)

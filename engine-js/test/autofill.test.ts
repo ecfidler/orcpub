@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { addLevel, autofill, emptyCharacter, evaluate, exportCharacter, select, setValue } from "@dmv/pubdoor";
-import type { Selection } from "@dmv/pubdoor";
+import { addLevel, autofill, emptyCharacter, evaluate, exportCharacter, select, setValue } from "@pubdoor/dmv";
+import type { AvailableSelection } from "@pubdoor/dmv";
 
 const VALUES = "~:orcpub.entity.strict/values";
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -16,7 +16,7 @@ type Node = Record<string, unknown>;
  * entity/combine-selections sums min and max across the occurrences.
  */
 function unfilled(entity: object): string[] {
-  const groups = new Map<string, Selection[]>();
+  const groups = new Map<string, AvailableSelection[]>();
   for (const s of evaluate(entity).selections) {
     const k = JSON.stringify(s.actualPath);
     groups.set(k, [...(groups.get(k) ?? []), s]);

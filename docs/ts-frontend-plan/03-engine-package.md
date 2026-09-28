@@ -1,6 +1,6 @@
 # Phase 2: Package the rules engine for npm
 
-The goal is `@dmv/pubdoor`, an npm package compiled from the existing
+The goal is `@pubdoor/dmv`, an npm package compiled from the existing
 `.cljc` code with shadow-cljs that exposes the rules engine to TypeScript
 behind a small typed facade. This is the only phase that involves writing
 Clojure. The code is mechanical glue, about 300 to 500 lines, not game
@@ -114,7 +114,7 @@ A new top-level directory, `engine-js/`, keeps `project.clj` untouched:
 engine-js/
   shadow-cljs.edn        ; :npm-module or :esm target, release optimizations
   src/orcpub/engine.cljs ; the facade namespace (^:export fns)
-  package.json           ; name @dmv/pubdoor, main/module entries
+  package.json           ; name @pubdoor/dmv, main/module entries
   types/index.d.ts       ; hand-written types (ships in the package)
   test/                  ; golden-file tests
 ```
@@ -157,6 +157,6 @@ safety net for engine upgrades and for a future engine rewrite.
 
 ## Exit criteria
 
-- [ ] `@dmv/pubdoor` builds reproducibly and imports from TypeScript with types
+- [ ] `@pubdoor/dmv` builds reproducibly and imports from TypeScript with types
 - [ ] Golden-file tests pass for all reference characters
 - [ ] A scripted end-to-end run: an empty character, a sequence of picks, a strict entity, and acceptance by `POST /dnd/5e/characters`. This proves the engine output matches the server spec

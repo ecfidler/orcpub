@@ -44,9 +44,10 @@ survey of this repository. File and line citations are for commit
   *Changes to make during M1 and M2*). Build 2024 support as a new
   TypeScript engine after the 2014 app works, reusing the choice-tree
   model of the current core. Port 2014 onto that engine last, with
-  `@dmv/pubdoor` as the test oracle. This is option E. One answer changes
-  the recommendation: if a 2024 character must use 2014 content from the
-  first release, option C is the better path. Option C is a second rules
+  `@dmv/pubdoor` (renamed `@pubdoor/dmv` in ORC-26) as the test oracle.
+  This is option E. One answer changes the recommendation: if a 2024
+  character must use 2014 content from the first release, option C is the
+  better path. Option C is a second rules
   edition written in ClojureScript on the compiled engine.
 
 ## Decision (2026-09-23): option E
@@ -62,8 +63,8 @@ answer before deciding*:
    Handbook rules for older species and backgrounds.
 2. **The 2014 port may change values.** When 2014 moves to the new engine,
    every character must import and evaluate, and a difference report
-   against `@dmv/pubdoor` lists every sheet value that changed. Identical
-   values stay required for as long as `@dmv/pubdoor` evaluates 2014
+   against `@pubdoor/dmv` lists every sheet value that changed. Identical
+   values stay required for as long as `@pubdoor/dmv` evaluates 2014
    characters.
 3. **Clojure is temporary.** Working in it now is acceptable, for fast
    content and data compatibility. Leaving it is the end goal, so option C
@@ -347,7 +348,7 @@ hold a `template-base`, extended constructors, the classes, species,
 backgrounds, feats, and SRD 5.2 spells. The extended constructors cover a
 background with ability increases and an Origin feat, feat categories and
 level prerequisites, Weapon Mastery, and Epic Boons. `evaluate` takes a
-rules edition, and `@dmv/pubdoor` ships both templates, one per chunk.
+rules edition, and `@pubdoor/dmv` ships both templates, one per chunk.
 
 - **Strengths.** There is one engine, one selection model, and one
   facade. The M4 builder, which renders `evaluate().selections` (ORC-55),
@@ -407,7 +408,7 @@ matches.
   is new design work with no legacy data to match. With the choice-tree
   model kept, the strict entity, the `selections` shape, and the mutations
   mean the same thing in both engines, so the app's builder and storage
-  carry over. `@dmv/pubdoor` becomes the oracle for the 2014 port instead
+  carry over. `@pubdoor/dmv` becomes the oracle for the 2014 port instead
   of a permanent dependency. The port can be tested against it on every
   fixture and on characters that `autofill` (ORC-23) generates at random,
   as many as CI can afford.
@@ -419,7 +420,7 @@ matches.
   That gives 2024 characters access to 2014 homebrew before the full SRD
   5.1 port.
 - **Compatibility.** C1 to C3 hold by construction for as long as
-  `@dmv/pubdoor` evaluates 2014 characters, and by differential testing
+  `@pubdoor/dmv` evaluates 2014 characters, and by differential testing
   after the port.
 - **Main risk.** The port never happens and two engines persist. That
   outcome is still no worse than option A plus a working 2024 engine.

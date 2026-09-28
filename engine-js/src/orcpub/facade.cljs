@@ -1,5 +1,5 @@
 (ns orcpub.facade
-  "The exported API of @dmv/pubdoor. See docs/ts-rewrite-plan/02-engine-library.md.
+  "The exported API of @pubdoor/dmv. See docs/ts-rewrite-plan/02-engine-library.md.
 
   Nothing lazy crosses the boundary: every function takes and returns plain
   JS data. The conversion rules are the ones fixtures/README.md documents for
@@ -75,7 +75,6 @@
   [["base-swimming-speed" char5e/base-swimming-speed]
    ["base-flying-speed" char5e/base-flying-speed]
    ["base-land-speed" char5e/base-land-speed]
-   ["speed-with-armor" char5e/land-speed-with-armor]
    ["unarmored-speed-bonus" char5e/unarmored-speed-bonus]
    ["max-hit-points" char5e/max-hit-points]
    ["current-hit-points" char5e/current-hit-points]
@@ -183,6 +182,11 @@
        sort
        (map (fn [k] [k (get all-weapons-map k)]))))
 
+(defn- shield?
+  "True for an [item-key item] pair whose item is a shield."
+  [[_ item]]
+  (= :shield (:type item)))
+
 (defn- armor-combos
   "Every carried armor × carried shield, each side also nil, as
   armor-calculations in subs.cljs does for ::char5e/best-armor-combo."
@@ -190,7 +194,6 @@
   (let [ac-fn (char5e/armor-class-with-armor built)
         items (map (fn [k] [k (get all-armor-map k)])
                    (sort (keys (char5e/all-armor-inventory built))))
-        shield? #(= :shield (:type (second %)))
         shields (filter shield? items)
         armor (remove shield? items)]
     (vec
@@ -199,6 +202,23 @@
        {"armor" (some-> armor-key kw->str)
         "shield" (some-> shield-key kw->str)
         "ac" (ac-fn armor-item shield-item)}))))
+
+(defn- armor-speeds
+  "speed-with-armor evaluated unarmored (nil) and then with each carried
+  armor. Like speed-section-2 in views.cljs, but it skips every item with
+  :type :shield, as armor-combos does, and resolves homebrew armor through
+  ::mi5e/all-armor-map. nil when nothing sets the attribute, such as the
+  barbarian's Fast Movement."
+  [built all-armor-map]
+  (when-let [speed-fn (char5e/land-speed-with-armor built)]
+    (let [armor (->> (sort (keys (char5e/all-armor-inventory built)))
+                     (map (fn [k] [k (get all-armor-map k)]))
+                     (remove shield?))]
+      (vec
+       ;; nil first on purpose: the old UI shows the unarmored speed first.
+       (for [[armor-key armor-item] (cons [nil nil] armor)]
+         {"armor" (some-> armor-key kw->str)
+          "speed" (speed-fn armor-item)})))))
 
 (defn- weapon-table [built all-weapons-map]
   (let [attack (char5e/weapon-attack-modifier-fn built)
@@ -234,6 +254,7 @@
         prepares (char5e/prepares-spells built)]
     (-> (into {} (map (fn [[k f]] [k (->plain (f built))])) plain-accessors)
         (assoc "armor-class-with-armor" (armor-combos built all-armor-map)
+               "speed-with-armor" (armor-speeds built all-armor-map)
                "weapon-modifiers" (weapon-table built all-weapons-map)
                "spell-save-dc" (keyed-table char5e/ability-keys
                                             (char5e/spell-save-dc-fn built))
@@ -312,7 +333,7 @@
   (let [rules (or (some-> options (gobj/get "rules")) "2014")]
     (when-not (contains? supported-rules rules)
       (throw (js/Error. (str "Unsupported rules edition: " rules
-                             ". @dmv/pubdoor supports only \"2014\"."))))))
+                             ". @pubdoor/dmv supports only \"2014\"."))))))
 
 (def ^:private memo (atom {:key nil :value nil}))
 

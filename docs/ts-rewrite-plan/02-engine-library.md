@@ -33,7 +33,7 @@ The build excludes these on purpose:
 - All of `src/clj`.
 
 The four patches listed below are ordinary commits to this fork's source.
-The app repo consumes the published `@dmv/pubdoor` package and never sees
+The app repo consumes the published `@pubdoor/dmv` package and never sees
 Clojure.
 
 ## Facade API beyond Plan Set 1 doc 03

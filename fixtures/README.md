@@ -1,7 +1,7 @@
 # Fixtures: Phase A, M0
 
 Real inputs and oracle-produced expected outputs for the engine package
-(`@dmv/pubdoor`, M1) and the homebrew engine path (M3). The plan is
+(`@pubdoor/dmv`, M1) and the homebrew engine path (M3). The plan is
 `docs/ts-rewrite-plan/`; the milestone is `HANDOFF-phase-a.md` §4.
 
 The oracle is the **old app's own code** running on the JVM, unmodified:
@@ -38,7 +38,7 @@ fixtures/
 
 | Set | Count |
 |---|---|
-| Golden characters | 11 (`characters/`) |
+| Golden characters | 12 (`characters/`) |
 | Legacy entities | 3 real + 8 synthetic (`legacy/`) |
 | `.orcbrew` packs | 16, each with a `.template.json`, plus the baseline |
 
@@ -74,8 +74,9 @@ evaluated on the built character and converted with these rules
   `[class-name spell-key]`) → `{"__entries": [[key, value], ...]}` sorted by
   the key's `pr-str`
 - vector / seq → array in order; ratio → double; `nil` → `null`
-- a function anywhere in a value → the string `"#fn"` (none occur in the
-  current fixtures); anything else → `pr-str`
+- a function anywhere in a value → the string `"#fn"`; anything else →
+  `pr-str`. No fixture contains `"#fn"`: every function-valued attribute
+  that a golden character has is in the table below
 
 The function-valued attributes are evaluated against fixed arguments and
 recorded under these keys (the `-fn` suffix of the sub name is dropped):
@@ -83,6 +84,7 @@ recorded under these keys (the `-fn` suffix of the sub name is dropped):
 | Key | Value |
 |---|---|
 | `armor-class-with-armor` | `[{armor, shield, ac}]` for every combination of carried non-shield armor × carried shield, each side also `null`. This is exactly `armor-calculations` in `subs.cljs` (items resolved through `::mi5e/all-armor-map`, sorted by key) |
+| `speed-with-armor` | `[{armor, speed}]`: the speed without armor (`armor` `null`), then with each carried armor, sorted by key. Like `speed-section-2` in `views.cljs`, but it skips every item with `:type :shield`, as `armor-class-with-armor` does, and resolves homebrew armor through `::mi5e/all-armor-map`. `null` when nothing sets the attribute. Only the barbarian's Fast Movement (`classes.cljc:90`) sets it in the SRD |
 | `weapon-modifiers` | per carried weapon key (normal + magic inventories, resolved through `::mi5e/all-weapons-map`; `null` if unresolved): `attack {standard, finesse}`, `best-attack`, `damage {standard, finesse, off-hand}`, `best-damage`, `best-damage-off-hand`, `dual-wield?`, `has-prof?` |
 | `spell-save-dc`, `spell-attack-modifier` | per ability key |
 | `class-level` | per class key in `levels` |
@@ -166,7 +168,7 @@ lines in `scripts/orcpub/oracle.clj`.
 
 All SRD except where a pack is listed. Ability scores, hit points (average
 per level) and every required selection are filled the way the old builder
-would; `unfilledSelections` is empty for all eleven.
+would; `unfilledSelections` is empty for all twelve.
 
 | Name | What it covers | Packs |
 |---|---|---|
@@ -174,6 +176,7 @@ would; `unfilledSelections` is empty for all eleven.
 | `fighter-5` | Hill dwarf fighter 5, Champion, **Dueling** (+2 damage on the one-handed longsword: the `patch D2` case), ASI, Extra Attack, tool proficiency | none |
 | `fighter-11` | Half-orc fighter 11, Champion, Great Weapon Fighting, three attacks, three ASIs, greataxe | none |
 | `fighter-20` | Human fighter 20, Champion, Protection, four attacks, every ASI (one as the Grappler feat), plate + shield, a `+1` longsword and an attuned amulet of health | none |
+| `barbarian-5` | Human barbarian 5, Path of the Berserker, ASI, Fast Movement. Carries hide, chain mail, and a shield, so `speed-with-armor` shows 40 ft. unarmored and in hide, and 30 ft. in the heavy chain mail | none |
 | `wizard-1` | High elf wizard 1, racial cantrip, 6 spells known, 4 prepared | none |
 | `wizard-5` | Rock gnome wizard 5, Evocation, ASI, 3rd-level slots, 14 spells known | none |
 | `wizard-11` | Tiefling wizard 11, Evocation, two ASIs, 6th-level slots, 5 wizard cantrips + Thaumaturgy, cloak of protection | none |
@@ -307,7 +310,7 @@ macrovich, bidi) and runs the same scripts:
 ```sh
 scripts/oracle-env.sh scripts/golden-characters.clj
 scripts/oracle-env.sh scripts/dump-template.clj ...
-scripts/oracle-env.sh test      # the engine test namespaces (40 tests)
+scripts/oracle-env.sh test      # the engine test namespaces (53 tests)
 ```
 
 Generation is deterministic; a regeneration on unchanged engine source must

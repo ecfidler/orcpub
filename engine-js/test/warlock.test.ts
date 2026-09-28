@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate } from "@dmv/pubdoor";
+import { evaluate } from "@pubdoor/dmv";
 
 // Port of test/cljc/orcpub/dnd/e5/warlock_test.clj. The character needs
 // warlock-test-content.orcbrew for the Drow subrace, the Spy background and
