@@ -14,10 +14,10 @@ everything the old app holds. 2024 content has its own data format and key
 scheme (ORC-96) and no contract with the old app, because the old app has
 no 2024 rules.
 
-The contracts hold by construction while `@dmv/pubdoor` evaluates 2014
+The contracts hold by construction while `@pubdoor/dmv` evaluates 2014
 characters. When a later engine replaces it (ORC-97), the bar for C1
 mechanics fidelity and for C2 changes. Every character must import and
-evaluate, and a difference report against `@dmv/pubdoor` lists every sheet
+evaluate, and a difference report against `@pubdoor/dmv` lists every sheet
 value that changed. Identical values are not required then. C3 does not
 change: engine keys stay as they are, and the app qualifies the keys it
 stores or routes by rules edition. See `docs/reports/2024-rules-support.md`
@@ -93,13 +93,13 @@ characters and what handles it.
 
 | # | Quirk | Handled by |
 |---|---|---|
-| R1 | Equipment stored as a map `{item-kw value}` in old data rather than a vector of `{key value}`, under all seven equipment keys | Inherited: `vectorize-equipment` (`character.cljc:274`) |
-| R2 | `prepared-spells-by-class` stored as a seq of records | Inherited: `update-values-from-strict` (`:294`) |
+| R1 | Equipment stored as a map `{item-kw value}` in old data rather than a vector of `{key value}`, under all seven equipment keys | Inherited: `vectorize-equipment` (`character.cljc:287`) |
+| R2 | `prepared-spells-by-class` stored as a seq of records | Inherited: `update-values-from-strict` (`:307`) |
 | R3 | `slots-used` and `features-used` values as vectors, and a stray `:db/id` in `features-used` | Inherited: the same function |
 | R4 | An option `int-value` of `0` or a `string-value` of `""` | Preserved as `0` and `""`. The `or` in `entity.cljc:158` keeps them, because both are truthy in Clojure and ClojureScript. An earlier version of this row said they read back as nil. `fixtures/README.md` finding 3 corrected it. Fixture: `legacy/r4-zero-int-value` |
 | R5 | `xps` as a string | Not inherited. The old server coerces it (`routes.clj:930`). The importer must parse it, and a blank or invalid value becomes 0 |
 | R6 | `equip/quantity` as a string | Inherited on the save path (`fix-quantities`). Apply it on import too |
-| R7 | Unqualified legacy keys such as `:str` and `:quantity` | Not inherited. Detection specs exist (`character.cljc:47-94`), but the migration is disabled with `#_`. Re-enable it in the facade's `importCharacter` (patch D1, doc 02) |
+| R7 | Unqualified legacy keys such as `:str` and `:quantity` | Not inherited. Detection specs exist (`character.cljc:47-94`). Patch D1 (ORC-20, doc 02) re-enabled the migration (`character.cljc:121-178`), and the facade's `importCharacter` runs it |
 | R8 | Selection keys that do not resolve because homebrew is not loaded | Inherited: `content_reconciliation.cljs` detects them. The UI is the new app's |
 | R9 | Duplicate multi-select options with the same key | Inherited: `has-duplicate-selections?`. Tolerate them on read |
 | R10 | Transit wire format with namespaced keywords | Decode with `transit-js`, or let the library decode it, which is simpler because `cognitect.transit` is already a ClojureScript dependency of the old client |

@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "actual": 5,
+      "expected": 5,
+      "pass": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "pass": true
+    },
+    {
+      "actual": 30,
+      "expected": 30,
+      "pass": true
+    },
+    {
+      "actual": 40,
+      "expected": 40,
+      "pass": true
+    },
+    {
+      "actual": 40,
+      "expected": 40,
+      "pass": true
+    },
+    {
+      "actual": 30,
+      "expected": 30,
+      "pass": true
+    }
+  ],
+  "description": "Level 5 human (standard) barbarian (Path of the Berserker), ASI at 4 (STR+1, CON+1). Fast Movement sets the function-valued speed-with-armor: 40 ft. unarmored or in hide, 30 ft. in the carried chain mail (heavy). Also carries a shield, which speed-with-armor skips.",
+  "name": "barbarian-5",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

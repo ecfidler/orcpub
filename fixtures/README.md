@@ -1,7 +1,7 @@
 # Fixtures: Phase A, M0
 
 Real inputs and oracle-produced expected outputs for the engine package
-(`@dmv/pubdoor`, M1) and the homebrew engine path (M3). The plan is
+(`@pubdoor/dmv`, M1) and the homebrew engine path (M3). The plan is
 `docs/ts-rewrite-plan/`; the milestone is `HANDOFF-phase-a.md` §4.
 
 The oracle is the **old app's own code** running on the JVM, unmodified:
@@ -9,11 +9,17 @@ The oracle is the **old app's own code** running on the JVM, unmodified:
 `spell_subs.cljs` / `equipment_subs.cljs` subscription chain for the template
 (loaded onto the JVM through re-frame's JVM interop, see
 `scripts/orcpub/oracle.clj`). Nothing here was typed in by hand except the
-raw entities of the golden characters and the synthetic `.orcbrew` packs.
+raw entities of the golden characters, the synthetic `.orcbrew` packs, and
+the browser values that an `overrides` entry in `.meta.json` records in place
+of the JVM's (finding 13).
 
 Produced from engine source at commit **`bcd9d68`** (branch `engine`; the
 engine source is unchanged from `develop` at that point). Regenerate whenever
-`src/cljc` or the two `src/cljs` namespaces above change (see *Regenerating*).
+`src/cljc` or one of the three `src/cljs` files the engine reads changes (see
+*Regenerating*): `orcpub/dnd/e5.cljc`, `spell_subs.cljs` and
+`equipment_subs.cljs`, the last copied into `engine-js/src/orcpub/facade/template.cljs`.
+`import_validation.cljs` and `content_reconciliation.cljs` join them when the
+facade takes on the homebrew path in M3.
 
 ## Layout
 
@@ -36,7 +42,7 @@ fixtures/
 
 | Set | Count |
 |---|---|
-| Golden characters | 11 (`characters/`) |
+| Golden characters | 12 (`characters/`) |
 | Legacy entities | 3 real + 8 synthetic (`legacy/`) |
 | `.orcbrew` packs | 16, each with a `.template.json`, plus the baseline |
 
@@ -72,8 +78,9 @@ evaluated on the built character and converted with these rules
   `[class-name spell-key]`) → `{"__entries": [[key, value], ...]}` sorted by
   the key's `pr-str`
 - vector / seq → array in order; ratio → double; `nil` → `null`
-- a function anywhere in a value → the string `"#fn"` (none occur in the
-  current fixtures); anything else → `pr-str`
+- a function anywhere in a value → the string `"#fn"`; anything else →
+  `pr-str`. No fixture contains `"#fn"`: every function-valued attribute
+  that a golden character has is in the table below
 
 The function-valued attributes are evaluated against fixed arguments and
 recorded under these keys (the `-fn` suffix of the sub name is dropped):
@@ -81,6 +88,7 @@ recorded under these keys (the `-fn` suffix of the sub name is dropped):
 | Key | Value |
 |---|---|
 | `armor-class-with-armor` | `[{armor, shield, ac}]` for every combination of carried non-shield armor × carried shield, each side also `null`. This is exactly `armor-calculations` in `subs.cljs` (items resolved through `::mi5e/all-armor-map`, sorted by key) |
+| `speed-with-armor` | `[{armor, speed}]`: the speed without armor (`armor` `null`), then with each carried armor, sorted by key. Like `speed-section-2` in `views.cljs`, but it skips every item with `:type :shield`, as `armor-class-with-armor` does, and resolves homebrew armor through `::mi5e/all-armor-map`. `null` when nothing sets the attribute. Only the barbarian's Fast Movement (`classes.cljc:90`) sets it in the SRD |
 | `weapon-modifiers` | per carried weapon key (normal + magic inventories, resolved through `::mi5e/all-weapons-map`; `null` if unresolved): `attack {standard, finesse}`, `best-attack`, `damage {standard, finesse, off-hand}`, `best-damage`, `best-damage-off-hand`, `dual-wield?`, `has-prof?` |
 | `spell-save-dc`, `spell-attack-modifier` | per ability key |
 | `class-level` | per class key in `levels` |
@@ -112,7 +120,10 @@ with `min 2`); the old UI merges those.
 `to-strict(from-strict(x)) = x`, or the exception it throws), `unfilledSelections`
 (required selections the UI would still flag), `checks` (hand-written
 assertions the generator ran, with expected/actual/pass), and `quirk` for
-the legacy set.
+the legacy set. `overrides`, when present, lists the values in
+`expected.json` that record the browser's result instead of the JVM
+oracle's. Each entry names the `key`, the entry `name`, and the `field`, and
+gives the `jvm` and `browser` values and the `reason` (finding 13).
 
 ### `<pack>.template.json`
 
@@ -161,7 +172,7 @@ lines in `scripts/orcpub/oracle.clj`.
 
 All SRD except where a pack is listed. Ability scores, hit points (average
 per level) and every required selection are filled the way the old builder
-would; `unfilledSelections` is empty for all eleven.
+would; `unfilledSelections` is empty for all twelve.
 
 | Name | What it covers | Packs |
 |---|---|---|
@@ -169,6 +180,7 @@ would; `unfilledSelections` is empty for all eleven.
 | `fighter-5` | Hill dwarf fighter 5, Champion, **Dueling** (+2 damage on the one-handed longsword: the `patch D2` case), ASI, Extra Attack, tool proficiency | none |
 | `fighter-11` | Half-orc fighter 11, Champion, Great Weapon Fighting, three attacks, three ASIs, greataxe | none |
 | `fighter-20` | Human fighter 20, Champion, Protection, four attacks, every ASI (one as the Grappler feat), plate + shield, a `+1` longsword and an attuned amulet of health | none |
+| `barbarian-5` | Human barbarian 5, Path of the Berserker, ASI, Fast Movement. Carries hide, chain mail, and a shield, so `speed-with-armor` shows 40 ft. unarmored and in hide, and 30 ft. in the heavy chain mail | none |
 | `wizard-1` | High elf wizard 1, racial cantrip, 6 spells known, 4 prepared | none |
 | `wizard-5` | Rock gnome wizard 5, Evocation, ASI, 3rd-level slots, 14 spells known | none |
 | `wizard-11` | Tiefling wizard 11, Evocation, two ASIs, 6th-level slots, 5 wizard cantrips + Thaumaturgy, cloak of protection | none |
@@ -284,6 +296,11 @@ lein run -m clojure.main scripts/dump-built-character.clj <in.strict.json> <out.
      [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...]
 ```
 
+`scripts/event-handler-fixtures.clj` writes the entities of
+`test/cljc/orcpub/dnd/e5/event_handlers_test.clj` as Transit-JSON to
+`engine-js/test/fixtures/event-handlers/`, for the ported mutation tests
+(ORC-19). Run it the same way.
+
 Or in `lein repl`: `(load-file "scripts/golden-characters.clj")` regenerates
 everything; `(load-file "scripts/dump-template.clj")` and
 `(load-file "scripts/dump-built-character.clj")` define `dump-template` and
@@ -297,12 +314,13 @@ macrovich, bidi) and runs the same scripts:
 ```sh
 scripts/oracle-env.sh scripts/golden-characters.clj
 scripts/oracle-env.sh scripts/dump-template.clj ...
-scripts/oracle-env.sh test      # the engine test namespaces (40 tests)
+scripts/oracle-env.sh test      # the engine test namespaces (53 tests)
 ```
 
 Generation is deterministic; a regeneration on unchanged engine source must
 produce no diff. `dump-built-character.clj` on a checked-in `.strict.json`
-reproduces its `.expected.json` and `.selections.json` byte for byte.
+reproduces its `.expected.json` and `.selections.json` byte for byte,
+except for any values listed under `overrides` in its `.meta.json`.
 
 ## UI spot check (ORC-11)
 
@@ -344,8 +362,8 @@ The other differences are intentional:
 - **Selections left unfilled.** The UI characters leave out skill
   proficiencies, the background's holy symbol and prayer book, the
   equipment pack, and the human's extra language. The fixtures fill every
-  required selection (`unfilledSelections` is empty). `fighter-1` fills the
-  human's extra language with `:common`, which the option list allows.
+  required selection (`unfilledSelections` is empty). `fighter-1` fills its
+  three language picks with Dwarvish, Elvish and Giant (finding 14).
 - **Sibling order.** Every `selections` and `options` vector in the
   responses is in ascending `:db/id` order, which is creation order. The
   fixtures use the generator's order. `entity/from-strict-selections`
@@ -496,3 +514,27 @@ Line numbers are for commit `bcd9d68`.
     record behind it (`spell_subs.cljs:169` for `:spell` level-modifiers,
     `:362` for `:cleric-spells`). The new app must show such an entry
     without a spell record, as it must for R8's unresolved options.
+13. **Set iteration order differs between the JVM and the browser.**
+    Spell Mastery stores the two chosen spell names in a set
+    (`mod/set-mod` at `classes.cljc:2342`), and its summary joins that set
+    with `common/list-print` (`:2414`). The JVM oracle iterates the set for
+    `wizard-20` as "Alter Self and Alarm". The compiled engine, which is the
+    code the old browser app runs, gives "Alarm and Alter Self". Plain
+    regeneration reproduces the JVM order, so the generator applies an
+    override: `wizard-20` carries an `:overrides` entry in
+    `scripts/golden-characters.clj`, which replaces the value in
+    `expected.json` and records itself in `meta.json`. The generator throws
+    if the oracle's value no longer matches the recorded `jvm` value. Any
+    summary built from a set can show the same difference. ORC-17 found
+    this one.
+14. **Some fixtures pick a language that the builder refuses.** A language
+    option has the prerequisite "You already have this language", so the
+    builder does not let a human or half-elf pick Common, which the race
+    already grants. The option list includes it, and the generator does not
+    check prerequisites. `fighter-1` picked Common, and ORC-19 found this
+    when a scripted sequence of the builder's own steps could not rebuild
+    it. `fighter-1` now picks Giant instead, and regenerating changed only
+    its language list. `fighter-20`, `wizard-20` and `fighter-3-wizard-2`
+    still pick Common, and `ironwrought-artificer-3` picks it for a
+    homebrew race. They still build as the old engine builds them, but the
+    builder could not have produced them.

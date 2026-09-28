@@ -1,7 +1,7 @@
 # Phase A handoff: start here
 
 You are picking up Phase A of the active plan (`docs/ts-rewrite-plan/`,
-Plan Set 2): the compiled engine package `@dmv/pubdoor`, built in this fork
+Plan Set 2): the compiled engine package `@pubdoor/dmv`, built in this fork
 so that a new TypeScript app can use the existing rules engine as a
 library. All 24 Phase A decisions were reviewed and approved on 2026-09-20.
 M0 (fixtures) is done. The next milestone is M1. Linear project PubDoor
@@ -48,11 +48,11 @@ Skim later: `06-milestones-and-risks.md` (the M0 and M1 rows),
 - The engine you are packaging is unmodified upstream code. The only
   intended source changes are the four patches in doc 02 §Patches.
 - These decisions are already made. Do not reopen them without the user:
-  the package name `@dmv/pubdoor`, shadow-cljs with `:esm` and `:advanced`,
-  the build scope and exclusions, a plain-JS boundary with one-pass
-  extraction, a hand-written `.d.ts`, fixtures generated here and
-  snapshot-copied to the app repo, CI on the `engine` branch, and a manual
-  tagged publish. Also decided, on 2026-09-23 (ORC-94): `evaluate` takes a
+  the package name `@dmv/pubdoor` (renamed `@pubdoor/dmv` in ORC-26),
+  shadow-cljs with `:esm` and `:advanced`, the build scope and exclusions,
+  a plain-JS boundary with one-pass extraction, a hand-written `.d.ts`,
+  fixtures generated here and snapshot-copied to the app repo, CI on the
+  `engine` branch, and a manual tagged publish. Also decided, on 2026-09-23 (ORC-94): `evaluate` takes a
   `rules` option that defaults to `"2014"` and rejects any other value, and
   the `.d.ts` splits the built character into an edition-neutral part and a
   `Built2014` extension. 2024 rules are out of scope for Phase A.
@@ -116,7 +116,7 @@ access (ORC-13), and folding the findings back into the plan docs (ORC-14).
 
 ## 5. M1: the engine package (target about 2 to 3 weeks)
 
-The goal is `@dmv/pubdoor@0.1.x` published, with `evaluate`, the mutation
+The goal is `@pubdoor/dmv@0.1.x` published, with `evaluate`, the mutation
 functions, and `importCharacter`, and the golden tests green.
 
 ### 5.1 Scaffold `engine-js/`
@@ -124,7 +124,7 @@ functions, and `importCharacter`, and the golden tests green.
 ```
 engine-js/
   shadow-cljs.edn
-  package.json           ; "name": "@dmv/pubdoor", "type": "module", files: dist/, types/
+  package.json           ; "name": "@pubdoor/dmv", "type": "module", files: dist/, types/
   src/orcpub/facade.cljs
   types/index.d.ts
   test/*.test.ts         ; vitest, reads ../fixtures
@@ -169,9 +169,9 @@ green.
 | 3 | ORC-17 | Golden tests: every SRD golden character and legacy fixture matches its `expected.json` and `selections.json`, plus the ordering test |
 | 4 | ORC-18 | Port `warlock_test.clj` and the three `character_test.clj` round-trips |
 | 5 | ORC-19 | Mutations (`select`, `deselect`, `setValue`, `setField`, `addLevel`, `removeLevel`, `setClass`, `addStartingEquipment`) and the `event_handlers_test` port |
-| 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:130-165`), then `importCharacter` and `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
+| 6 | ORC-20, ORC-21 | Patch D1 (re-enable the legacy key migration, `character.cljc:121-178`), then `importCharacter` and `exportCharacter` with the R5 `xps` fix and the `fixtures/legacy/` suite |
 | 7 | ORC-22 | Patch D2: the `app-db` reads in `options.cljc` read from the entity instead, plus the Dueling arity and off-hand condition. `fighter-5` is the test |
-| 8 | ORC-23 | `autofill(entity)`, the fixed-point loop from `events.cljs:310` |
+| 8 | ORC-23 | `autofill(entity)`, the fixed-point loop from `events.cljs:311` |
 | 9 | ORC-24, ORC-25, ORC-26 | `types/index.d.ts` by hand, with `Rules` and the `Built2014` split, CI on `engine`, and publishing `0.1.0` with the tag `pubdoor-v0.1.0`. Record the registry choice on ORC-26 |
 
 `buildTemplate`, `parseOrcbrew`, `orcbrewToEdn`, `reconcileMissingContent`,
@@ -188,8 +188,8 @@ M1. Leave them out entirely rather than shipping stubs.
 - `ref` selections store data at a global path (`entity/actual-path`),
   not their tree position.
 - `options.cljc` requires re-frame, so the namespace must load even though
-  nothing subscribes. The `re-frame.db/app-db` reads inside modifiers are
-  patch D2.
+  nothing subscribes. Patch D2 (ORC-22) replaced the `re-frame.db/app-db`
+  reads inside modifiers.
 - Multi-select option paths carry no index (`entity.cljc:299`).
 - `:advanced` renames everything that is not marked `^:export` or listed
   in `:exports`.
@@ -199,7 +199,7 @@ M1. Leave them out entirely rather than shipping stubs.
 The M1 milestone in Linear closes when ORC-15 to ORC-26 are done, which
 amounts to:
 
-- [ ] `npm install @dmv/pubdoor` works from the registry, and `import { evaluate } from "@dmv/pubdoor"` type-checks
+- [ ] `npm install @pubdoor/dmv` works from the registry, and `import { evaluate } from "@pubdoor/dmv"` type-checks
 - [ ] For every M0 golden character, `evaluate().built` equals `expected.json`
 - [ ] The ported warlock, character round-trip, and event-handler tests are green
 - [ ] The legacy fixtures for R1 to R9 import, with R5 and R7 covered explicitly

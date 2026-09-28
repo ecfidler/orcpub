@@ -1,0 +1,45 @@
+{
+  "name": "@pubdoor/dmv",
+  "version": "0.1.0",
+  "description": "The Dungeon Master's Vault 5e rules engine, compiled from ClojureScript",
+  "license": "EPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecfidler/orcpub.git",
+    "directory": "engine-js"
+  },
+  "homepage": "https://github.com/ecfidler/orcpub/tree/pubdoor/engine-js#readme",
+  "bugs": {
+    "url": "https://github.com/ecfidler/orcpub/issues"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./dist/pubdoor.js"
+    }
+  },
+  "types": "./types/index.d.ts",
+  "files": [
+    "dist/pubdoor.js",
+    "types/index.d.ts",
+    "THIRD-PARTY-NOTICES"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "shadow-cljs release pubdoor",
+    "test": "tsc --noEmit && vitest run",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.4",
+    "create-react-class": "15.7.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "shadow-cljs": "3.5.3",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2"
+  }
+}

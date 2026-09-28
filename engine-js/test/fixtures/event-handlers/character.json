@@ -1,0 +1,67 @@
+{
+  "~:orcpub.entity.strict/selections": [
+    {
+      "~:orcpub.entity.strict/key": "~:class",
+      "~:orcpub.entity.strict/options": [
+        {
+          "~:db/id": 17592186055267,
+          "~:orcpub.entity.strict/key": "~:barbarian",
+          "~:orcpub.entity.strict/selections": [
+            {
+              "~:orcpub.entity.strict/key": "~:levels",
+              "~:orcpub.entity.strict/options": [
+                {
+                  "~:db/id": 17592186055269,
+                  "~:orcpub.entity.strict/key": "~:level-1"
+                },
+                {
+                  "~:db/id": 17592186055270,
+                  "~:orcpub.entity.strict/key": "~:level-2",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:db/id": 17592186055272,
+                        "~:orcpub.entity.strict/key": "~:roll",
+                        "~:orcpub.entity.strict/int-value": 7
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:db/id": 17592186055273,
+                  "~:orcpub.entity.strict/key": "~:level-3",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:db/id": 17592186055275,
+                        "~:orcpub.entity.strict/key": "~:roll",
+                        "~:orcpub.entity.strict/int-value": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                  "~:db/id": 17592186055288,
+                  "~:orcpub.entity.strict/key": "~:level-4",
+                  "~:orcpub.entity.strict/selections": [
+                    {
+                      "~:orcpub.entity.strict/key": "~:hit-points",
+                      "~:orcpub.entity.strict/option": {
+                        "~:db/id": 17592186055290,
+                        "~:orcpub.entity.strict/key": "~:manual-entry",
+                        "~:orcpub.entity.strict/int-value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "~:db/id": 17592186055262
+}

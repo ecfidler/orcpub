@@ -64,6 +64,10 @@
                                             ?ac-bonus
                                             (?shield-ac-bonus shield)))
     ?dual-wield-weapon? weapon5e/light-melee-weapon?
+    ;; Where the Dueling and Dual Wielder conditions look up the wielded
+    ;; weapons. t5e/template can replace it with a map that includes custom
+    ;; magic items.
+    ?all-weapons-map mi5e/all-weapons-map
     ?armor-class-with-armor-base (fn [armor & [shield]]
                                    (cond (and (nil? armor)
                                               (nil? shield)) ?unarmored-armor-class

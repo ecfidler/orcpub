@@ -21,6 +21,7 @@
             [orcpub.dnd.e5.character.equipment :as equip]
             [orcpub.dnd.e5.spells :as spells5e]
             [orcpub.dnd.e5.weapons :as weapons5e]
+            [orcpub.dnd.e5.armor :as armor5e]
             [orcpub.dnd.e5.spell-lists :as sl5e]
             [clojure.string :as str]
             [clojure.java.io :as io]))
@@ -162,7 +163,7 @@
           (merge {:ability-scores (val-opt :standard-scores (abilities 15 14 13 12 10 8))
                   :alignment (opt :lawful-good)
                   :race (opt :human {:subrace (opt :damaran) :variant (opt :standard-human)})
-                  :languages [(opt :common) (opt :dwarvish) (opt :elvish)]
+                  :languages [(opt :dwarvish) (opt :elvish) (opt :giant)]
                   :background acolyte
                   :class [(fighter-base 1 {})]}
                  fighter-items)
@@ -251,6 +252,32 @@
                            ::char5e/attuned-magic-items [:amulet-of-health]}}
     :checks (fn [b] [[20 (char5e/total-levels b)] [6 (char5e/proficiency-bonus b)] [4 (char5e/number-of-attacks b)]])}
 
+   {:name "barbarian-5"
+    :description "Level 5 human (standard) barbarian (Path of the Berserker), ASI at 4 (STR+1, CON+1). Fast Movement sets the function-valued speed-with-armor: 40 ft. unarmored or in hide, 30 ft. in the carried chain mail (heavy). Also carries a shield, which speed-with-armor skips."
+    :raw {::entity/options
+          {:ability-scores (val-opt :standard-scores (abilities 15 13 14 8 12 10))
+           :alignment (opt :chaotic-neutral)
+           :race (opt :human {:subrace (opt :tethyrian) :variant (opt :standard-human)})
+           :languages [(opt :dwarvish) (opt :giant) (opt :orc)]
+           :background acolyte
+           :class [(opt :barbarian {:starting-equipment-martial-weapon (opt :greataxe)
+                                    :starting-equipment-simple-weapon (opt :handaxe)
+                                    :skill-proficiency [(opt :athletics) (opt :survival)]
+                                    :levels (class-levels 5 12 {3 {:primal-path (opt :path-of-the-berserker)}
+                                                                4 {:asi-or-feat (asi A C)}})})]
+           :weapons [(item :javelin 4 :class? true)]
+           :armor [(item :hide 1) (item :chain-mail 1 :equipped? false) (item :shield 1 :equipped? false)]
+           :equipment (into [(item :explorers-pack 1 :class? true)] acolyte-items)
+           :treasure [(item :gp 15 :bg? true)]}
+          ::entity/values {::char5e/character-name "Korga Stormhide"
+                           ::char5e/xps 6500
+                           ::char5e/worn-armor :hide
+                           ::char5e/main-hand-weapon :greataxe}}
+    :checks (fn [b] (let [speed (char5e/land-speed-with-armor b)
+                          armor-map armor5e/armor-map]
+                      [[5 (char5e/total-levels b)] [2 (char5e/number-of-attacks b)] [30 (char5e/base-land-speed b)]
+                       [40 (speed nil)] [40 (speed (:hide armor-map))] [30 (speed (:chain-mail armor-map))]]))}
+
    {:name "wizard-1"
     :description "Level 1 high elf wizard, Acolyte, three cantrips + the High Elf cantrip, six spells known, four prepared."
     :raw {::entity/options
@@ -327,7 +354,14 @@
                            ::char5e/xps 355000
                            ::char5e/prepared-spells-by-class (prepared-wizard-spells 20 20)}}
     :checks (fn [b] [[20 (char5e/total-levels b)] [6 (char5e/proficiency-bonus b)]
-                     [{1 4 2 3 3 3 4 3 5 3 6 2 7 2 8 1 9 1} (char5e/spell-slots b)]])}
+                     [{1 4 2 3 3 3 4 3 5 3 6 2 7 2 8 1 9 1} (char5e/spell-slots b)]])
+    ;; fixtures/README.md, finding 13.
+    :overrides [{"key" "traits"
+                 "name" "Spell Mastery"
+                 "field" "summary"
+                 "jvm" "Cast Alter Self and Alarm at lowest level without expending a slot if you have them prepared"
+                 "browser" "Cast Alarm and Alter Self at lowest level without expending a slot if you have them prepared"
+                 "reason" "The summary joins a set (classes.cljc:2342, :2414). The JVM and the compiled engine iterate that set in different orders; the browser's order is recorded."}]}
 
    {:name "fighter-3-wizard-2"
     :description "Multiclass: half-elf fighter 3 (Champion, Defense) / wizard 2 (Evocation). Wizard is the second class, so no wizard skill selection; spell slots from two wizard levels."
@@ -522,8 +556,21 @@
            (println "  CHECK FAILED: expected" (pr-str expected) "got" (pr-str actual)))
          {"expected" (oracle/->plain expected) "actual" (oracle/->plain actual) "pass" (= expected actual)}))))
 
+(defn apply-override
+  "Replaces one field of a named entry in a list-valued key of expected.json
+   with the value the browser computes. Throws if the oracle's value is not
+   the recorded `jvm` value, so a stale override cannot apply silently."
+  [expected {:strs [key name field jvm browser] :as override}]
+  (let [entries (get expected key)
+        i (first (keep-indexed (fn [i e] (when (= name (get e "name")) i)) entries))
+        actual (when i (get-in entries [i field]))]
+    (when (not= jvm actual)
+      (throw (ex-info (str "override does not match the oracle's value: " key " " name " " field)
+                      {:override override :actual actual})))
+    (assoc-in expected [key i field] browser)))
+
 (defn write-fixture!
-  [dir {:keys [name description quirk orcbrew raw strict checks] :or {orcbrew []}}]
+  [dir {:keys [name description quirk orcbrew raw strict checks overrides] :or {orcbrew []}}]
   (println "==" name)
   (let [strict (or strict (char5e/to-strict raw))
         strict-path (str dir "/" name ".strict.json")
@@ -534,7 +581,7 @@
                         (catch Exception e (str "throws: " (.getMessage e))))
         template (template-for orcbrew)
         {:keys [raw built]} (oracle/build-strict strict* template)
-        expected (oracle/expected-values built)
+        expected (reduce apply-override (oracle/expected-values built) overrides)
         selections (oracle/selections-summary raw built template)
         unfilled (filter #(pos? (get % "remaining")) selections)
         check-results (when checks (run-checks checks built))]
@@ -549,7 +596,8 @@
                                      "strictRoundTrip" round-trip
                                      "unfilledSelections" (mapv #(get % "actualPath") unfilled)
                                      "checks" (or check-results [])}
-                              quirk (assoc "quirk" quirk)))
+                              quirk (assoc "quirk" quirk)
+                              overrides (assoc "overrides" overrides)))
     (println (format "  levels=%s hp=%s ac=%s unfilled=%d checks=%s"
                      (pr-str (into {} (map (fn [[k v]] [k (:class-level v)])) (char5e/levels built)))
                      (char5e/max-hit-points built)

@@ -1,0 +1,12 @@
+{
+  "~:db/id": 17592186055354,
+  "~:orcpub.entity.strict/selections": [
+    {
+      "~:db/id": 17592186055371,
+      "~:orcpub.entity.strict/key": "~:race",
+      "~:orcpub.entity.strict/option": {
+        "~:orcpub.entity.strict/key": "~:elf"
+      }
+    }
+  ]
+}

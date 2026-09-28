@@ -10,7 +10,7 @@ Treat them as relative sizes, not commitments.
 |---|-----------|----------|------|
 | M0 | Reference captured | Phase 0 complete: app running, fixtures, golden characters | days |
 | M1 | Read-only client | Scaffold, auth, character list, and read-only sheet (doc 04) | about 2 weeks |
-| M2 | Engine proven | `@dmv/pubdoor` with golden tests. The M1 sheet uses it, so docs 03 and 04 overlap and M1 needs a minimal engine build early | about 2 to 3 weeks |
+| M2 | Engine proven | `@pubdoor/dmv` with golden tests. The M1 sheet uses it, so docs 03 and 04 overlap and M1 needs a minimal engine build early | about 2 to 3 weeks |
 | M3 | PDF export | Doc 06 §PDF export | days |
 | M4 | Builder core | 4.3 sub-milestones 1 to 3 (selections, abilities, classes) | the longest task, about 4 to 8 weeks |
 | M5 | Builder complete | 4.3 sub-milestones 4 to 6 (equipment, spells, save and autosave) | about 3 to 4 weeks |

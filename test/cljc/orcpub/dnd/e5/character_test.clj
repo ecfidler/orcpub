@@ -41,6 +41,36 @@
                      :orcpub.dnd.e5.character/cha 8}}}}]
     (is (= (char/add-ability-namespaces character) expected))))
 
+(deftest add-namespaces
+  (let [character {::entity/options
+                   {:ability-scores {::entity/key :standard-roll
+                                     ::entity/value {:str 16 :dex 12 :con 15
+                                                     :int 10 :wis 13 :cha 8}}
+                    :weapons [{::entity/key :handaxe
+                               ::entity/value {:quantity 2 :equipped? true}}]}
+                   ::entity/values
+                   {:character-name "Old Tom"
+                    :xps 300
+                    :custom-equipment [{:name "Lucky coin" :quantity 1}]}}
+        expected {::entity/options
+                  {:ability-scores {::entity/key :standard-roll
+                                    ::entity/value {::char/str 16 ::char/dex 12 ::char/con 15
+                                                    ::char/int 10 ::char/wis 13 ::char/cha 8}}
+                   :weapons [{::entity/key :handaxe
+                              ::entity/value {::equip/quantity 2 ::equip/equipped? true}}]}
+                  ::entity/values
+                  {::char/character-name "Old Tom"
+                   ::char/xps 300
+                   ::char/custom-equipment [{::equip/name "Lucky coin" ::equip/quantity 1}]}}]
+    (is (spec/valid? ::char/unnamespaced-character character))
+    (is (= expected (char/add-namespaces character)))
+    (is (not (spec/valid? ::char/unnamespaced-character (char/add-namespaces character))))))
+
+(deftest add-namespaces-without-ability-scores
+  (let [character {::entity/values {:character-name "Old Tom"}}]
+    (is (= {::entity/values {::char/character-name "Old Tom"}}
+           (char/add-namespaces character)))))
+
 (deftest unnamespaced-character
   (let [character {:orcpub.entity/options
                    {:magic-armor

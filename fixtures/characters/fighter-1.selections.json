@@ -92,9 +92,9 @@
     ],
     "remaining": -2,
     "selected": [
-      "common",
       "dwarvish",
-      "elvish"
+      "elvish",
+      "giant"
     ]
   },
   {
@@ -197,9 +197,9 @@
     ],
     "remaining": -1,
     "selected": [
-      "common",
       "dwarvish",
-      "elvish"
+      "elvish",
+      "giant"
     ]
   },
   {

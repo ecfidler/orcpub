@@ -981,7 +981,7 @@
     {
       "name": "Spell Mastery",
       "page": 115,
-      "summary": "Cast Alter Self and Alarm at lowest level without expending a slot if you have them prepared"
+      "summary": "Cast Alarm and Alter Self at lowest level without expending a slot if you have them prepared"
     },
     {
       "name": "Signature Spells",
