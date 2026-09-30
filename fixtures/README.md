@@ -2,7 +2,8 @@
 
 Real inputs and oracle-produced expected outputs for the engine package
 (`@pubdoor/dmv`, M1) and the homebrew engine path (M3). The plan is
-`docs/ts-rewrite-plan/`; the milestone is `HANDOFF-phase-a.md` §4.
+`docs/plan/` in `ecfidler/orc-alchemy`; the milestone is
+`HANDOFF-phase-a.md` §4.
 
 The oracle is the **old app's own code** running on the JVM, unmodified:
 `entity/build` and the `character.cljc` accessors for characters, and the

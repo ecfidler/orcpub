@@ -19,7 +19,7 @@ from `entity.cljc`, `template.cljc`, `modifiers.cljc`, and
 
 ## Read the planning documents before any frontend or rewrite work
 
-Two plan sets under `docs/` describe the intended direction for a
+Two plan sets in orc-alchemy describe the intended direction for a
 TypeScript frontend. They come from an investigation of this codebase and
 cite file and line numbers. Prefer them to re-deriving the architecture.
 
@@ -39,36 +39,28 @@ below are the technical reference. When the two disagree about what is
 built, the docs win. When they disagree about status, Linear wins.
 Reference the issue identifier (`ORC-nn`) in commits and PRs.
 
-Plan Set 2, `docs/ts-rewrite-plan/`, is the plan under consideration for
-implementation. When the user says "the plan" without qualification, they
-mean Plan Set 2. Plan Set 1 remains as reference material that Plan Set 2
-builds on.
+The plan documents live in
+[`ecfidler/orc-alchemy`](https://github.com/ecfidler/orc-alchemy), the
+TypeScript monorepo, under `docs/plan/`. They moved out of this fork on
+2026-09-29 (ORC-101). The last fork commit that has them is `26f57e07`,
+and their file and line citations refer to this fork at that commit.
+Plan Set 2, `docs/plan/`, is the active plan. When the user says "the
+plan" without qualification, they mean Plan Set 2. Plan Set 1,
+`docs/plan/plan-set-1/`, is reference material that Plan Set 2 builds on.
 
-- `docs/ts-rewrite-plan/` (Plan Set 2, active) describes a new application
-  built on the compiled `.cljc` engine as an npm library, with its own
-  backend and user-level compatibility: users import `.orcbrew` homebrew
-  files and characters exported from this app. Start at its `README.md`.
-  The key documents are `01-compatibility-contract.md`, which lists what
-  must import and export and the legacy data quirks, and
-  `02-engine-library.md`, which covers the facade API, the engine
-  wrinkles, and the few upstream patches needed. If you are implementing
-  Phase A, the engine package in this fork, read
-  `docs/ts-rewrite-plan/HANDOFF-phase-a.md` first. M0, the fixtures
-  milestone, is done: `fixtures/` and `scripts/` hold the oracle outputs
-  and tooling, described in `fixtures/README.md`, whose Findings section
-  corrects the plan in a few places.
-- `docs/ts-frontend-plan/` (Plan Set 1, reference) describes replacing the
-  ClojureScript UI with TypeScript and React while reusing the compiled
-  engine and keeping this backend unchanged. Plan Set 2 references it
-  where the work is identical: the engine facade, the app scaffold, and
-  the page order. The key documents are `02-api-surface.md`, which lists
-  every backend endpoint, the Transit wire format, and JWT auth, and
-  `03-engine-package.md`, which describes the shadow-cljs facade.
-- `docs/reports/2024-rules-support.md` §Decision records how 2024 rules
-  (SRD 5.2) arrive: option E. `@pubdoor/dmv` serves 2014 only, and a later
-  TypeScript engine, tracked in Linear project *2024 engine*, adds 2024.
-  Read it before any work on rules editions, the `rules` tag, or 2024
-  content.
+- If you are working on Phase A, the engine package in this fork, read
+  `docs/plan/HANDOFF-phase-a.md` in orc-alchemy first. The key documents
+  are `01-compatibility-contract.md`, which lists what must import and
+  export and the legacy data quirks, and `02-engine-library.md`, which
+  covers the facade API, the engine wrinkles, and the few upstream patches
+  needed. M0, the fixtures milestone, is done: `fixtures/` and `scripts/`
+  hold the oracle outputs and tooling, described in `fixtures/README.md`,
+  whose Findings section corrects the plan in a few places.
+- orc-alchemy `docs/reports/2024-rules-support.md` §Decision records how
+  2024 rules (SRD 5.2) arrive: option E. `@pubdoor/dmv` serves 2014 only,
+  and a later TypeScript engine, tracked in Linear project *2024 engine*,
+  adds 2024. Read it before any work on rules editions, the `rules` tag,
+  or 2024 content.
 
 ## Facts the plans depend on
 
@@ -84,9 +76,9 @@ Do not contradict these without checking the source.
   explicit keys. Changing a key breaks saved data.
 - `.orcbrew` files are EDN. The import pipeline is
   `src/cljs/orcpub/dnd/e5/import_validation.cljs`.
-  `docs/ORCBREW_FILE_VALIDATION.md` and
-  `docs/ts-rewrite-plan/01-compatibility-contract.md` document the format
-  and its known drift.
+  `docs/ORCBREW_FILE_VALIDATION.md` and orc-alchemy
+  `docs/plan/01-compatibility-contract.md` document the format and its
+  known drift.
 - Selection order in a strict entity carries meaning. `entity.cljc` uses
   `array-map` deliberately to preserve it.
 

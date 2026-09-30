@@ -1,5 +1,5 @@
 (ns orcpub.oracle
-  "Phase A oracle (see docs/ts-rewrite-plan/HANDOFF-phase-a.md §4).
+  "Phase A oracle (see orc-alchemy docs/plan/HANDOFF-phase-a.md §4).
 
    Runs the OLD app's rules engine and its homebrew → template chain on the
    JVM so fixtures can be produced without a browser:

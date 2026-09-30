@@ -1,6 +1,6 @@
 (ns orcpub.facade.template
   "The old app's homebrew -> template subscription chain as plain functions
-  (ORC-16, docs/ts-rewrite-plan/02-engine-library.md §De-re-framing).
+  (ORC-16, orc-alchemy docs/plan/02-engine-library.md §De-re-framing).
 
   The old app computes the character template through re-frame
   subscriptions rooted at `::e5/plugins` (app-db `:plugins`) and

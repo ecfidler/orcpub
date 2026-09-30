@@ -55,7 +55,7 @@ If your output contradicts an existing ADR, say so rather than overriding the AD
 This repo uses the single-context layout. `CONTEXT.md` and `docs/adr/` do
 not exist yet. `/domain-modeling` creates them when first needed. Until
 then, the working vocabulary is in `CLAUDE.md` and in the plan documents
-under `docs/ts-rewrite-plan/`: strict entity, engine facade, Phase A and
+under `docs/plan/` in `ecfidler/orc-alchemy`: strict entity, engine facade, Phase A and
 Phase B, and the compatibility quirks R1 to R10. The decisions already
 taken are on the Linear issues labelled `Decision` and in the plan
 overview document linked from `CLAUDE.md`. Use that vocabulary. Do not
