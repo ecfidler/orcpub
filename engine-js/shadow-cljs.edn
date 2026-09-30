@@ -1,4 +1,4 @@
-;; Build for @pubdoor/dmv. See docs/ts-rewrite-plan/HANDOFF-phase-a.md §5.1.
+;; Build for @pubdoor/dmv. See orc-alchemy docs/plan/HANDOFF-phase-a.md §5.1.
 ;;
 ;; The engine compiles in place from ../src/cljc and ../src/cljs. Only the
 ;; namespaces the facade requires are compiled, so the old UI (orcpub.core,

@@ -1,5 +1,5 @@
 (ns orcpub.facade
-  "The exported API of @pubdoor/dmv. See docs/ts-rewrite-plan/02-engine-library.md.
+  "The exported API of @pubdoor/dmv. See orc-alchemy docs/plan/02-engine-library.md.
 
   Nothing lazy crosses the boundary: every function takes and returns plain
   JS data. The conversion rules are the ones fixtures/README.md documents for
@@ -366,7 +366,7 @@
          value)))))
 
 ;;; ---------------------------------------------------------------------------
-;;; importCharacter, exportCharacter (docs/ts-rewrite-plan/03-character-import-and-storage.md)
+;;; importCharacter, exportCharacter (orc-alchemy docs/plan/03-character-import-and-storage.md)
 ;;; ---------------------------------------------------------------------------
 
 (defn- read-entity [entity]

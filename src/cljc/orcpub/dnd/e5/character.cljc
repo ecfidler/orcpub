@@ -167,7 +167,7 @@
   "Migrates a raw character saved with legacy unnamespaced keys
   (::unnamespaced-character) to namespaced keys: ability scores, equipment
   values, character values, and custom equipment and treasure items.
-  Patch D1 (docs/ts-rewrite-plan/02-engine-library.md): only
+  Patch D1 (orc-alchemy docs/plan/02-engine-library.md): only
   importCharacter in engine-js/ calls it."
   [raw-character]
   (cond-> (add-equipment-namespaces raw-character)

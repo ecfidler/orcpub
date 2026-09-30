@@ -15,7 +15,7 @@ in `CLAUDE.md`:
 | Project | What it tracks | Repo |
 | --- | --- | --- |
 | PubDoor | Phase A: the compiled engine package `@pubdoor/dmv` | this repo |
-| Alchemy 5e | Phase B: the new TypeScript and React app | its own repo |
+| Alchemy 5e | Phase B: the new TypeScript and React app | `ecfidler/orc-alchemy` |
 
 New issues for work in this repo go in PubDoor unless the user says
 otherwise. If the target project is unclear, ask.
