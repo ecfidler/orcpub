@@ -1,4 +1,4 @@
-# Builds and tests @dmv/pubdoor (engine-js/). See
+# Builds and tests @pubdoor/dmv (engine-js/). See
 # orc-alchemy docs/plan/HANDOFF-phase-a.md. The Leiningen CI is
 # continuous-integration.yml.
 
