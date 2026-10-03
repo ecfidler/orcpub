@@ -306,7 +306,7 @@
 ;;; ---------------------------------------------------------------------------
 
 (def ^:private srd-template
-  "The SRD-only template. homebrew is ignored until buildTemplate (ORC-27)."
+  "The SRD-only template content."
   (delay (template/build {})))
 
 (defn- read-strict
@@ -320,8 +320,33 @@
   [entity]
   (if (string? entity) entity (js/JSON.stringify entity)))
 
-(defn- evaluate* [text]
-  (let [{:keys [template] :as content} @srd-template
+(defn- memo-previous
+  "f, a function of one argument, memoized on its previous call: a call
+  with an argument equal to the previous call's returns the previous value."
+  [f]
+  (let [memo (atom nil)]
+    (fn [x]
+      (let [[k v :as hit] @memo]
+        (if (and hit (= k x))
+          v
+          (let [v (f x)]
+            (reset! memo [x v])
+            v))))))
+
+;; Homebrew crosses the boundary as the multi-plugin map, the old app's
+;; :plugins ({pack-name plugin}), in verbose Transit-JSON: the text, or the
+;; value JSON.parse returns for it, as for strict entities.
+
+(def ^:private homebrew-content
+  "The template content for homebrew's Transit-JSON text, or the SRD's for
+  nil."
+  (memo-previous #(if % (template/build (read-strict %)) @srd-template)))
+
+(defn- homebrew-text [options]
+  (some-> options (gobj/get "homebrew") entity-text))
+
+(defn- evaluate* [text content]
+  (let [{:keys [template]} content
         raw (char5e/from-strict (read-strict text))
         built (entity/build raw template)]
     (clj->js {"built" (built-values built content)
@@ -337,15 +362,17 @@
       (throw (js/Error. (str "Unsupported rules edition: " rules
                              ". @pubdoor/dmv supports only \"2014\"."))))))
 
-(def ^:private memo (atom {:key nil :value nil}))
+(def ^:private evaluate-previous
+  (memo-previous (fn [[text homebrew]] (evaluate* text (homebrew-content homebrew)))))
 
 (defn ^:export evaluate
   "Builds a strict entity and returns {built, selections} as plain JS.
 
   entity is the strict entity as Transit-JSON: the text, or the value
   JSON.parse returns for it. options is {rules?, homebrew?}. rules defaults
-  to \"2014\", the only edition 0.1 supports. homebrew is accepted and
-  ignored until buildTemplate (ORC-27).
+  to \"2014\", the only edition 0.1 supports. homebrew is the loaded packs,
+  the multi-plugin map as verbose Transit-JSON (parseOrcbrew's data);
+  without it the character builds against the SRD only.
 
   Weapon bonuses read the hand slots in the entity's values,
   :orcpub.dnd.e5.character/main-hand-weapon and off-hand-weapon, each a
@@ -354,18 +381,14 @@
   set to something that is not a weapon, such as :shield. An empty off hand
   gives no bonus.
 
-  The result is memoized on the entity's JSON text, so calling evaluate
-  again with an unchanged entity returns the same object."
+  The result is memoized on the JSON text of the entity and the homebrew,
+  so calling evaluate again with both unchanged returns the same object.
+  The template is memoized on the homebrew alone."
   ([entity] (evaluate entity nil))
   ([entity options]
+   ;; Not (content options): the memo key is the homebrew's text.
    (check-rules! options)
-   (let [text (entity-text entity)
-         {:keys [key value]} @memo]
-     (if (= key text)
-       value
-       (let [value (evaluate* text)]
-         (reset! memo {:key text :value value})
-         value)))))
+   (evaluate-previous [(entity-text entity) (homebrew-text options)])))
 
 ;;; ---------------------------------------------------------------------------
 ;;; importCharacter, exportCharacter (orc-alchemy docs/plan/03-character-import-and-storage.md)
@@ -430,10 +453,6 @@
 
 ;;; ---------------------------------------------------------------------------
 ;;; parseOrcbrew (orc-alchemy docs/plan/04-homebrew.md)
-;;;
-;;; Homebrew crosses the boundary as the multi-plugin map, the old app's
-;;; :plugins ({pack-name plugin}), in verbose Transit-JSON: the text, or the
-;;; value JSON.parse returns for it, as for strict entities.
 ;;; ---------------------------------------------------------------------------
 
 ;; COPIED: events.cljs:3917-3954 (build-conflict-list). events.cljs cannot be
@@ -543,11 +562,10 @@
   (throw (js/Error. (apply str parts))))
 
 (defn- content
-  "The template content for options {rules?, homebrew?}. homebrew is
-  ignored until buildTemplate (ORC-27)."
+  "The template content for options {rules?, homebrew?}."
   [options]
   (check-rules! options)
-  @srd-template)
+  (homebrew-content (homebrew-text options)))
 
 (defn- read-raw [entity]
   (char5e/from-strict (read-entity entity)))

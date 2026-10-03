@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate, importCharacter } from "@pubdoor/dmv";
+import { evaluate, importCharacter, parseOrcbrew, type Homebrew } from "@pubdoor/dmv";
 
 // The M0 fixtures: fixtures/README.md describes the layout and how
 // expected.json and selections.json were generated.
@@ -37,20 +37,24 @@ function needsImport(dir: string, name: string): boolean {
   return quirk === "R5" || quirk === "R7";
 }
 
-function usesHomebrew(dir: string, name: string): boolean {
-  return meta(dir, name).orcbrew.length > 0;
+/** The character's packs, imported in order as the old app would. */
+function homebrew(dir: string, name: string): Homebrew | undefined {
+  const files = meta(dir, name).orcbrew;
+  if (files.length === 0) return undefined;
+  return files.reduce<Homebrew>((loaded, file) => {
+    const text = readFileSync(new URL(`orcbrew/${file}`, fixtures), "utf8");
+    return parseOrcbrew(text, { name: file.slice(0, -".orcbrew".length), existing: loaded }).data!;
+  }, {});
 }
 
 for (const dir of ["characters", "legacy"]) {
   describe(`golden ${dir}`, () => {
     for (const name of fixtureNames(dir)) {
-      // Characters built with .orcbrew content need buildTemplate (M3).
-      const test = usesHomebrew(dir, name) ? it.skip : it;
-
-      test(name, () => {
+      it(name, () => {
         const strict = read(dir, `${name}.strict.json`) as object;
         const { built, selections } = evaluate(
           needsImport(dir, name) ? importCharacter(strict).entity : strict,
+          { homebrew: homebrew(dir, name) },
         );
 
         expect(built).toStrictEqual(read(dir, `${name}.expected.json`));
