@@ -61,6 +61,7 @@ full signatures and the types.
 - `increaseAbility(entity, path, abilityKey, options?)` adds one to an ability in an ability score improvement.
 - `decreaseAbility(entity, path, abilityKey, options?)` removes one pick of an ability from an ability score improvement.
 - `autofill(entity, options?)` fills a character at random, as the builder's random character button does.
+- `parseOrcbrew(text, options?)` reads an `.orcbrew` file through the old importer and returns `{ success, data, log, conflicts, skipped }`. `data` is homebrew: the packs as verbose Transit-JSON, keyed by pack name.
 
 Each mutation returns a new entity. It throws with the reason when the old
 builder would refuse the same change.

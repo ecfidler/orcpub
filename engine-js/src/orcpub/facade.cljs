@@ -16,6 +16,7 @@
             [orcpub.dnd.e5.character :as char5e]
             [orcpub.dnd.e5.classes :as class5e]
             [orcpub.dnd.e5.event-handlers :as eh]
+            [orcpub.dnd.e5.import-validation :as import-val]
             [orcpub.dnd.e5.template :as t5e]
             [orcpub.facade.template :as template]))
 
@@ -425,6 +426,107 @@
   so their order is kept."
   [entity]
   (write-entity (char5e/to-strict (char5e/from-strict (read-entity entity)))))
+
+;;; ---------------------------------------------------------------------------
+;;; parseOrcbrew (orc-alchemy docs/plan/04-homebrew.md)
+;;;
+;;; Homebrew crosses the boundary as the multi-plugin map, the old app's
+;;; :plugins ({pack-name plugin}), in verbose Transit-JSON: the text, or the
+;;; value JSON.parse returns for it, as for strict entities.
+;;; ---------------------------------------------------------------------------
+
+(defn- read-homebrew [homebrew]
+  (transit/read (transit/reader :json) (entity-text homebrew)))
+
+(defn- write-homebrew [plugins]
+  (js/JSON.parse (transit/write (transit/writer :json-verbose) plugins)))
+
+;; COPIED: events.cljs:3918-3958 (build-conflict-list). events.cljs cannot be
+;; required. import-name is unused there too.
+(defn- build-conflict-list
+  [{:keys [internal-conflicts external-conflicts]} import-name]
+  (let [;; Internal conflicts: same key appears in multiple sources within the import
+        internal (map-indexed
+                  (fn [idx {:keys [key content-type content-type-name sources]}]
+                    {:id (str "internal-" idx)
+                     :type :internal
+                     :key key
+                     :content-type content-type
+                     :content-type-name content-type-name
+                     :sources sources
+                     ;; For internal, user picks which source to rename
+                     :suggested-renames (mapv (fn [{:keys [source name]}]
+                                                {:source source
+                                                 :new-key (import-val/generate-new-key key source)})
+                                              sources)})
+                  internal-conflicts)
+
+        ;; External conflicts: imported key conflicts with existing key
+        external (map-indexed
+                  (fn [idx {:keys [key content-type content-type-name
+                                   import-source import-name
+                                   existing-source existing-name]}]
+                    {:id (str "external-" idx)
+                     :type :external
+                     :key key
+                     :content-type content-type
+                     :content-type-name content-type-name
+                     :import-source import-source
+                     :import-name import-name
+                     :existing-source existing-source
+                     :existing-name existing-name
+                     ;; Suggested rename for the import
+                     :suggested-new-key (import-val/generate-new-key key import-source)})
+                  external-conflicts)]
+    (vec (concat internal external))))
+
+(defn ^:export parseOrcbrew
+  "Runs .orcbrew text through the old importer, validate-import with
+  auto-clean on, as the ::e5/import-plugin event does. A leading byte-order
+  mark is removed first.
+
+  options is {name?, existing?, strict?}. name is the pack name for a
+  single-plugin file, the file name without .orcbrew in the old app, and
+  defaults to \"Imported Content\". existing is the homebrew already loaded,
+  for the external key-conflict check. strict selects the all-or-nothing
+  strategy instead of the progressive one.
+
+  Returns {success, data, log, conflicts, skipped}:
+    data      the cleaned multi-plugin map as homebrew, a single-plugin file
+              placed under name, or null when success is false
+    log       the old :import-log fields: changes, errors, skipped-items,
+              key-conflicts and key-warnings, plus imported-count,
+              skipped-count, message (the old app's notice) and, for a parse
+              failure, parse-error, line and hint
+    conflicts the key conflicts with suggested keys, as the old
+              conflict-resolution modal lists them
+    skipped   the items the progressive strategy left out, {key, errors}
+  Key conflicts do not stop an import. The old app asked the user to
+  resolve them before it loaded the data."
+  ([text] (parseOrcbrew text nil))
+  ([text options]
+   (let [name (or (some-> options (gobj/get "name")) "Imported Content")
+         existing (some-> options (gobj/get "existing") read-homebrew)
+         result (import-val/validate-import
+                 (str/replace-first text #"^﻿" "")
+                 {:strategy (if (some-> options (gobj/get "strict")) :strict :progressive)
+                  :existing-plugins existing
+                  :import-source-name name})
+         data (:data result)]
+     #js {"success" (boolean (:success result))
+          "data" (when (:success result)
+                   (write-homebrew (if (import-val/is-multi-plugin? data) data {name data})))
+          "log" (clj->js
+                 (->plain
+                  (assoc (select-keys result [:changes :skipped-items :key-conflicts :key-warnings
+                                              :imported-count :skipped-count
+                                              :parse-error :line :hint])
+                         :errors (if (:parse-error result)
+                                   [(:error result)]
+                                   (vec (:errors result)))
+                         :message (import-val/format-import-result result))))
+          "conflicts" (clj->js (->plain (build-conflict-list (:key-conflicts result) name)))
+          "skipped" (clj->js (->plain (vec (:skipped-items result))))})))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)
