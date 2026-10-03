@@ -539,3 +539,22 @@ Line numbers are for commit `bcd9d68`.
     still pick Common, and `ironwrought-artificer-3` picks it for a
     homebrew race. They still build as the old engine builds them, but the
     builder could not have produced them.
+15. **Some template option lists come from hash iteration.** The JVM and
+    browser difference from finding 13 also affects the template. Three
+    kinds of selection build their options by iterating a hash map or set:
+    each class's spells-known selections (`select-keys` over the class
+    spell list, `options.cljc:655`), the half-elf's ability increases
+    (`(disj (set ...))`, `spell_subs.cljs:831`), and Bard Magical Secrets.
+    Their option order in `_srd-baseline.template.json.gz` and the
+    `.template.json` deltas is the JVM's. Magical Secrets also changes
+    content: it takes the highest spell level as
+    `(key (last (total-slots level 1)))` (`options.cljc:592`), and
+    `total-slots` at level 18 has nine keys, so it is a hash map. The
+    browser iterates small integers in order and offers spells up to 9th
+    level. The JVM's last key is 8, so its 18th-level selection lacks the
+    15 9th-level spells. The browser is the old app, and its result is also
+    what the rules give a level 18 bard. The JVM oracle cannot reproduce
+    browser hash order, so the fixtures stay as generated.
+    `engine-js/test/template.test.ts` compares only the option sets of these
+    selections, and it checks the 9th-level spells separately. ORC-28 found
+    this.

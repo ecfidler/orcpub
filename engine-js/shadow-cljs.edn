@@ -36,5 +36,6 @@
                                          increaseAbility orcpub.facade/increaseAbility
                                          decreaseAbility orcpub.facade/decreaseAbility
                                          autofill orcpub.facade/autofill
-                                         parseOrcbrew orcpub.facade/parseOrcbrew}}}
+                                         parseOrcbrew orcpub.facade/parseOrcbrew
+                                         buildTemplate orcpub.facade/buildTemplate}}}
    :compiler-options {:optimizations :advanced}}}}

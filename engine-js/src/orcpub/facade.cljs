@@ -12,6 +12,7 @@
             [orcpub.entity :as entity]
             [orcpub.entity.strict :as se]
             [orcpub.template :as t]
+            [orcpub.modifiers :as mods]
             [orcpub.common :as common]
             [orcpub.dnd.e5 :as e5]
             [orcpub.dnd.e5.character :as char5e]
@@ -549,6 +550,95 @@
                          :message (import-val/format-import-result result))))
           "conflicts" (clj->js (->plain (build-conflict-list (:key-conflicts result) name)))
           "skipped" (clj->js (->plain (vec (:skipped-items result))))})))
+
+;;; ---------------------------------------------------------------------------
+;;; buildTemplate (fixtures/README.md, <pack>.template.json)
+;;; ---------------------------------------------------------------------------
+
+;; Ports of orcpub.oracle/template-shape and template-summary
+;; (scripts/orcpub/oracle.clj) and of content-summary
+;; (scripts/dump-template.clj).
+
+(defn- modifier-shape [{:keys [::mods/key ::mods/name ::mods/value]}]
+  (cond-> {"key" (some-> key kw->str)}
+    (string? name) (assoc "name" name)
+    (or (number? value) (string? value) (keyword? value) (boolean? value))
+    (assoc "value" (->plain value))))
+
+(declare selection-shape)
+
+(defn- option-shape [{:keys [::t/key ::t/name ::t/order ::t/selections ::t/modifiers ::t/prereqs]}]
+  (cond-> {"key" (kw->str key)
+           "name" name}
+    order (assoc "order" order)
+    (seq modifiers) (assoc "modifiers" (mapv modifier-shape (flatten modifiers)))
+    (seq prereqs) (assoc "prereqs" (count prereqs))
+    (seq selections) (assoc "selections" (mapv selection-shape selections))))
+
+(defn- selection-shape
+  [{:keys [::t/key ::t/name ::t/min ::t/max ::t/ref ::t/tags ::t/order
+           ::t/multiselect? ::t/sequential? ::t/require-value? ::t/options]}]
+  (cond-> {"key" (kw->str key)
+           "name" name
+           "min" min
+           "max" max
+           "options" (mapv option-shape options)}
+    ref (assoc "ref" (->plain ref))
+    order (assoc "order" order)
+    (seq tags) (assoc "tags" (->plain tags))
+    multiselect? (assoc "multiselect" true)
+    sequential? (assoc "sequential" true)
+    require-value? (assoc "requireValue" true)))
+
+(defn- template-summary [template]
+  (mapv (fn [{:keys [::t/key ::t/min ::t/max ::t/options]}]
+          {"key" (kw->str key) "min" min "max" max
+           "optionKeys" (mapv (comp kw->str ::t/key) options)})
+        (::t/selections template)))
+
+(def ^:private content-fields
+  "The field that names each item of a content list."
+  {"races" :key
+   "backgrounds" :name
+   "classes" ::t/key
+   "feats" :key
+   "languages" :key
+   "invocations" :key
+   "boons" :key
+   "plugin-spells" :key
+   "plugin-subraces" :key
+   "plugin-subclasses" :key
+   "plugin-selections" :key
+   "plugin-monsters" :key})
+
+(defn ^:export buildTemplate
+  "Builds the template for homebrew, the multi-plugin map as verbose
+  Transit-JSON (parseOrcbrew's data), or for the SRD alone without it.
+  The template holds functions, so this returns a plain description of it,
+  the one fixtures/README.md gives for <pack>.template.json:
+
+    summary per top-level selection: key, min, max, and optionKeys in
+            template order
+    shape   the template's structure: each selection's key, name, min,
+            max and options, and ref, order, tags, multiselect, sequential
+            and requireValue when set; each option's key, name, and order,
+            the prereqs count, nested selections, and modifier keys when
+            set
+    content the subscription chain's lists (races, backgrounds, classes,
+            feats, languages, invocations, boons and the plugin-* lists),
+            each item named by its key, or a background by its name
+
+  The template is the one evaluate uses for the same homebrew, and shares
+  its memo."
+  ([] (buildTemplate nil))
+  ([homebrew]
+   (let [{:keys [template content]} (homebrew-content (some-> homebrew entity-text))]
+     (clj->js {"summary" (template-summary template)
+               "shape" (mapv selection-shape (::t/selections template))
+               "content" (into {}
+                               (map (fn [[label items]]
+                                      [label (mapv #(->plain (get % (content-fields label))) items)]))
+                               content)}))))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)

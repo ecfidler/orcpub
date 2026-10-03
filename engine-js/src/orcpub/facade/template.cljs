@@ -32,6 +32,7 @@
             [orcpub.dnd.e5.weapons :as weapon5e]
             [orcpub.dnd.e5.armor :as armor5e]
             [orcpub.dnd.e5.spells :as spells5e]
+            [orcpub.dnd.e5.monsters :as monsters5e]
             [orcpub.dnd.e5.spell-lists :as sl5e]
             [orcpub.dnd.e5.template :as t5e]
             [orcpub.dnd.e5.spell-subs
@@ -376,6 +377,11 @@
      (assoc spell :edit-event [::spells5e/edit-spell spell]))
    (mapcat (comp vals ::e5/spells) plugins)))
 
+;; ::monsters5e/plugin-monsters — spell_subs.cljs:1047-1051. Not an input
+;; of the template; build returns it as content.
+(defn- plugin-monsters [plugins]
+  (mapcat (comp vals ::e5/monsters) plugins))
+
 ;; ::spells5e/spells — spell_subs.cljs:1185-1193
 (defn- spells [plugin-spells]
   (into
@@ -540,7 +546,10 @@
      :all-weapons-map what @(subscribe [::mi5e/all-weapons-map]) yields
      :all-armor-map   what @(subscribe [::mi5e/all-armor-map]) yields
      :backgrounds     what @(subscribe [::bg5e/backgrounds]) yields, the raw
-                      configs that :add-background-starting-equipment takes}"
+                      configs that :add-background-starting-equipment takes
+     :content         the chain's intermediate lists, named as in
+                      scripts/dump-template.clj: \"races\" is what
+                      @(subscribe [::races5e/races]) yields, and so on}"
   [plugins]
   (let [;; roots
         plugins (plugins-sub {:plugins plugins})
@@ -556,10 +565,12 @@
         spells-map (spells-map (spells plugin-spells))
 
         ;; languages, backgrounds, feats, selections
-        language-map (language-map (languages-sub (plugin-languages plugin-vals)))
+        languages (languages-sub (plugin-languages plugin-vals))
+        language-map (language-map languages)
         backgrounds (backgrounds (plugin-backgrounds plugin-vals))
         feats (feats (plugin-feats plugin-vals))
-        selection-map (selection-map (plugin-selections plugin-vals))
+        plugin-selections (plugin-selections plugin-vals)
+        selection-map (selection-map plugin-selections)
 
         ;; magic items and weapons
         expanded-custom-items (expanded-custom-items custom-items)
@@ -572,21 +583,24 @@
         all-armor-map (all-armor-map (magic-armor-map magic-armor))
 
         ;; races
+        plugin-subraces (plugin-subraces plugin-vals)
         races (races (plugin-races plugin-vals)
-                     (plugin-subraces-map (plugin-subraces plugin-vals))
+                     (plugin-subraces-map plugin-subraces)
                      spell-lists
                      spells-map
                      language-map)
 
         ;; classes
+        plugin-subclasses (plugin-subclasses plugins-with-sources spell-lists spells-map selection-map)
+        invocations (invocations (plugin-invocations plugin-vals))
+        boons (boons (plugin-boons plugin-vals))
         classes (classes spell-lists
                          spells-map
-                         (plugin-subclasses-map
-                          (plugin-subclasses plugins-with-sources spell-lists spells-map selection-map))
+                         (plugin-subclasses-map plugin-subclasses)
                          language-map
                          (plugin-classes plugins-with-sources spell-lists spells-map selection-map)
-                         (invocations (plugin-invocations plugin-vals))
-                         (boons (plugin-boons plugin-vals))
+                         invocations
+                         boons
                          (custom-and-standard-weapons-map custom-and-standard-weapons))]
     {:template (template
                 (template-selections (magic-weapon-options magic-weapons)
@@ -604,4 +618,16 @@
                 all-weapons-map)
      :all-weapons-map all-weapons-map
      :all-armor-map all-armor-map
-     :backgrounds backgrounds}))
+     :backgrounds backgrounds
+     :content {"races" races
+               "backgrounds" backgrounds
+               "classes" classes
+               "feats" feats
+               "languages" languages
+               "invocations" invocations
+               "boons" boons
+               "plugin-spells" plugin-spells
+               "plugin-subraces" plugin-subraces
+               "plugin-subclasses" plugin-subclasses
+               "plugin-selections" plugin-selections
+               "plugin-monsters" (plugin-monsters plugin-vals)}}))
