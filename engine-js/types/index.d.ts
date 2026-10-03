@@ -429,7 +429,10 @@ export interface ParseOrcbrewOptions {
    * without .orcbrew. Defaults to "Imported Content".
    */
   name?: string;
-  /** The homebrew already loaded, for the external key-conflict check. */
+  /**
+   * The homebrew already loaded. The file is merged into it, and its keys
+   * are checked for external conflicts.
+   */
   existing?: Homebrew;
   /** Import all or nothing instead of skipping invalid items. */
   strict?: boolean;
@@ -482,7 +485,12 @@ export interface KeyConflict {
 
 export interface ParsedOrcbrew {
   success: boolean;
-  /** The cleaned packs, with a single-plugin file under options.name. null when success is false. */
+  /**
+   * options.existing with the file merged in, as the old app merged it. A
+   * single-plugin file replaces the pack under options.name. A multi-plugin
+   * file's packs merge into same-named packs one content type at a time.
+   * Load it in place of the existing homebrew. null when success is false.
+   */
   data: Record<string, object> | null;
   log: ImportLog;
   conflicts: KeyConflict[];
@@ -493,7 +501,8 @@ export interface ParsedOrcbrew {
  * Reads .orcbrew text through the old importer: text fixes, parsing,
  * Unicode normalization, data cleaning, placeholders for required fields,
  * option deduplication, duplicate-key detection, and validation. A leading
- * byte-order mark is removed. Key conflicts do not stop the import. The old
+ * byte-order mark is removed. The result's data is all the loaded homebrew,
+ * not only the file's packs. Key conflicts do not stop the import. The old
  * app asked the user to resolve them before it loaded the data.
  */
 export function parseOrcbrew(text: string, options?: ParseOrcbrewOptions): ParsedOrcbrew;

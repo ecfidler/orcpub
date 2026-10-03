@@ -13,6 +13,7 @@
             [orcpub.entity.strict :as se]
             [orcpub.template :as t]
             [orcpub.common :as common]
+            [orcpub.dnd.e5 :as e5]
             [orcpub.dnd.e5.character :as char5e]
             [orcpub.dnd.e5.classes :as class5e]
             [orcpub.dnd.e5.event-handlers :as eh]
@@ -374,8 +375,8 @@
   (read-strict (entity-text entity)))
 
 (defn- write-entity
-  "A strict entity as verbose Transit-JSON, parsed: the format of the
-  fixtures' .strict.json files and of evaluate's input."
+  "A strict entity or homebrew as verbose Transit-JSON, parsed: the format
+  of the fixtures' .strict.json files and of evaluate's input."
   [strict]
   (js/JSON.parse (transit/write (transit/writer :json-verbose) strict)))
 
@@ -435,13 +436,7 @@
 ;;; value JSON.parse returns for it, as for strict entities.
 ;;; ---------------------------------------------------------------------------
 
-(defn- read-homebrew [homebrew]
-  (transit/read (transit/reader :json) (entity-text homebrew)))
-
-(defn- write-homebrew [plugins]
-  (js/JSON.parse (transit/write (transit/writer :json-verbose) plugins)))
-
-;; COPIED: events.cljs:3918-3958 (build-conflict-list). events.cljs cannot be
+;; COPIED: events.cljs:3917-3954 (build-conflict-list). events.cljs cannot be
 ;; required. import-name is unused there too.
 (defn- build-conflict-list
   [{:keys [internal-conflicts external-conflicts]} import-name]
@@ -492,8 +487,11 @@
   strategy instead of the progressive one.
 
   Returns {success, data, log, conflicts, skipped}:
-    data      the cleaned multi-plugin map as homebrew, a single-plugin file
-              placed under name, or null when success is false
+    data      existing with the file merged in, as homebrew, or null when
+              success is false. As in the old app, a single-plugin file
+              replaces the pack under name, and a multi-plugin file's packs
+              merge into same-named packs one content type at a time
+              (e5/merge-all-plugins)
     log       the old :import-log fields: changes, errors, skipped-items,
               key-conflicts and key-warnings, plus imported-count,
               skipped-count, message (the old app's notice) and, for a parse
@@ -506,16 +504,21 @@
   ([text] (parseOrcbrew text nil))
   ([text options]
    (let [name (or (some-> options (gobj/get "name")) "Imported Content")
-         existing (some-> options (gobj/get "existing") read-homebrew)
+         existing (some-> options (gobj/get "existing") read-entity)
          result (import-val/validate-import
-                 (str/replace-first text #"^﻿" "")
+                 (str/replace-first text #"^\uFEFF" "")
                  {:strategy (if (some-> options (gobj/get "strict")) :strict :progressive)
                   :existing-plugins existing
                   :import-source-name name})
-         data (:data result)]
+         data (:data result)
+         ;; The ::e5/import-plugin handler's test (events.cljs:3858-3859) and merge (:3871-3873)
+         multi? (and (spec/valid? ::e5/plugins data)
+                     (not (spec/valid? ::e5/plugin data)))]
      #js {"success" (boolean (:success result))
           "data" (when (:success result)
-                   (write-homebrew (if (import-val/is-multi-plugin? data) data {name data})))
+                   (write-entity (if multi?
+                                   (e5/merge-all-plugins existing data)
+                                   (assoc existing name data))))
           "log" (clj->js
                  (->plain
                   (assoc (select-keys result [:changes :skipped-items :key-conflicts :key-warnings

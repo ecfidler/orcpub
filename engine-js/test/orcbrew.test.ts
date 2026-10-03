@@ -74,7 +74,7 @@ describe("parseOrcbrew", () => {
 
   it("removes a leading byte-order mark", () => {
     const plain = parseOrcbrew(text("warlock-test-content"), { name: "w" });
-    const bom = parseOrcbrew(`﻿${text("warlock-test-content")}`, { name: "w" });
+    const bom = parseOrcbrew(`\uFEFF${text("warlock-test-content")}`, { name: "w" });
 
     expect(bom.success).toBe(true);
     expect(bom.data).toStrictEqual(plain.data);
@@ -97,6 +97,29 @@ describe("parseOrcbrew", () => {
         "suggested-new-key": "custom-lineage-duplicate-external-b",
       }),
     );
+  });
+
+  it("adds a single-plugin file to the loaded packs, replacing the pack under its name", () => {
+    const a = parseOrcbrew(text("duplicate-external-a"), { name: "duplicate-external-a" });
+    const b = parseOrcbrew(text("duplicate-external-b"), { name: "duplicate-external-b", existing: a.data! });
+    const again = parseOrcbrew(text("warlock-test-content"), { name: "duplicate-external-a", existing: b.data! });
+
+    expect(Object.keys(b.data!).sort()).toEqual(["duplicate-external-a", "duplicate-external-b"]);
+    expect(contentKeys(again.data!)["duplicate-external-a"]).toStrictEqual(
+      fixture("warlock-test-content").plugins["warlock-test-content"],
+    );
+  });
+
+  it("merges a multi-plugin file into same-named packs by content type", () => {
+    const pack = (key: string) =>
+      `{"Shared" {:orcpub.dnd.e5/languages {:${key} {:name "${key}" :key :${key} :option-pack "Shared"}}}}`;
+    const first = parseOrcbrew(pack("first"));
+    const second = parseOrcbrew(pack("second"), { existing: first.data! });
+
+    expect(second.success).toBe(true);
+    expect(contentKeys(second.data!)).toStrictEqual({
+      Shared: { "orcpub.dnd.e5/languages": ["first", "second"] },
+    });
   });
 
   it("accepts its own data as text", () => {
