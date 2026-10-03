@@ -12,8 +12,11 @@ export type Rules = "2014";
 export interface EvaluateOptions {
   /** Defaults to "2014". Any other value throws. */
   rules?: Rules;
-  /** Accepted and ignored until buildTemplate (ORC-27). */
-  homebrew?: unknown;
+  /**
+   * The loaded packs: the data of the last parseOrcbrew call. Without it,
+   * the character builds against the SRD only.
+   */
+  homebrew?: Homebrew;
 }
 
 // The built character is plain JSON data keyed by the old app's
@@ -418,8 +421,8 @@ export function autofill(entity: StrictEntity, options?: AutofillOptions): objec
  * Transit-JSON. That is the text, or the value JSON.parse returns for it.
  * Each top-level key is a pack name, and each value is that pack's
  * single-plugin map, such as { "~:orcpub.dnd.e5/spells": { "~:fireball":
- * {...} } }. Packs merge by pack name. Store each pack as it is, and
- * remove an item by deleting its entry.
+ * {...} } }. parseOrcbrew merges a file into it. Store each pack as it
+ * is, and remove an item by deleting its entry.
  */
 export type Homebrew = string | Record<string, object>;
 

@@ -1,17 +1,24 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate } from "@pubdoor/dmv";
+import { evaluate, parseOrcbrew } from "@pubdoor/dmv";
 
 // Port of test/cljc/orcpub/dnd/e5/warlock_test.clj. The character needs
 // warlock-test-content.orcbrew for the Drow subrace, the Spy background and
-// the Keen Mind feat. Until buildTemplate (ORC-27) loads it, evaluate builds
-// against the SRD only, so the checks that depend on the pack are todo.
+// the Keen Mind feat, which warlock_test.clj defines inline.
 const strict = JSON.parse(
   readFileSync(
     new URL("../../fixtures/characters/warlock-10-drow.strict.json", import.meta.url),
     "utf8",
   ),
 ) as object;
+
+const { data: homebrew } = parseOrcbrew(
+  readFileSync(
+    new URL("../../fixtures/orcbrew/warlock-test-content.orcbrew", import.meta.url),
+    "utf8",
+  ),
+  { name: "warlock-test-content" },
+);
 
 type SpellsKnown = Record<string, { __entries: [[string, string], unknown][] }>;
 
@@ -26,7 +33,7 @@ function hasSpell(
 }
 
 describe("warlock_test", () => {
-  const built = evaluate(strict).built as Record<string, unknown>;
+  const built = evaluate(strict, { homebrew: homebrew! }).built as Record<string, unknown>;
 
   it("build-smoke-test: builds without throwing", () => {
     expect(built).toBeTruthy();
@@ -53,23 +60,31 @@ describe("warlock_test", () => {
     expect(hasSpell(built, 1, "Warlock", "speak-with-animals")).toBe(true);
   });
 
-  it("warlock-ability-scores: the scores without a pack bonus", () => {
-    expect(built["abilities"]).toMatchObject({
+  it("warlock-ability-scores: Keen Mind and the Drow subrace raise INT and CHA", () => {
+    expect(built["abilities"]).toStrictEqual({
       "orcpub.dnd.e5.character/str": 10,
       // 11 base + 2 elf
       "orcpub.dnd.e5.character/dex": 13,
       "orcpub.dnd.e5.character/con": 11,
+      // 15 base + 1 Keen Mind
+      "orcpub.dnd.e5.character/int": 16,
       "orcpub.dnd.e5.character/wis": 14,
+      // 15 base + 1 Drow
+      "orcpub.dnd.e5.character/cha": 16,
     });
   });
 
-  it("warlock-skill-proficiencies: elf and warlock skills", () => {
-    expect(Object.keys(built["skill-profs"] as object)).toEqual(
-      expect.arrayContaining(["perception", "intimidation", "history"]),
-    );
+  it("warlock-race-and-subrace: subrace is Dark Elf (Drow)", () => {
+    expect(built["subrace"]).toBe("Dark Elf (Drow)");
   });
 
-  it.todo("warlock-ability-scores: INT 16 (Keen Mind) and CHA 16 (Drow) need the pack (ORC-27, buildTemplate)");
-  it.todo("warlock-race-and-subrace: subrace Dark Elf (Drow) needs the pack (ORC-27, buildTemplate)");
-  it.todo("warlock-skill-proficiencies: Spy's deception and stealth, and the count of 5, need the pack (ORC-27, buildTemplate)");
+  it("warlock-skill-proficiencies: elf, Spy and warlock skills, five in all", () => {
+    expect(Object.keys(built["skill-profs"] as object).sort()).toEqual([
+      "deception",
+      "history",
+      "intimidation",
+      "perception",
+      "stealth",
+    ]);
+  });
 });

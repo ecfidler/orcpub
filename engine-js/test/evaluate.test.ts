@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate } from "@pubdoor/dmv";
+import { emptyCharacter, evaluate, parseOrcbrew, select } from "@pubdoor/dmv";
 
 const characters = new URL("../../fixtures/characters/", import.meta.url);
 
@@ -28,6 +28,46 @@ describe("evaluate", () => {
 
   it("rejects any other rules edition", () => {
     expect(() => evaluate(strict, { rules: "2024" as never })).toThrow(/2024/);
+  });
+});
+
+describe("evaluate: homebrew", () => {
+  const { data: homebrew } = parseOrcbrew(
+    readFileSync(new URL("../orcbrew/duplicate-external-b.orcbrew", characters), "utf8"),
+    { name: "duplicate-external-b" },
+  );
+  const strict = fixture("ironwrought-artificer-3.strict.json") as object;
+
+  it("builds a homebrew character with its pack", () => {
+    const { built } = evaluate(strict, { homebrew: homebrew! });
+
+    expect(built).toEqual(fixture("ironwrought-artificer-3.expected.json"));
+  });
+
+  it("builds against the SRD only without the pack", () => {
+    expect((evaluate(strict).built as Record<string, unknown>)["race"]).toBeNull();
+  });
+
+  it("accepts the homebrew as text", () => {
+    expect(evaluate(strict, { homebrew: JSON.stringify(homebrew) })).toEqual(
+      evaluate(strict, { homebrew: homebrew! }),
+    );
+  });
+
+  it("returns the same object for the same entity and homebrew", () => {
+    const first = evaluate(strict, { homebrew: homebrew! });
+
+    expect(evaluate(strict, { homebrew: structuredClone(homebrew!) })).toBe(first);
+    expect(evaluate(strict)).not.toBe(first);
+  });
+
+  it("lets the mutations select homebrew options", () => {
+    const entity = select(emptyCharacter(), ["race"], "ironwrought", { homebrew: homebrew! });
+
+    expect((evaluate(entity, { homebrew: homebrew! }).built as Record<string, unknown>)["race"]).toBe(
+      "Ironwrought",
+    );
+    expect(() => select(emptyCharacter(), ["race"], "ironwrought")).toThrow();
   });
 });
 

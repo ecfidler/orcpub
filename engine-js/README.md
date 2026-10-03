@@ -72,6 +72,16 @@ builder would refuse the same change.
 `{ rules }`. The only value is `"2014"`, which is the default. Any other
 value throws.
 
+## The homebrew option
+
+`evaluate`, `autofill`, and the mutations also take `{ homebrew }`: the
+loaded `.orcbrew` packs, keyed by pack name, as verbose Transit-JSON. To
+load a file, pass the current homebrew to `parseOrcbrew` as
+`options.existing` and replace it with the result's `data`. `parseOrcbrew`
+merges the file in as the old app did, so do not merge packs yourself.
+Without the option, characters build against the SRD only. The engine
+rebuilds its template only when the homebrew changes.
+
 ## Versions
 
 The package follows semver. Every engine patch or facade addition bumps the
