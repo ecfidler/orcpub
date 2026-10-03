@@ -412,3 +412,97 @@ export interface AutofillOptions extends MutationOptions {
  * zero or less there.
  */
 export function autofill(entity: StrictEntity, options?: AutofillOptions): object;
+
+/**
+ * Homebrew: the multi-plugin map, the old app's :plugins, as verbose
+ * Transit-JSON. That is the text, or the value JSON.parse returns for it.
+ * Each top-level key is a pack name, and each value is that pack's
+ * single-plugin map, such as { "~:orcpub.dnd.e5/spells": { "~:fireball":
+ * {...} } }. Packs merge by pack name. Store each pack as it is, and
+ * remove an item by deleting its entry.
+ */
+export type Homebrew = string | Record<string, object>;
+
+export interface ParseOrcbrewOptions {
+  /**
+   * The pack name for a single-plugin file. The old app used the file name
+   * without .orcbrew. Defaults to "Imported Content".
+   */
+  name?: string;
+  /**
+   * The homebrew already loaded. The file is merged into it, and its keys
+   * are checked for external conflicts.
+   */
+  existing?: Homebrew;
+  /** Import all or nothing instead of skipping invalid items. */
+  strict?: boolean;
+}
+
+/** One item the progressive import left out. */
+export interface SkippedItem {
+  key: string;
+  errors: unknown;
+}
+
+/** The old app's import log for one file. Keywords are "ns/name" strings. */
+export interface ImportLog {
+  /** Each automatic fix, {type, description, ...}. */
+  changes: object[];
+  errors: string[];
+  "skipped-items": SkippedItem[];
+  /** The raw duplicate-key report. */
+  "key-conflicts"?: { "internal-conflicts": object[]; "external-conflicts": object[] };
+  "key-warnings"?: object[];
+  "imported-count"?: number;
+  "skipped-count"?: number;
+  /** The notice the old app showed after the import. */
+  message: string;
+  "parse-error"?: boolean;
+  line?: number | null;
+  hint?: string;
+}
+
+/** A key conflict with suggested replacement keys, as the old conflict modal lists it. */
+export interface KeyConflict {
+  id: string;
+  type: "internal" | "external";
+  key: string;
+  "content-type": string;
+  "content-type-name": string;
+  /** internal: the packs that share the key. */
+  sources?: object[];
+  /** internal: a suggested key for each source. */
+  "suggested-renames"?: { source: string; "new-key": string }[];
+  /** external: the imported item. */
+  "import-source"?: string;
+  "import-name"?: string;
+  /** external: the loaded item it collides with. */
+  "existing-source"?: string;
+  "existing-name"?: string;
+  /** external: a suggested key for the imported item. */
+  "suggested-new-key"?: string;
+}
+
+export interface ParsedOrcbrew {
+  success: boolean;
+  /**
+   * options.existing with the file merged in, as the old app merged it. A
+   * single-plugin file replaces the pack under options.name. A multi-plugin
+   * file's packs merge into same-named packs one content type at a time.
+   * Load it in place of the existing homebrew. null when success is false.
+   */
+  data: Record<string, object> | null;
+  log: ImportLog;
+  conflicts: KeyConflict[];
+  skipped: SkippedItem[];
+}
+
+/**
+ * Reads .orcbrew text through the old importer: text fixes, parsing,
+ * Unicode normalization, data cleaning, placeholders for required fields,
+ * option deduplication, duplicate-key detection, and validation. A leading
+ * byte-order mark is removed. The result's data is all the loaded homebrew,
+ * not only the file's packs. Key conflicts do not stop the import. The old
+ * app asked the user to resolve them before it loaded the data.
+ */
+export function parseOrcbrew(text: string, options?: ParseOrcbrewOptions): ParsedOrcbrew;
