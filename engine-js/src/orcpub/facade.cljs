@@ -643,6 +643,55 @@
                                content)}))))
 
 ;;; ---------------------------------------------------------------------------
+;;; keys (orc-alchemy docs/plan/01-compatibility-contract.md, C3)
+;;; ---------------------------------------------------------------------------
+
+(defn- template-key-sets
+  "The distinct selection keys and option keys of template, from every
+  selection at any depth."
+  [template]
+  (loop [stack (vec (::t/selections template))
+         selection-keys (transient #{})
+         option-keys (transient #{})]
+    (if-let [selection (peek stack)]
+      (let [options (::t/options selection)]
+        (recur (into (pop stack) (mapcat ::t/selections) options)
+               (cond-> selection-keys
+                 (::t/key selection) (conj! (::t/key selection)))
+               (reduce conj! option-keys (keep ::t/key options))))
+      {:selection-keys (persistent! selection-keys)
+       :option-keys (persistent! option-keys)})))
+
+(def ^:private template-keys
+  "template-key-sets for homebrew's Transit-JSON text, or the SRD's for nil."
+  (memo-previous #(template-key-sets (:template (homebrew-content %)))))
+
+(defn- sorted-keys [homebrew which]
+  (->> (template-keys (some-> homebrew entity-text))
+       which
+       (map kw->str)
+       sort
+       into-array))
+
+(defn- selection-keys
+  "Every selection key in the template for homebrew, or for the SRD alone
+  without it, once each, sorted."
+  [homebrew]
+  (sorted-keys homebrew :selection-keys))
+
+(defn- option-keys
+  "Every option key in the template for homebrew, or for the SRD alone
+  without it, once each, sorted."
+  [homebrew]
+  (sorted-keys homebrew :option-keys))
+
+(def key-lists
+  "Exported as keys: the key namespace of a template, the input to the
+  content-identity check (contract C3)."
+  #js {"selectionKeys" selection-keys
+       "optionKeys" option-keys})
+
+;;; ---------------------------------------------------------------------------
 ;;; reconcileMissingContent (orc-alchemy docs/plan/03-character-import-and-storage.md, R8)
 ;;; ---------------------------------------------------------------------------
 

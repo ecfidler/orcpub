@@ -32,7 +32,6 @@
             [orcpub.dnd.e5.weapons :as weapon5e]
             [orcpub.dnd.e5.armor :as armor5e]
             [orcpub.dnd.e5.spells :as spells5e]
-            [orcpub.dnd.e5.monsters :as monsters5e]
             [orcpub.dnd.e5.spell-lists :as sl5e]
             [orcpub.dnd.e5.template :as t5e]
             [orcpub.dnd.e5.spell-subs

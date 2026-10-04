@@ -571,6 +571,85 @@ export interface BuiltTemplate {
  */
 export function buildTemplate(homebrew?: Homebrew): BuiltTemplate;
 
+/**
+ * The key namespace of a template: the keys that saved characters and
+ * .orcbrew files refer to (contract C3). Each function builds the template
+ * for the homebrew, or for the SRD alone without it, as buildTemplate does,
+ * and returns each key once, sorted.
+ */
+export const keys: {
+  /** Every selection key in the template, at any depth. */
+  selectionKeys(homebrew?: Homebrew): string[];
+  /** Every option key in the template, at any depth. */
+  optionKeys(homebrew?: Homebrew): string[];
+};
+
+/**
+ * An item of a content list in dist/content. A keyword is an "ns/name"
+ * string, as in BuiltCharacter. Functions, :modifiers, and :selections are
+ * left out.
+ */
+export interface ContentItem {
+  key: string;
+  name: string;
+  [field: string]: unknown;
+}
+
+/** An item of content/spells.json. */
+export interface ContentSpell extends ContentItem {
+  level: number;
+  school: string;
+  "casting-time": string;
+  range: string;
+  duration: string;
+  components: Record<string, unknown>;
+  description: string;
+}
+
+/** An item of content/monsters.json. */
+export interface ContentMonster extends ContentItem {
+  size: string;
+  type: string;
+  alignment: string;
+  /** The challenge rating, such as 0.125 for 1/8. */
+  challenge: number;
+  "armor-class": number;
+  "hit-points": Record<string, unknown>;
+  str: number;
+  dex: number;
+  con: number;
+  int: number;
+  wis: number;
+  cha: number;
+}
+
+/**
+ * The content lists, keyed by file name. Import one with
+ * `import("@pubdoor/dmv/content/<name>.json", { with: { type: "json" } })`.
+ * Each holds the SRD content only, in the engine's order.
+ */
+export interface ContentLists {
+  /** The classes: key and name. Their choices are in buildTemplate().shape. */
+  classes: ContentItem[];
+  /** The races, with their subraces and traits. */
+  races: ContentItem[];
+  backgrounds: ContentItem[];
+  /** The feats: key and name. */
+  feats: ContentItem[];
+  languages: ContentItem[];
+  spells: ContentSpell[];
+  monsters: ContentMonster[];
+  /** The magic items, with each weapon and armor item expanded into one item per base item. */
+  "magic-items": ContentItem[];
+  weapons: ContentItem[];
+  ammunition: ContentItem[];
+  armor: ContentItem[];
+  /** The adventuring gear, tools, packs, mounts, and vehicles. */
+  equipment: ContentItem[];
+  /** Coins and gems. */
+  treasure: ContentItem[];
+}
+
 export interface ExportOptions {
   /** The one pack to export or check. Without it, all packs. */
   pack?: string;
