@@ -147,6 +147,9 @@
    :orcpub.dnd.e5/invocations
    {:name {:dummy "[Missing Invocation Name]"}}
 
+   :orcpub.dnd.e5/boons
+   {:name {:dummy "[Missing Boon Name]"}}
+
    :orcpub.dnd.e5/languages
    {:name {:dummy "[Missing Language Name]"}}
 
@@ -1010,6 +1013,7 @@
    :orcpub.dnd.e5/spells "spells"
    :orcpub.dnd.e5/monsters "monsters"
    :orcpub.dnd.e5/invocations "invocations"
+   :orcpub.dnd.e5/boons "boons"
    :orcpub.dnd.e5/selections "selections"
    :orcpub.dnd.e5/languages "languages"
    :orcpub.dnd.e5/encounters "encounters"})
