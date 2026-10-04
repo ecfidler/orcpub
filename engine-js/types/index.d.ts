@@ -509,3 +509,64 @@ export interface ParsedOrcbrew {
  * app asked the user to resolve them before it loaded the data.
  */
 export function parseOrcbrew(text: string, options?: ParseOrcbrewOptions): ParsedOrcbrew;
+
+/** A modifier in a template shape. name and value appear when they are plain data. */
+export interface TemplateModifier {
+  key: string | null;
+  name?: string;
+  value?: string | number | boolean;
+}
+
+/** An option in a template shape. */
+export interface TemplateOption {
+  key: string;
+  name: string;
+  order?: number;
+  modifiers?: TemplateModifier[];
+  /** How many prereqs the option has. */
+  prereqs?: number;
+  selections?: TemplateSelection[];
+}
+
+/** A selection in a template shape. */
+export interface TemplateSelection {
+  key: string;
+  name: string;
+  min: number | null;
+  max: number | null;
+  options: TemplateOption[];
+  ref?: string[];
+  order?: number;
+  tags?: string[];
+  multiselect?: true;
+  sequential?: true;
+  requireValue?: true;
+}
+
+/** A top-level selection's picks and its option keys in template order. */
+export interface TemplateSummaryEntry {
+  key: string;
+  min: number | null;
+  max: number | null;
+  optionKeys: string[];
+}
+
+export interface BuiltTemplate {
+  summary: TemplateSummaryEntry[];
+  /** The template's top-level selections. */
+  shape: TemplateSelection[];
+  /**
+   * The old subscription chain's lists: races, backgrounds, classes, feats,
+   * languages, invocations, boons, plugin-spells, plugin-subraces,
+   * plugin-subclasses, plugin-selections, and plugin-monsters. Each item is
+   * its key, or a background its name.
+   */
+  content: Record<string, string[]>;
+}
+
+/**
+ * Builds the template for the homebrew, or for the SRD alone without it, and
+ * describes it as plain data. The template is the one evaluate uses for the
+ * same homebrew.
+ */
+export function buildTemplate(homebrew?: Homebrew): BuiltTemplate;
