@@ -125,10 +125,11 @@ Measured on the `:advanced` release build, ORC-42:
 
 | File | Size | Gzipped |
 |---|---|---|
-| `dist/pubdoor.js` | MEASURED_RAW | MEASURED_GZIP |
-| `dist/content/monsters.json` | MEASURED_MONSTERS | |
+| `dist/pubdoor.js` | 1,540.5 KiB | 398.9 KiB |
+| `dist/content/monsters.json` | 466.9 KiB | |
+| `dist/content/`, all 13 files | 1,566.2 KiB | |
 
-Before ORC-42, `dist/pubdoor.js` was 2,025,012 bytes (482,349 gzipped), and
+Before ORC-42, `dist/pubdoor.js` was 1,977.6 KiB (471.0 KiB gzipped), and
 it held the monsters. The build leaves these namespaces out of
 `dist/pubdoor.js`: `character/random.cljc`, everything under `templates/`,
 `pdf_spec.cljc`, `char_decision_tree.cljc`, and the monster list in

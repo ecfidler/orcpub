@@ -3,18 +3,18 @@ import { gzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 
 // What dist/pubdoor.js, the engine chunk, must leave out (orc-alchemy
-// docs/plan/02-engine-library.md §What the package compiles, wrinkle 8).
+// docs/plan/02-engine-library.md §Where the engine is built, wrinkle 8).
 // Each string appears in one source file only, so its absence from the
 // bundle shows that the namespace was not compiled in. :advanced keeps
 // string literals as they are, as the control strings show.
-/**
- * The budget for dist/pubdoor.js. Before ORC-42 it was 2,025,012 bytes with
- * the monsters in it.
- */
-const BUDGET_BYTES = 2_000_000;
-
 const dist = new URL("../dist/", import.meta.url);
 const bundle = readFileSync(new URL("pubdoor.js", dist), "utf8");
+
+/**
+ * The budget for dist/pubdoor.js: about 8% over the 1,577,000 bytes measured
+ * in ORC-42. It was 2,025,012 bytes before ORC-42, with the monsters in it.
+ */
+const BUDGET_BYTES = 1_700_000;
 
 const excluded: Record<string, string[]> = {
   // Non-SRD name tables (contract quirk list, doc 01).
@@ -49,8 +49,8 @@ const included: Record<string, string> = {
   "spell_subs.cljc": "Dwarves are short and stout",
 };
 
-/** A byte count in KiB, for the log. */
-const kib = (bytes: number): string => `${(bytes / 1024).toFixed(1)} KiB`;
+/** A byte count, for the log. */
+const kib = (bytes: number): string => `${bytes} bytes (${(bytes / 1024).toFixed(1)} KiB)`;
 
 describe("the engine chunk", () => {
   for (const [file, strings] of Object.entries(excluded)) {
