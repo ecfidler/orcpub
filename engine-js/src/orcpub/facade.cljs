@@ -677,7 +677,12 @@
     (when (> (count parts) 1)
       (str/join " " (map str/capitalize (rest parts))))))
 
-(defn- suggestion [{:keys [key name similarity option-pack plugin-source]}]
+(defn- suggestion
+  "A suggestion as plain data. find-similar-content returns the content
+  item itself with :similarity and :inferred-source added; it has no
+  source key. The source is the item's :option-pack, or, for a class or
+  subclass without one, the :plugin-source that template/build adds."
+  [{:keys [key name similarity option-pack plugin-source]}]
   {"key" (kw->str key)
    "name" name
    "source" (or option-pack plugin-source)

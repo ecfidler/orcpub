@@ -660,7 +660,7 @@ export interface OrcbrewToEdnOptions extends ExportOptions {
 export function orcbrewToEdn(homebrew: Homebrew, options?: OrcbrewToEdnOptions): string;
 
 /** A content type that reconcileMissingContent reports with suggestions. */
-export type ContentType = "race" | "subrace" | "background" | "class" | "subclass" | "feat";
+export type MissingContentType = "race" | "subrace" | "background" | "class" | "subclass" | "feat";
 
 /**
  * Loaded content that might replace a missing key, scored as the old
@@ -683,7 +683,7 @@ export interface ContentSuggestion {
 /** A race, subrace, background, class, subclass, or feat that does not resolve. */
 export interface MissingContent {
   key: string;
-  contentType: ContentType;
+  contentType: MissingContentType;
   /** The old report's label, such as "Subclass". */
   label: string;
   /**

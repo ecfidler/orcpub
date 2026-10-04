@@ -91,6 +91,54 @@ describe("reconcileMissingContent: r8-unresolved-keys", () => {
     expect(items.map((item) => item.inferredSource)).toStrictEqual([null, null, null, null]);
   });
 
+  it("scores each tier of the old find-similar-content", () => {
+    // The scores come from content_reconciliation.cljs: 1.0 for the same
+    // key, 0.8 for the same part before the first dash, 0.7 when one key
+    // starts with the other, at least 0.6 when the item's name gives the
+    // missing key's base, and only scores above 0.3, at most 5, best first.
+    // The subraces and subclasses attach to a race and class that are not
+    // loaded, so the character's own picks stay unresolved.
+    const scores = parseOrcbrew(
+      `{:orcpub.dnd.e5/subraces
+         {:envoys {:key :envoys :name "Envoys" :race :other :option-pack "Scores"}
+          :ambassador {:key :ambassador :name "Envoy" :race :other :option-pack "Scores"}
+          :envoy-mk2 {:key :envoy-mk2 :name "Mark Two" :race :other :option-pack "Scores"}
+          :juggernaut {:key :juggernaut :name "Juggernaut" :race :other :option-pack "Scores"}}
+        :orcpub.dnd.e5/subclasses
+         {:alchemist {:key :alchemist :name "Alchemist" :class :other :option-pack "Scores"}
+          :alchemist-a {:key :alchemist-a :name "Alchemist A" :class :other :option-pack "Scores"}
+          :alchemist-b {:key :alchemist-b :name "Alchemist B" :class :other :option-pack "Scores"}
+          :alchemist-c {:key :alchemist-c :name "Alchemist C" :class :other :option-pack "Scores"}
+          :alchemist-d {:key :alchemist-d :name "Alchemist D" :class :other :option-pack "Scores"}
+          :alchemist-e {:key :alchemist-e :name "Alchemist E" :class :other :option-pack "Scores"}}}`,
+      { name: "Scores" },
+    );
+    expect(scores.success).toBe(true);
+
+    const items = reconcileMissingContent(entity, scores.data!).items;
+    const suggestions = Object.fromEntries(items.map((item) => [item.key, item.suggestions]));
+
+    // :envoy-mk2 shares the base "envoy" (0.8), :envoys starts with "envoy"
+    // but has another base (0.7), :ambassador is named "Envoy" (0.6), and
+    // :juggernaut scores 0, below the 0.3 cutoff.
+    expect(suggestions["envoy"]).toStrictEqual([
+      { key: "envoy-mk2", name: "Mark Two", source: "Scores", similarity: 0.8 },
+      { key: "envoys", name: "Envoys", source: "Scores", similarity: 0.7 },
+      { key: "ambassador", name: "Envoy", source: "Scores", similarity: 0.6 },
+    ]);
+
+    // Six candidates: the same key (1.0) first, then four of the five that
+    // share the base (0.8). Ties keep the packs' order, which is not pinned.
+    const alchemist = suggestions["alchemist"]!;
+    expect(alchemist).toHaveLength(5);
+    expect(alchemist[0]).toStrictEqual({ key: "alchemist", name: "Alchemist", source: "Scores", similarity: 1 });
+    for (const rest of alchemist.slice(1)) {
+      expect(rest.similarity).toBe(0.8);
+      expect(["alchemist-a", "alchemist-b", "alchemist-c", "alchemist-d", "alchemist-e"]).toContain(rest.key);
+    }
+    expect(new Set(alchemist.map((s) => s.key)).size).toBe(5);
+  });
+
   it("accepts the entity and homebrew as text", () => {
     const homebrew = pack("duplicate-external-b");
 
