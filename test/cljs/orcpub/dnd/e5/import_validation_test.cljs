@@ -524,8 +524,8 @@
                             {:artificer {:option-pack "Source B" :name "Artificer B"}}}}
           renames [{:source "Source A"
                     :content-type :orcpub.dnd.e5/classes
-                    :old-key :artificer
-                    :new-key :artificer-source-a}]
+                    :from :artificer
+                    :to :artificer-source-a}]
           result (import-val/apply-key-renames data renames)]
       ;; Source A's artificer should be renamed
       (is (contains? (get-in result ["Source A" :orcpub.dnd.e5/classes]) :artificer-source-a))
@@ -534,6 +534,86 @@
       (is (= :artificer-source-a (get-in result ["Source A" :orcpub.dnd.e5/subclasses :alchemist :class])))
       ;; Source B's artificer should be unchanged
       (is (contains? (get-in result ["Source B" :orcpub.dnd.e5/classes]) :artificer)))))
+
+;; Patch D4 (orc-alchemy docs/plan/01-compatibility-contract.md, Known quirks):
+;; a rename rewrites every reference that key-reference-map lists.
+
+(deftest test-rename-class-updates-spell-lists
+  (testing "Renaming a class key updates the spells that list it"
+    (let [plugin {:orcpub.dnd.e5/classes
+                  {:artificer {:option-pack "Test" :key :artificer :name "Artificer"}}
+                  :orcpub.dnd.e5/spells
+                  {:spark {:option-pack "Test" :key :spark :name "Spark" :level 0
+                           :spell-lists {:artificer true :wizard true}}
+                   :ember {:option-pack "Test" :key :ember :name "Ember" :level 1
+                           :spell-lists {:artificer false :sorcerer true}}
+                   :frost {:option-pack "Test" :key :frost :name "Frost" :level 1
+                           :spell-lists {:wizard true}}}}
+          result (import-val/rename-key-in-plugin
+                  plugin :orcpub.dnd.e5/classes :artificer :artificer-test)
+          spells (:orcpub.dnd.e5/spells result)]
+      (is (= :artificer-test (get-in result [:orcpub.dnd.e5/classes :artificer-test :key])))
+      (is (= {:artificer-test true :wizard true} (get-in spells [:spark :spell-lists])))
+      (is (= {:artificer-test false :sorcerer true} (get-in spells [:ember :spell-lists])))
+      (is (= {:wizard true} (get-in spells [:frost :spell-lists]))))))
+
+(deftest test-rename-class-updates-spell-list-kw
+  (testing "Renaming a class key updates the classes and subclasses that use its spell list"
+    (let [plugin {:orcpub.dnd.e5/classes
+                  {:artificer {:option-pack "Test" :name "Artificer"
+                               :spellcasting {:spell-list-kw :artificer :level-factor 2}}
+                   :tinker {:option-pack "Test" :name "Tinker"
+                            :spellcasting {:spell-list-kw :artificer :level-factor 3}}
+                   :mage {:option-pack "Test" :name "Mage"
+                          :spellcasting {:spell-list-kw :wizard :level-factor 1}}}
+                  :orcpub.dnd.e5/subclasses
+                  {:gadgeteer {:option-pack "Test" :name "Gadgeteer" :class :rogue
+                               :spellcasting {:spell-list-kw :artificer :level-factor 3}}}}
+          result (import-val/rename-key-in-plugin
+                  plugin :orcpub.dnd.e5/classes :artificer :artificer-test)]
+      (is (= :artificer-test (get-in result [:orcpub.dnd.e5/classes :artificer-test :spellcasting :spell-list-kw])))
+      (is (= :artificer-test (get-in result [:orcpub.dnd.e5/classes :tinker :spellcasting :spell-list-kw])))
+      (is (= :wizard (get-in result [:orcpub.dnd.e5/classes :mage :spellcasting :spell-list-kw])))
+      (is (= :artificer-test (get-in result [:orcpub.dnd.e5/subclasses :gadgeteer :spellcasting :spell-list-kw]))))))
+
+(deftest test-rename-selection-updates-level-selections
+  (testing "Renaming a selection key updates the level-selections that use it"
+    (let [plugin {:orcpub.dnd.e5/selections
+                  {:quirks {:option-pack "Test" :key :quirks :name "Quirks"
+                            :options [{:name "A"} {:name "B"}]}}
+                  :orcpub.dnd.e5/classes
+                  {:tinker {:option-pack "Test" :name "Tinker"
+                            :level-selections [{:type :quirks :level 1 :num 1}
+                                               {:type :other :level 2}]}}
+                  :orcpub.dnd.e5/subclasses
+                  {:odd-soul {:option-pack "Test" :name "Odd Soul" :class :sorcerer
+                              :level-selections [{:type :quirks :level 1 :num 1}]}}}
+          result (import-val/rename-key-in-plugin
+                  plugin :orcpub.dnd.e5/selections :quirks :quirks-test)]
+      (is (= :quirks-test (get-in result [:orcpub.dnd.e5/selections :quirks-test :key])))
+      (is (= [{:type :quirks-test :level 1 :num 1} {:type :other :level 2}]
+             (get-in result [:orcpub.dnd.e5/classes :tinker :level-selections])))
+      (is (= [{:type :quirks-test :level 1 :num 1}]
+             (get-in result [:orcpub.dnd.e5/subclasses :odd-soul :level-selections]))))))
+
+(deftest test-rename-race-updates-feat-prereqs
+  (testing "Renaming a race key updates subraces and feat race prerequisites"
+    (let [plugin {:orcpub.dnd.e5/races {:tidefolk {:option-pack "Test" :key :tidefolk :name "Tidefolk"}}
+                  :orcpub.dnd.e5/subraces {:reef {:option-pack "Test" :key :reef :name "Reef" :race :tidefolk}}
+                  :orcpub.dnd.e5/feats {:gills {:option-pack "Test" :key :gills :name "Gills"
+                                                :path-prereqs {:race {:tidefolk true :elf true}}}}}
+          result (import-val/rename-key-in-plugin
+                  plugin :orcpub.dnd.e5/races :tidefolk :tidefolk-test)]
+      (is (= :tidefolk-test (get-in result [:orcpub.dnd.e5/races :tidefolk-test :key])))
+      (is (= :tidefolk-test (get-in result [:orcpub.dnd.e5/subraces :reef :race])))
+      (is (= {:tidefolk-test true :elf true} (get-in result [:orcpub.dnd.e5/feats :gills :path-prereqs :race]))))))
+
+(deftest test-rename-missing-key-is-a-no-op
+  (testing "Renaming a key the plugin does not have changes nothing"
+    (let [plugin {:orcpub.dnd.e5/classes {:artificer {:option-pack "Test" :name "Artificer"}}
+                  :orcpub.dnd.e5/subclasses {:alchemist {:option-pack "Test" :name "Alchemist" :class :wizard}}}]
+      (is (= plugin (import-val/rename-key-in-plugin plugin :orcpub.dnd.e5/classes :wizard :wizard-test)))
+      (is (= plugin (import-val/rename-key-in-plugin plugin :orcpub.dnd.e5/races :elf :elf-test))))))
 
 ;; ============================================================================
 ;; Option Auto-Fill Tests

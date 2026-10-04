@@ -875,6 +875,49 @@
        (pr-str data)))))
 
 ;;; ---------------------------------------------------------------------------
+;;; renameKey (orc-alchemy docs/plan/01-compatibility-contract.md, Known quirks; patch D4)
+;;; ---------------------------------------------------------------------------
+
+(defn- rename-arg
+  "The string field k of rename, or a thrown error that names it."
+  [rename k]
+  (let [v (some-> rename (gobj/get k))]
+    (when-not (and (string? v) (not (str/blank? v)))
+      (fail! "renameKey: " k " must be a non-empty string"))
+    v))
+
+(defn ^:export renameKey
+  "Renames one item's key in one pack of homebrew, as the old conflict
+  modal's \"rename\" does (import-val/rename-key-in-plugin), and rewrites
+  the pack's references to it that key-reference-map lists: a renamed
+  class's subclasses, the spells that list it and the classes and
+  subclasses that use its spell list; a renamed race's subraces and the
+  feats that require it; a renamed selection's level-selections. Other
+  packs are not changed.
+
+  homebrew is as for evaluate. rename is {pack, contentType, from, to}:
+  contentType as a KeyConflict gives it, such as \"orcpub.dnd.e5/classes\",
+  and from and to the old and new keys without the leading colon. Returns
+  the new homebrew in evaluate's format. Throws if pack is not loaded,
+  from is not in that content type of the pack, or to already is."
+  [homebrew rename]
+  (let [plugins (read-entity homebrew)
+        pack (rename-arg rename "pack")
+        content-type (keyword (rename-arg rename "contentType"))
+        from (keyword (rename-arg rename "from"))
+        to (keyword (rename-arg rename "to"))
+        items (get-in plugins [pack content-type])]
+    (cond (not (contains? plugins pack))
+          (fail! "No pack named " (pr-str pack) " in homebrew")
+
+          (not (contains? items from))
+          (fail! "Pack " (pr-str pack) " has no key " (pr-str (kw->str from)) " in " (kw->str content-type))
+
+          (and (not= from to) (contains? items to))
+          (fail! "Pack " (pr-str pack) " already has the key " (pr-str (kw->str to)) " in " (kw->str content-type)))
+    (write-entity (update plugins pack import-val/rename-key-in-plugin content-type from to))))
+
+;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)
 ;;;
 ;;; Each takes a strict entity and returns a new one, as evaluate takes it.

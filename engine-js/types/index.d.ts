@@ -739,6 +739,30 @@ export interface OrcbrewToEdnOptions extends ExportOptions {
  */
 export function orcbrewToEdn(homebrew: Homebrew, options?: OrcbrewToEdnOptions): string;
 
+/** One key rename in one pack, as the old conflict modal's "rename" applies it. */
+export interface KeyRename {
+  /** The pack that holds the item, such as a KeyConflict's import-source. */
+  pack: string;
+  /** The content type as a KeyConflict gives it, such as "orcpub.dnd.e5/classes". */
+  contentType: string;
+  /** The item's current key, such as "artificer". */
+  from: string;
+  /** The new key, such as a KeyConflict's suggested-new-key. */
+  to: string;
+}
+
+/**
+ * Renames one item's key in one pack and rewrites that pack's references
+ * to it (patch D4): a renamed class's subclasses, the spells that list it,
+ * and the classes and subclasses that use its spell list; a renamed race's
+ * subraces and the feats that require it; a renamed selection's
+ * level-selections. The item's own key field is set to the new key. Other
+ * packs and saved characters are not changed. Returns the new homebrew.
+ * Throws if the pack is not loaded, if it has no item under from, or if it
+ * already has one under to.
+ */
+export function renameKey(homebrew: Homebrew, rename: KeyRename): Record<string, object>;
+
 /** A content type that reconcileMissingContent reports with suggestions. */
 export type MissingContentType = "race" | "subrace" | "background" | "class" | "subclass" | "feat";
 
