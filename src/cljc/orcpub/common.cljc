@@ -9,7 +9,7 @@
   (when (string? name)
     (as-> name $
         (s/lower-case $)
-        (s/replace $ #"'" "")
+        (s/replace $ #"'" "-")
         (s/replace $ #"\W" "-")
         (s/replace $ #"\-+" "-")
         (keyword ns $))))
