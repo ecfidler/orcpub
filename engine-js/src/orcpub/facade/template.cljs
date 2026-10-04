@@ -547,6 +547,11 @@
      :all-armor-map   what @(subscribe [::mi5e/all-armor-map]) yields
      :backgrounds     what @(subscribe [::bg5e/backgrounds]) yields, the raw
                       configs that :add-background-starting-equipment takes
+     :available-content
+                      what @(subscribe [::char5e/available-content]) yields
+                      (subs.cljs): the plugin-only classes, subclasses,
+                      races, subraces, backgrounds and feats that
+                      content_reconciliation.cljs suggests from
      :content         the chain's intermediate lists, named as in
                       scripts/dump-template.clj: \"races\" is what
                       @(subscribe [::races5e/races]) yields, and so on}"
@@ -567,8 +572,10 @@
         ;; languages, backgrounds, feats, selections
         languages (languages-sub (plugin-languages plugin-vals))
         language-map (language-map languages)
-        backgrounds (backgrounds (plugin-backgrounds plugin-vals))
-        feats (feats (plugin-feats plugin-vals))
+        plugin-backgrounds (plugin-backgrounds plugin-vals)
+        backgrounds (backgrounds plugin-backgrounds)
+        plugin-feats (plugin-feats plugin-vals)
+        feats (feats plugin-feats)
         plugin-selections (plugin-selections plugin-vals)
         selection-map (selection-map plugin-selections)
 
@@ -583,8 +590,9 @@
         all-armor-map (all-armor-map (magic-armor-map magic-armor))
 
         ;; races
+        plugin-races (plugin-races plugin-vals)
         plugin-subraces (plugin-subraces plugin-vals)
-        races (races (plugin-races plugin-vals)
+        races (races plugin-races
                      (plugin-subraces-map plugin-subraces)
                      spell-lists
                      spells-map
@@ -592,13 +600,14 @@
 
         ;; classes
         plugin-subclasses (plugin-subclasses plugins-with-sources spell-lists spells-map selection-map)
+        plugin-classes (plugin-classes plugins-with-sources spell-lists spells-map selection-map)
         invocations (invocations (plugin-invocations plugin-vals))
         boons (boons (plugin-boons plugin-vals))
         classes (classes spell-lists
                          spells-map
                          (plugin-subclasses-map plugin-subclasses)
                          language-map
-                         (plugin-classes plugins-with-sources spell-lists spells-map selection-map)
+                         plugin-classes
                          invocations
                          boons
                          (custom-and-standard-weapons-map custom-and-standard-weapons))]
@@ -619,6 +628,12 @@
      :all-weapons-map all-weapons-map
      :all-armor-map all-armor-map
      :backgrounds backgrounds
+     :available-content {:classes plugin-classes
+                         :subclasses plugin-subclasses
+                         :races plugin-races
+                         :subraces plugin-subraces
+                         :backgrounds plugin-backgrounds
+                         :feats plugin-feats}
      :content {"races" races
                "backgrounds" backgrounds
                "classes" classes

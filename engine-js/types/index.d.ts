@@ -658,3 +658,73 @@ export interface OrcbrewToEdnOptions extends ExportOptions {
  * homebrew to omit them. Throws if options.pack is not in homebrew.
  */
 export function orcbrewToEdn(homebrew: Homebrew, options?: OrcbrewToEdnOptions): string;
+
+/** A content type that reconcileMissingContent reports with suggestions. */
+export type ContentType = "race" | "subrace" | "background" | "class" | "subclass" | "feat";
+
+/**
+ * Loaded content that might replace a missing key, scored as the old
+ * content_reconciliation.cljs scores it.
+ */
+export interface ContentSuggestion {
+  key: string;
+  /** The display name. A homebrew class's name ends with its pack, as in the old class list. */
+  name: string | null;
+  /** The pack the content comes from, or null when the item names none. */
+  source: string | null;
+  /**
+   * 1 for the same key, 0.8 for the same part before the first dash, 0.7
+   * when one key starts with the other, and at least 0.6 when the item's
+   * name gives the same base. Only scores above 0.3 are suggested.
+   */
+  similarity: number;
+}
+
+/** A race, subrace, background, class, subclass, or feat that does not resolve. */
+export interface MissingContent {
+  key: string;
+  contentType: ContentType;
+  /** The old report's label, such as "Subclass". */
+  label: string;
+  /**
+   * The option's path of keys, without indices, such as ["class",
+   * "fighter", "levels", "level-3", "martial-archetype", "eldritch-knight"].
+   */
+  path: string[];
+  /**
+   * The old report's guess at the source from the key's suffix: the words
+   * after the first dash, capitalized. null for a key without a dash.
+   */
+  inferredSource: string | null;
+  /** Up to 5 loaded items from the homebrew's packs, best first. */
+  suggestions: ContentSuggestion[];
+}
+
+/** Any other option that does not resolve, under a parent that does. */
+export interface UnresolvedOption {
+  key: string;
+  /** As MissingContent.path. */
+  path: string[];
+}
+
+export interface ReconcileReport {
+  /** true when items or unresolvedOptions is not empty. */
+  hasMissing: boolean;
+  /** Each unresolved content reference, even under an unresolved parent. */
+  items: MissingContent[];
+  /**
+   * Each other unresolved option whose parent option resolves. An
+   * unresolved option under an unresolved parent is not listed, because
+   * its ancestor is.
+   */
+  unresolvedOptions: UnresolvedOption[];
+}
+
+/**
+ * Checks every option key in the entity against the template for the
+ * homebrew, or for the SRD alone without it, and reports the keys that do
+ * not resolve (quirk R8). An option resolves when evaluate would find it
+ * in the template. Nothing is changed: the entity keeps every choice, so
+ * the app can offer a remap or ask for the pack to be imported first.
+ */
+export function reconcileMissingContent(entity: StrictEntity, homebrew?: Homebrew): ReconcileReport;

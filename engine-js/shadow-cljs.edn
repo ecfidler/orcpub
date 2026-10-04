@@ -39,5 +39,6 @@
                                          parseOrcbrew orcpub.facade/parseOrcbrew
                                          buildTemplate orcpub.facade/buildTemplate
                                          validateForExport orcpub.facade/validateForExport
-                                         orcbrewToEdn orcpub.facade/orcbrewToEdn}}}
+                                         orcbrewToEdn orcpub.facade/orcbrewToEdn
+                                         reconcileMissingContent orcpub.facade/reconcileMissingContent}}}
    :compiler-options {:optimizations :advanced}}}}
