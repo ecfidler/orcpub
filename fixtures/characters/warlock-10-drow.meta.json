@@ -66,5 +66,104 @@
     "warlock-test-content.orcbrew"
   ],
   "strictRoundTrip": true,
-  "unfilledSelections": []
+  "unfilledSelections": [],
+  "unresolved": {
+    "items": [
+      {
+        "contentType": "subclass",
+        "key": "the-archfey",
+        "path": [
+          "class",
+          "warlock",
+          "levels",
+          "level-1",
+          "otherworldly-patron",
+          "the-archfey"
+        ]
+      }
+    ],
+    "reason": "The warlock_test.clj entity was written against content that is not in the SRD: the Archfey patron, its expanded spells Sleep, Faerie Fire and Dominate Person, Crown of Madness, and the cantrips Friends, Blade Ward and Thorn Whip. Its starting weapon choice uses the old key any-simple-weapon, which the template now calls simple-weapon.",
+    "unresolvedOptions": [
+      {
+        "key": "friends",
+        "path": [
+          "class",
+          "warlock",
+          "warlock-cantrips-known",
+          "friends"
+        ]
+      },
+      {
+        "key": "blade-ward",
+        "path": [
+          "class",
+          "warlock",
+          "levels",
+          "level-3",
+          "pact-boon",
+          "pact-of-the-tome",
+          "book-of-shadows-cantrips",
+          "blade-ward"
+        ]
+      },
+      {
+        "key": "thorn-whip",
+        "path": [
+          "class",
+          "warlock",
+          "levels",
+          "level-3",
+          "pact-boon",
+          "pact-of-the-tome",
+          "book-of-shadows-cantrips",
+          "thorn-whip"
+        ]
+      },
+      {
+        "key": "any-simple-weapon",
+        "path": [
+          "class",
+          "warlock",
+          "starting-equipment-weapon",
+          "any-simple-weapon"
+        ]
+      },
+      {
+        "key": "sleep",
+        "path": [
+          "class",
+          "warlock",
+          "warlock-spells-known",
+          "sleep"
+        ]
+      },
+      {
+        "key": "dominate-person",
+        "path": [
+          "class",
+          "warlock",
+          "warlock-spells-known",
+          "dominate-person"
+        ]
+      },
+      {
+        "key": "crown-of-madness",
+        "path": [
+          "class",
+          "warlock",
+          "warlock-spells-known",
+          "crown-of-madness"
+        ]
+      },
+      {
+        "key": "faerie-fire",
+        "path": [
+          "class",
+          "warlock",
+          "warlock-spells-known",
+          "faerie-fire"
+        ]
+      }
+    ]
+  }
 }

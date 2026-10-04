@@ -178,6 +178,11 @@ npm run build   # writes dist/pubdoor.js and dist/content/*.json
 npm test        # tsc --noEmit, then the vitest golden tests against ../fixtures
 ```
 
+`test/content-identity.test.ts` is the contract C3 check. It fails when
+key derivation changes: when a fixture character's option keys stop
+resolving, when a fixture pack refers to a class, race, or selection that
+does not exist, or when the SRD template's keys differ from the baseline.
+
 ## Publish a version
 
 Publishing is manual. You must be a member of the `pubdoor` npm org.

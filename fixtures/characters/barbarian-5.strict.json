@@ -146,7 +146,7 @@
             {
               "~:orcpub.entity.strict/key": "~:starting-equipment-simple-weapon",
               "~:orcpub.entity.strict/option": {
-                "~:orcpub.entity.strict/key": "~:handaxe"
+                "~:orcpub.entity.strict/key": "~:handaxe-2-"
               }
             },
             {

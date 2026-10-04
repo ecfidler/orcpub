@@ -10,5 +10,61 @@
       "fighter",
       "skill-proficiency"
     ]
-  ]
+  ],
+  "unresolved": {
+    "items": [
+      {
+        "contentType": "subclass",
+        "key": "eldritch-knight",
+        "path": [
+          "class",
+          "fighter",
+          "levels",
+          "level-3",
+          "martial-archetype",
+          "eldritch-knight"
+        ]
+      },
+      {
+        "contentType": "background",
+        "key": "noble",
+        "path": [
+          "background",
+          "noble"
+        ]
+      },
+      {
+        "contentType": "feat",
+        "key": "ritual-caster",
+        "path": [
+          "feats",
+          "ritual-caster"
+        ]
+      }
+    ],
+    "reason": "A real saved character built against the SRD alone. Eldritch Knight, Noble and Ritual Caster are not in the SRD. The armor-of-resistance key names no damage type, and skill-profs is a top-level selection that the template no longer has.",
+    "unresolvedOptions": [
+      {
+        "key": "armor-of-resistance-half-plate",
+        "path": [
+          "magic-armor",
+          "armor-of-resistance-half-plate"
+        ]
+      },
+      {
+        "key": "animal-handling",
+        "path": [
+          "skill-profs",
+          "animal-handling"
+        ]
+      },
+      {
+        "key": "intimidation",
+        "path": [
+          "skill-profs",
+          "intimidation"
+        ]
+      }
+    ]
+  }
 }

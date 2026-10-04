@@ -65,5 +65,19 @@
       "level-1",
       "otherworldly-patron"
     ]
-  ]
+  ],
+  "unresolved": {
+    "items": [
+      {
+        "contentType": "background",
+        "key": "spy",
+        "path": [
+          "background",
+          "spy"
+        ]
+      }
+    ],
+    "reason": "A real saved character built against the SRD alone. The Spy background, a Criminal variant, is not in the SRD. warlock-test-content.orcbrew defines Spy, but this fixture loads no pack, so it shows the character as the old app shows it without homebrew.",
+    "unresolvedOptions": []
+  }
 }
