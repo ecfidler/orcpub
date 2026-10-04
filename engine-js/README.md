@@ -62,7 +62,7 @@ full signatures and the types.
 - `decreaseAbility(entity, path, abilityKey, options?)` removes one pick of an ability from an ability score improvement.
 - `autofill(entity, options?)` fills a character at random, as the builder's random character button does.
 - `parseOrcbrew(text, options?)` reads an `.orcbrew` file through the old importer and returns `{ success, data, log, conflicts, skipped }`. `data` is homebrew, the packs as verbose Transit-JSON keyed by pack name: `options.existing` with the file merged in, as the old app merged it.
-- `validateForExport(homebrew, options?)` checks packs before export, as the old app's export buttons did, and returns `{ valid, packs, filled }`. `filled` is the homebrew with placeholders for missing required fields, which the old app's "export anyway" wrote.
+- `validateForExport(homebrew, options?)` checks packs before export, as the old app's export buttons did, and checks each item's key, pack, and nils. It returns `{ valid, packs, filled }`. `filled` is the homebrew with those items repaired and with placeholders for missing required fields, which the old app's "export anyway" wrote.
 - `orcbrewToEdn(homebrew, options?)` returns `.orcbrew` text: all packs as the old app's `all-content.orcbrew`, or with `options.pack` one pack alone. `options.pretty` pretty-prints it.
 - `buildTemplate(homebrew?)` builds the template for homebrew, or for the SRD alone, and returns `{ summary, shape, content }`: the top-level selections and their option keys, the template's structure without functions, and the content lists, such as races and classes.
 

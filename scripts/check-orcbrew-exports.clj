@@ -10,8 +10,8 @@
 ;; Each <dir>/*.orcbrew must be a valid ::e5/plugins and each
 ;; <dir>/single/*.orcbrew a valid ::e5/plugin. The old importer
 ;; (oracle/import-orcbrew) must then import every file with no auto-clean
-;; changes, no skipped items, and the data unchanged. Exits 1 if any file
-;; fails.
+;; changes, no skipped items, no errors, no key conflicts or warnings, and
+;; the data unchanged. Exits 1 if any file fails.
 (load-file "scripts/orcpub/oracle.clj")
 
 (ns check-orcbrew-exports
@@ -21,19 +21,27 @@
             [clojure.java.io :as io]
             [clojure.spec.alpha :as spec]))
 
-(defn orcbrew-files [dir]
+(defn orcbrew-files
+  "The .orcbrew files directly in dir, sorted by path."
+  [dir]
   (sort-by str (filter #(.endsWith (.getName %) ".orcbrew") (.listFiles (io/file dir)))))
 
-(defn problems [file spec-k]
+(defn problems
+  "Why file fails the check against spec-k and the old importer, or empty."
+  [file spec-k]
   (let [text (slurp file)
         data (edn/read-string text)
-        {:keys [success changes skipped-items] :as result}
+        {:keys [success errors had-errors changes skipped-items key-conflicts key-warnings] :as result}
         (:result (oracle/import-orcbrew (oracle/pack-name (str file)) text {}))]
     (cond-> []
       (not (spec/valid? spec-k data)) (conj (spec/explain-str spec-k data))
       (not success) (conj (str "import failed: " (pr-str (select-keys result [:error :errors]))))
       (seq changes) (conj (str "auto-clean changes: " (pr-str changes)))
       (seq skipped-items) (conj (str "skipped items: " (pr-str skipped-items)))
+      (and success (seq errors)) (conj (str "import errors: " (pr-str errors)))
+      had-errors (conj "the importer reports errors (:had-errors)")
+      (some seq (vals key-conflicts)) (conj (str "key conflicts: " (pr-str key-conflicts)))
+      (seq key-warnings) (conj (str "key warnings: " (pr-str key-warnings)))
       (and success (not= data (:data result))) (conj "the old importer changed the data"))))
 
 (let [dir (first *command-line-args*)

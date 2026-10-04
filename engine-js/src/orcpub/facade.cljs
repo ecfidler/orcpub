@@ -645,54 +645,104 @@
 ;;; validateForExport, orcbrewToEdn (orc-alchemy docs/plan/04-homebrew.md)
 ;;; ---------------------------------------------------------------------------
 
-(declare fail!)
+(defn- fail! [& parts]
+  (throw (js/Error. (apply str parts))))
 
 (defn- export-packs
-  "The packs of homebrew that options selects: the one named by pack, or
-  all of them."
-  [homebrew options]
-  (let [plugins (read-entity homebrew)
-        pack (some-> options (gobj/get "pack"))]
-    (cond (nil? pack) plugins
-          (contains? plugins pack) (select-keys plugins [pack])
-          :else (fail! "No pack named " (pr-str pack) " in homebrew"))))
+  "The packs of plugins to export: the one named pack, or all of them
+  without it."
+  [plugins pack]
+  (cond (nil? pack) plugins
+        (contains? plugins pack) (select-keys plugins [pack])
+        :else (fail! "No pack named " (pr-str pack) " in homebrew")))
+
+(defn- item-problems
+  "The problems of the items in pack's plugin that the old ::e5/plugins
+  spec or a re-import would reject or change, each {:content-type :key
+  :rule :fixed}. rule is :key when the item's :key is not its map key,
+  :option-pack when its :option-pack is blank, and :nil when it has a nil
+  that the importer's clean-nil-in-map-with-log removes or replaces. fixed
+  is the item with its :key set, a blank :option-pack set to pack, and
+  those nils cleaned."
+  [pack plugin]
+  (for [[content-type items] plugin
+        :when (and (qualified-keyword? content-type)
+                   (= "orcpub.dnd.e5" (namespace content-type))
+                   (map? items))
+        [k item] items
+        :when (map? item)
+        :let [blank-pack? (str/blank? (:option-pack item))
+              {fixed :data changes :changes} (import-val/clean-nil-in-map-with-log
+                                              (cond-> (assoc item :key k)
+                                                blank-pack? (assoc :option-pack pack)))]
+        rule [(when (not= k (:key item)) :key)
+              (when blank-pack? :option-pack)
+              ;; A preserved nil is logged but kept, so re-import keeps it too.
+              (when (some #(not= :preserved-nil (:type %)) changes) :nil)]
+        :when rule]
+    {:content-type content-type :key k :rule rule :fixed fixed}))
+
+(defn- fill-for-export
+  "plugin with its problem items fixed and the placeholders of the old
+  app's \"export anyway\" filled in."
+  [plugin problems]
+  (import-val/fill-missing-for-export
+   (reduce (fn [plugin {:keys [content-type key fixed]}]
+             (assoc-in plugin [content-type key] fixed))
+           plugin
+           problems)))
 
 (defn ^:export validateForExport
   "Checks packs before export as the old app's export buttons do, with
-  validate-before-export. homebrew is as for evaluate. options is {pack?}:
-  the one pack to check, or all of them without it.
+  validate-before-export, and checks each item as the old ::e5/plugins
+  spec and a re-import need it. homebrew is as for evaluate. options is
+  {pack?}: the one pack to check, or all of them without it.
 
   Returns {valid, packs, filled}:
-    packs  per pack name, {valid, warnings, errors, missingFields}.
+    packs  per pack name, {valid, warnings, errors, missingFields,
+           hasMissingRequiredFields, itemProblems}.
            missingFields lists the items without a required field, such
-           as a name, per content type
-    filled homebrew with the placeholders the old app's \"export anyway\"
-           fills in for missing fields, in the checked packs only, in
-           evaluate's homebrew format
-  valid is false when any checked pack is invalid. The old app exported a
-  pack whose only problem was missing fields once the user chose \"export
-  anyway\", and refused to export any other invalid pack."
+           as a name, per content type. hasMissingRequiredFields is the old
+           :has-missing-required-fields: when it is true, the old check
+           skips the full spec check, so errors does not list spec
+           problems. itemProblems lists each item whose :key is not its map
+           key (rule \"key\"), whose :option-pack is blank (\"option-pack\"),
+           or that has a nil the importer would remove or replace (\"nil\"),
+           as {content-type, key, rule}
+    filled homebrew with the checked packs fixed: the placeholders the old
+           app's \"export anyway\" fills in for missing fields, each item's
+           :key set to its map key, a blank :option-pack set to the pack
+           name, and those nils removed, in evaluate's homebrew format
+  valid is false when any checked pack is invalid, and a pack is invalid
+  when the old check fails or it has itemProblems. The old app exported a
+  single pack whose only problem was missing fields once the user chose
+  \"export anyway\", and refused to export any other invalid pack. Its
+  export of all packs had no \"export anyway\": filled is a convenience
+  there."
   ([homebrew] (validateForExport homebrew nil))
   ([homebrew options]
    (let [plugins (read-entity homebrew)
-         packs (export-packs homebrew options)
-         results (into {} (map (fn [[pack plugin]]
-                                 [pack (import-val/validate-before-export plugin)]))
-                       packs)]
-     #js {"valid" (every? :valid (vals results))
+         checks (into {} (map (fn [[pack plugin]]
+                                [pack (assoc (import-val/validate-before-export plugin)
+                                             :item-problems (vec (item-problems pack plugin)))]))
+                      (export-packs plugins (some-> options (gobj/get "pack"))))
+         valid? #(and (:valid %) (empty? (:item-problems %)))]
+     #js {"valid" (every? valid? (vals checks))
           "packs" (clj->js
                    (->plain
-                    (into {} (map (fn [[pack result]]
-                                    [pack {"valid" (:valid result)
-                                           "warnings" (vec (:warnings result))
-                                           "errors" (vec (:errors result))
-                                           "missingFields" (vec (:missing-fields-issues result))}]))
-                          results)))
+                    (into {} (map (fn [[pack check]]
+                                    [pack {"valid" (valid? check)
+                                           "warnings" (vec (:warnings check))
+                                           "errors" (vec (:errors check))
+                                           "missingFields" (vec (:missing-fields-issues check))
+                                           "hasMissingRequiredFields" (boolean (:has-missing-required-fields check))
+                                           "itemProblems" (mapv #(dissoc % :fixed) (:item-problems check))}]))
+                          checks)))
           "filled" (write-entity
-                    (reduce (fn [plugins pack]
-                              (update plugins pack import-val/fill-missing-for-export))
+                    (reduce (fn [plugins [pack check]]
+                              (update plugins pack fill-for-export (:item-problems check)))
                             plugins
-                            (keys packs)))})))
+                            checks))})))
 
 (defn ^:export orcbrewToEdn
   "The .orcbrew text of homebrew's packs, as the old app's export buttons
@@ -707,8 +757,9 @@
   type, so leave magic items out of homebrew to omit them."
   ([homebrew] (orcbrewToEdn homebrew nil))
   ([homebrew options]
-   (let [packs (export-packs homebrew options)
-         data (if (some-> options (gobj/get "pack")) (val (first packs)) packs)]
+   (let [pack (some-> options (gobj/get "pack"))
+         packs (export-packs (read-entity homebrew) pack)
+         data (if pack (val (first packs)) packs)]
      (if (some-> options (gobj/get "pretty"))
        (with-out-str (pprint/pprint data))
        (pr-str data)))))
@@ -720,9 +771,6 @@
 ;;; They do what the old builder does for the same click or input. Where the
 ;;; builder would ignore the input, they throw with the reason instead.
 ;;; ---------------------------------------------------------------------------
-
-(defn- fail! [& parts]
-  (throw (js/Error. (apply str parts))))
 
 (defn- content
   "The template content for options {rules?, homebrew?}."

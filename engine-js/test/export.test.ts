@@ -40,18 +40,6 @@ describe("orcbrewToEdn", () => {
         expect(again.log.changes).toStrictEqual([]);
       }
     });
-
-    it(`${pack} exports every item with its own key and a pack`, () => {
-      for (const plugin of Object.values(parse(pack))) {
-        for (const items of Object.values(plugin as Record<string, unknown>)) {
-          if (items === null || typeof items !== "object") continue;
-          for (const [key, item] of Object.entries(items as Record<string, Record<string, unknown>>)) {
-            expect(item["~:key"]).toBe(key);
-            expect(item["~:option-pack"]).toBeTruthy();
-          }
-        }
-      }
-    });
   }
 
   it("throws for a pack that is not loaded", () => {
@@ -67,6 +55,7 @@ describe("validateForExport", () => {
       expect(valid, pack).toBe(true);
       for (const result of Object.values(results)) {
         expect(result.missingFields).toStrictEqual([]);
+        expect(result.itemProblems).toStrictEqual([]);
       }
     }
   });
@@ -83,6 +72,8 @@ describe("validateForExport", () => {
     expect(valid).toBe(false);
     expect(results["Named"]!.valid).toBe(true);
     expect(results["Unnamed"]!.valid).toBe(false);
+    expect(results["Named"]!.hasMissingRequiredFields).toBe(false);
+    expect(results["Unnamed"]!.hasMissingRequiredFields).toBe(true);
     expect(results["Unnamed"]!.missingFields).toStrictEqual([
       expect.objectContaining({
         "content-type": "orcpub.dnd.e5/feats",
@@ -109,6 +100,29 @@ describe("validateForExport", () => {
     expect(Object.keys(results)).toStrictEqual(["Named"]);
     expect(filled).toStrictEqual(homebrew);
   });
+
+  // The old ::e5/plugins spec needs each item's key and pack, and a
+  // re-import removes nils from some fields.
+  const feat = { "~:key": "~:f", "~:name": "F", "~:option-pack": "P" };
+  for (const [problem, rule, item] of [
+    ["a key that is not its map key", "key", { ...feat, "~:key": "~:g" }],
+    ["no key", "key", { "~:name": "F", "~:option-pack": "P" }],
+    ["a blank option-pack", "option-pack", { ...feat, "~:option-pack": "" }],
+    ["a nested nil", "nil", { ...feat, "~:props": { "~:damage": { "~:die": null } } }],
+  ] as const) {
+    it(`reports and fixes an item with ${problem}`, () => {
+      const { valid, packs: results, filled } = validateForExport({ P: { "~:orcpub.dnd.e5/feats": { "~:f": item } } });
+
+      expect(valid).toBe(false);
+      expect(results["P"]!.valid).toBe(false);
+      expect(results["P"]!.itemProblems).toStrictEqual([{ "content-type": "orcpub.dnd.e5/feats", key: "f", rule }]);
+
+      const again = parseOrcbrew(orcbrewToEdn(filled));
+      expect(again.success).toBe(true);
+      expect(again.log.changes).toStrictEqual([]);
+      expect(validateForExport(filled).valid).toBe(true);
+    });
+  }
 });
 
 // Patch D3: boons get the same required-field handling as the other types.

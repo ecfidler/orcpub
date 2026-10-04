@@ -586,13 +586,38 @@ export interface MissingFieldsItem {
   "traits-missing-names": number;
 }
 
+/**
+ * An item that the old `::e5/plugins` spec or a re-import would reject or
+ * change.
+ */
+export interface ItemProblem {
+  /** The content type, such as "orcpub.dnd.e5/feats". */
+  "content-type": string;
+  /** The item's map key. */
+  key: string;
+  /**
+   * "key" when the item's key is not its map key, "option-pack" when its
+   * option-pack is blank, and "nil" when it has a nil that the importer
+   * would remove or replace.
+   */
+  rule: "key" | "option-pack" | "nil";
+}
+
 /** A pack's validateForExport result. */
 export interface PackExportCheck {
+  /** false when the old check fails or the pack has itemProblems. */
   valid: boolean;
   warnings: string[];
   errors: string[];
   /** The items without a required field, per content type. */
   missingFields: { "content-type": string; "invalid-items": MissingFieldsItem[] }[];
+  /**
+   * true when an item is missing a required field. The old check then
+   * skips the full spec check, so errors lists no spec problems.
+   */
+  hasMissingRequiredFields: boolean;
+  /** The items with a bad key, a blank option-pack, or a nil. */
+  itemProblems: ItemProblem[];
 }
 
 export interface ExportCheck {
@@ -601,18 +626,20 @@ export interface ExportCheck {
   /** Each checked pack's result, by pack name. */
   packs: Record<string, PackExportCheck>;
   /**
-   * The homebrew with placeholders for missing required fields in the
-   * checked packs, as the old app's "export anyway" filled them. Pass it to
-   * orcbrewToEdn to export anyway.
+   * The homebrew with the checked packs fixed: placeholders for missing
+   * required fields, as the old app's "export anyway" filled them, and each
+   * item in itemProblems repaired. Pass it to orcbrewToEdn to export anyway.
    */
   filled: Record<string, object>;
 }
 
 /**
- * Checks packs before export, as the old app's export buttons did. The old
- * app exported a pack whose only problem was missing fields once the user
- * chose "export anyway" (filled), and refused to export any other invalid
- * pack. Throws if options.pack is not in homebrew.
+ * Checks packs before export, as the old app's export buttons did, and
+ * checks each item's key, option-pack, and nils. The old app exported a
+ * single pack whose only problem was missing fields once the user chose
+ * "export anyway" (filled), and refused to export any other invalid pack.
+ * Its export of all packs had no "export anyway", so filled is a
+ * convenience there. Throws if options.pack is not in homebrew.
  */
 export function validateForExport(homebrew: Homebrew, options?: ExportOptions): ExportCheck;
 
