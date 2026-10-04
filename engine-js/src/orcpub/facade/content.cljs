@@ -10,11 +10,12 @@
   that the monsters, which the character build never uses, stay out of the
   engine chunk (see orcpub.facade.no-monsters).
 
-  Each item is converted as the facade converts values (orcpub.facade/->plain):
-  a keyword becomes \"ns/name\", a set a sorted array, and a map a
-  string-keyed object. Unlike ->plain, functions are omitted, and so are
+  Each item is converted by orcpub.facade.plain/->data, as the facade
+  converts values: a keyword becomes \"ns/name\", a set a sorted array, and
+  a map a string-keyed object. Functions are left out, and so are
   :modifiers and :selections, which hold engine objects rather than data.
-  The character's choices live in buildTemplate().shape."
+  Any other value that is not plain data fails the build. The character's
+  choices live in buildTemplate().shape."
   (:require ["fs" :as fs]
             ["path" :as path]
             [orcpub.common :as common]
@@ -25,42 +26,13 @@
             [orcpub.dnd.e5.monsters :as monsters5e]
             [orcpub.dnd.e5.spells :as spells5e]
             [orcpub.dnd.e5.weapons :as weapons5e]
+            [orcpub.facade.plain :as plain]
             [orcpub.facade.template :as template]))
 
 (def ^:private omitted-keys
   "Map keys whose values are engine objects (modifiers and template
   selections), not data."
   #{:modifiers :selections})
-
-(defn- kw->str [k]
-  (if (namespace k) (str (namespace k) "/" (name k)) (name k)))
-
-(defn- map-key [k]
-  (cond (keyword? k) (kw->str k)
-        (string? k) k
-        :else (str k)))
-
-(declare ->json)
-
-(defn- sort-json [coll]
-  (try (vec (sort coll))
-       (catch :default _ (vec (sort-by pr-str coll)))))
-
-(defn- ->json [x]
-  (cond (nil? x) nil
-        (string? x) x
-        (boolean? x) x
-        (number? x) x
-        (keyword? x) (kw->str x)
-        (symbol? x) (str x)
-        (map? x) (into {}
-                       (keep (fn [[k v]]
-                               (when-not (or (fn? v) (contains? omitted-keys k))
-                                 [(map-key k) (->json v)])))
-                       x)
-        (set? x) (sort-json (map ->json (remove fn? x)))
-        (sequential? x) (into [] (comp (remove fn?) (map ->json)) x)
-        :else (pr-str x)))
 
 (defn- template-options
   "The options of the template's top-level selection selection-key, as
@@ -101,10 +73,15 @@
 
 (defn main
   "Writes <out-dir>/<list>.json for each list. out-dir defaults to
-  dist/content."
+  dist/content. The .json files already in out-dir are removed first, so a
+  list that is renamed or dropped is not published from an earlier build."
   [& [out-dir]]
   (let [out-dir (or out-dir "dist/content")]
     (fs/mkdirSync out-dir #js {:recursive true})
+    (doseq [file (fs/readdirSync out-dir)
+            :when (.endsWith file ".json")]
+      (fs/unlinkSync (path/join out-dir file)))
     (doseq [[file-name items] (content-lists)]
       (fs/writeFileSync (path/join out-dir (str file-name ".json"))
-                        (js/JSON.stringify (clj->js (mapv ->json items)))))))
+                        (js/JSON.stringify
+                         (clj->js (mapv #(plain/->data omitted-keys %) items)))))))

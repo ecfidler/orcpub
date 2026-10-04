@@ -625,8 +625,9 @@ export interface ContentMonster extends ContentItem {
 
 /**
  * The content lists, keyed by file name. Import one with
- * `import("@pubdoor/dmv/content/<name>.json", { with: { type: "json" } })`.
- * Each holds the SRD content only, in the engine's order.
+ * `import("@pubdoor/dmv/content/<name>.json", { with: { type: "json" } })`
+ * and cast it to its entry here: the export has no types condition. Each
+ * holds the SRD content only, in the engine's order.
  */
 export interface ContentLists {
   /** The classes: key and name. Their choices are in buildTemplate().shape. */

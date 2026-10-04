@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 
@@ -8,6 +8,11 @@ import { describe, expect, it } from "vitest";
 // bundle shows that the namespace was not compiled in. :advanced keeps
 // string literals as they are, as the control strings show.
 const dist = new URL("../dist/", import.meta.url);
+for (const file of ["pubdoor.js", "content/monsters.json"]) {
+  if (!existsSync(new URL(file, dist))) {
+    throw new Error(`dist/${file} is missing: run npm run build first`);
+  }
+}
 const bundle = readFileSync(new URL("pubdoor.js", dist), "utf8");
 
 /**

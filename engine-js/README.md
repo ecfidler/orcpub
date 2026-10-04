@@ -102,9 +102,19 @@ console.log(spells.length); // 319
 | `treasure.json` | 11 | The coin or gem |
 
 Keywords are `"ns/name"` strings, as in `built`. Functions and the
-engine's `modifiers` and `selections` are left out. `ContentLists` in
-`types/index.d.ts` types each file. The lists hold the SRD only: homebrew
-content is in the homebrew itself.
+engine's `modifiers` and `selections` are left out. The lists hold the SRD
+only: homebrew content is in the homebrew itself.
+
+The `./content/*.json` export has no types condition, so TypeScript does
+not apply the package's types to these imports. To use the types in
+`types/index.d.ts`, cast each import to its `ContentLists` entry:
+
+```ts
+import type { ContentLists } from "@pubdoor/dmv";
+
+const spells = (await import("@pubdoor/dmv/content/spells.json", { with: { type: "json" } }))
+  .default as ContentLists["spells"];
+```
 
 ## Load the engine as an async chunk
 
@@ -121,19 +131,17 @@ the JSON files and never load the engine.
 
 ## Bundle size
 
-Measured on the `:advanced` release build, ORC-42:
+On the `:advanced` release build, `dist/pubdoor.js` is about 1.5 MiB, or
+about 400 KiB gzipped. The 13 files in `dist/content/` add about 1.5 MiB,
+which the engine never loads. `monsters.json` is about 470 KiB of that.
+Before ORC-42, `dist/pubdoor.js` was about 2 MiB and held the monsters.
+`test/bundle.test.ts` logs the exact sizes in CI and fails if
+`dist/pubdoor.js` grows past its budget.
 
-| File | Size | Gzipped |
-|---|---|---|
-| `dist/pubdoor.js` | 1,577,499 bytes (1,540.5 KiB) | 408,415 bytes (398.8 KiB) |
-| `dist/content/monsters.json` | 478,139 bytes (466.9 KiB) | |
-| `dist/content/`, all 13 files | 1,566.2 KiB | |
-
-Before ORC-42, `dist/pubdoor.js` was 2,025,012 bytes (482,349 gzipped), and
-it held the monsters. The build leaves these namespaces out of
-`dist/pubdoor.js`: `character/random.cljc`, everything under `templates/`,
-`pdf_spec.cljc`, `char_decision_tree.cljc`, and the monster list in
-`monsters.cljc`. `test/bundle.test.ts` checks each one and logs the sizes.
+The build leaves these namespaces out of `dist/pubdoor.js`:
+`character/random.cljc`, everything under `templates/`, `pdf_spec.cljc`,
+`char_decision_tree.cljc`, and the monster list in `monsters.cljc`.
+`test/bundle.test.ts` checks each one.
 
 ## The rules option
 

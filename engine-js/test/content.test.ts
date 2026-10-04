@@ -18,9 +18,11 @@ const keysOf = (items: ContentItem[]): string[] => items.map((item) => item.key)
 // The plan (orc-alchemy docs/plan/06-milestones-and-risks.md) gives 12
 // classes, 9 races, 268 spells, and 288 magic items. The classes and races
 // match. The spells and magic items are counted from the data: spells.cljc
-// has 319 spells, all SRD 5.1, and magic_items.cljc has 337 items, which
-// expand to 805 once each weapon and armor item becomes one item per base
-// weapon or armor, as the builder lists them.
+// has 319 spells, all SRD 5.1. raw-magic-items in magic_items.cljc has 337
+// entries, more than its 259 literal names because helpers such as
+// armors-of-resistance generate some. They expand to 805 once each weapon and
+// armor item becomes one item per base weapon or armor, as the builder lists
+// them.
 const counts: Record<keyof ContentLists, number> = {
   classes: 12,
   races: 9,

@@ -3,7 +3,9 @@
 
   Nothing lazy crosses the boundary: every function takes and returns plain
   JS data. The conversion rules are the ones fixtures/README.md documents for
-  expected.json (orcpub.oracle/->plain in scripts/orcpub/oracle.clj)."
+  expected.json (orcpub.oracle/->plain in scripts/orcpub/oracle.clj), in
+  orcpub.facade.plain."
+  (:refer-clojure :exclude [keys])
   (:require [cljs.pprint :as pprint]
             [cljs.spec.alpha :as spec]
             [clojure.string :as str]
@@ -22,54 +24,8 @@
             [orcpub.dnd.e5.event-handlers :as eh]
             [orcpub.dnd.e5.import-validation :as import-val]
             [orcpub.dnd.e5.template :as t5e]
+            [orcpub.facade.plain :refer [kw->str ->plain]]
             [orcpub.facade.template :as template]))
-
-;;; ---------------------------------------------------------------------------
-;;; Plain-data conversion (orcpub.oracle/->plain)
-;;; ---------------------------------------------------------------------------
-
-(defn- kw->str [k]
-  (if (namespace k) (str (namespace k) "/" (name k)) (name k)))
-
-(defn- simple-key->str [k]
-  (cond (keyword? k) (kw->str k)
-        (string? k) k
-        (number? k) (str k)
-        (boolean? k) (str k)
-        (nil? k) "nil"
-        :else ::composite))
-
-(declare ->plain)
-
-(defn- sort-plain [coll]
-  (try (vec (sort coll))
-       (catch :default _ (vec (sort-by pr-str coll)))))
-
-(defn- plain-map [m]
-  (if (some #{::composite} (map simple-key->str (keys m)))
-    ;; For example spells-known, keyed by [class-name spell-key].
-    {"__entries" (->> m
-                      (map (fn [[k v]] [(->plain k) (->plain v)]))
-                      (sort-by (comp pr-str first))
-                      vec)}
-    (into {} (map (fn [[k v]] [(simple-key->str k) (->plain v)])) m)))
-
-(defn- ->plain
-  "keyword → \"ns/name\", set → sorted vector, map → string-keyed map
-  (composite keys → {\"__entries\" [[k v] ...]}), fn → \"#fn\", anything
-  else unknown → pr-str. ClojureScript has no ratios."
-  [x]
-  (cond (nil? x) nil
-        (string? x) x
-        (boolean? x) x
-        (keyword? x) (kw->str x)
-        (symbol? x) (str x)
-        (number? x) x
-        (map? x) (plain-map x)
-        (set? x) (sort-plain (map ->plain x))
-        (sequential? x) (mapv ->plain x)
-        (fn? x) "#fn"
-        :else (pr-str x)))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Built-character values (character-subs, subs.cljs:628-736)
@@ -183,7 +139,7 @@
   [built all-weapons-map]
   (->> (merge (char5e/normal-weapons-inventory built)
               (char5e/magic-weapons-inventory built))
-       keys
+       cljs.core/keys
        sort
        (map (fn [k] [k (get all-weapons-map k)]))))
 
@@ -198,7 +154,7 @@
   [built all-armor-map]
   (let [ac-fn (char5e/armor-class-with-armor built)
         items (map (fn [k] [k (get all-armor-map k)])
-                   (sort (keys (char5e/all-armor-inventory built))))
+                   (sort (cljs.core/keys (char5e/all-armor-inventory built))))
         shields (filter shield? items)
         armor (remove shield? items)]
     (vec
@@ -216,7 +172,7 @@
   barbarian's Fast Movement."
   [built all-armor-map]
   (when-let [speed-fn (char5e/land-speed-with-armor built)]
-    (let [armor (->> (sort (keys (char5e/all-armor-inventory built)))
+    (let [armor (->> (sort (cljs.core/keys (char5e/all-armor-inventory built)))
                      (map (fn [k] [k (get all-armor-map k)]))
                      (remove shield?))]
       (vec
@@ -265,11 +221,11 @@
                                             (char5e/spell-save-dc-fn built))
                "spell-attack-modifier" (keyed-table char5e/ability-keys
                                                     (char5e/spell-attack-modifier-fn built))
-               "class-level" (keyed-table (sort (keys levels))
+               "class-level" (keyed-table (sort (cljs.core/keys levels))
                                           (char5e/class-level-fn built))
-               "tool-bonus" (keyed-table (sort (if (map? tool-profs) (keys tool-profs) (seq tool-profs)))
+               "tool-bonus" (keyed-table (sort (if (map? tool-profs) (cljs.core/keys tool-profs) (seq tool-profs)))
                                          (char5e/tool-bonus-fn built))
-               "prepare-spell-count" (keyed-table (sort (keys prepares))
+               "prepare-spell-count" (keyed-table (sort (cljs.core/keys prepares))
                                                   (char5e/prepare-spell-count-fn built))))))
 
 ;;; ---------------------------------------------------------------------------
@@ -685,9 +641,9 @@
   [homebrew]
   (sorted-keys homebrew :option-keys))
 
-(def key-lists
-  "Exported as keys: the key namespace of a template, the input to the
-  content-identity check (contract C3)."
+(def keys
+  "The key namespace of a template, the input to the content-identity
+  check (contract C3)."
   #js {"selectionKeys" selection-keys
        "optionKeys" option-keys})
 

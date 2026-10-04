@@ -9,6 +9,9 @@
   dist/pubdoor.js. The content build writes it to
   dist/content/monsters.json instead (orcpub.facade.content).
 
+  The alias also moves spell-subs' ::monsters5e/... subscription keywords
+  into this namespace. That is harmless, because the facade never uses them.
+
   It defines only the vars that spell-subs reads.")
 
 (def monsters
