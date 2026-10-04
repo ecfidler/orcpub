@@ -17,11 +17,13 @@
     ".": {
       "types": "./types/index.d.ts",
       "default": "./dist/pubdoor.js"
-    }
+    },
+    "./content/*.json": "./dist/content/*.json"
   },
   "types": "./types/index.d.ts",
   "files": [
     "dist/pubdoor.js",
+    "dist/content/*.json",
     "types/index.d.ts",
     "THIRD-PARTY-NOTICES"
   ],
@@ -29,7 +31,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "shadow-cljs release pubdoor",
+    "build": "shadow-cljs release pubdoor content && node target/content.cjs dist/content",
     "test": "tsc --noEmit && vitest run",
     "prepublishOnly": "npm run build && npm test"
   },

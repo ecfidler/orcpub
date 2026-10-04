@@ -4,6 +4,14 @@
 ;; namespaces the facade requires are compiled, so the old UI (orcpub.core,
 ;; views, events) and the excluded namespaces (pdf_spec, character/random,
 ;; char_decision_tree, templates/*) stay out as long as nothing requires them.
+;; engine-js/test/bundle.test.ts checks that they stay out.
+;;
+;; Two builds, both run by `npm run build`:
+;;   pubdoor  the engine, dist/pubdoor.js. orcpub.dnd.e5.monsters is aliased
+;;            to an empty stand-in (orcpub.facade.no-monsters), because only
+;;            the old app's monster subscriptions in spell_subs.cljs use it.
+;;   content  a Node script that writes the SRD content lists, monsters
+;;            included, to dist/content/*.json (orcpub.facade.content).
 {:source-paths ["src" "../src/cljc" "../src/cljs"]
 
  ;; Versions match project.clj.
@@ -40,5 +48,13 @@
                                          buildTemplate orcpub.facade/buildTemplate
                                          validateForExport orcpub.facade/validateForExport
                                          orcbrewToEdn orcpub.facade/orcbrewToEdn
-                                         reconcileMissingContent orcpub.facade/reconcileMissingContent}}}
-   :compiler-options {:optimizations :advanced}}}}
+                                         reconcileMissingContent orcpub.facade/reconcileMissingContent
+                                         keys orcpub.facade/keys}}}
+   :build-options {:ns-aliases {orcpub.dnd.e5.monsters orcpub.facade.no-monsters}}
+   :compiler-options {:optimizations :advanced}}
+
+  :content
+  {:target :node-script
+   :main orcpub.facade.content/main
+   :output-to "target/content.cjs"
+   :compiler-options {:optimizations :simple}}}}

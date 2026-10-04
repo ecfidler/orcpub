@@ -66,9 +66,82 @@ full signatures and the types.
 - `orcbrewToEdn(homebrew, options?)` returns `.orcbrew` text: all packs as the old app's `all-content.orcbrew`, or with `options.pack` one pack alone. `options.pretty` pretty-prints it.
 - `reconcileMissingContent(entity, homebrew?)` checks every option key in a character against the template for homebrew, or for the SRD alone, and returns `{ hasMissing, items, unresolvedOptions }`. `items` lists each race, subrace, background, class, subclass, or feat that does not resolve, with the old app's suggestions from the loaded packs. `unresolvedOptions` lists any other choice that does not resolve under a parent that does. The entity is not changed.
 - `buildTemplate(homebrew?)` builds the template for homebrew, or for the SRD alone, and returns `{ summary, shape, content }`: the top-level selections and their option keys, the template's structure without functions, and the content lists, such as races and classes.
+- `keys.selectionKeys(homebrew?)` and `keys.optionKeys(homebrew?)` return every selection key and every option key in the template for homebrew, or for the SRD alone, once each and sorted. Saved characters and `.orcbrew` files refer to content by these keys.
 
 Each mutation returns a new entity. It throws with the reason when the old
 builder would refuse the same change.
+
+## Content lists
+
+The build writes the SRD content as JSON files next to the engine, so that
+pages such as a spell list can load content without the engine. Import a
+list by its file name:
+
+```js
+const { default: spells } = await import("@pubdoor/dmv/content/spells.json", {
+  with: { type: "json" },
+});
+
+console.log(spells.length); // 319
+```
+
+| File | Items | What each item holds |
+|---|---|---|
+| `classes.json` | 12 | Key and name. The choices are in `buildTemplate().shape` |
+| `races.json` | 9 | The race, its subraces, and its traits |
+| `backgrounds.json` | 1 | The background |
+| `feats.json` | 1 | Key and name |
+| `languages.json` | 16 | Key and name |
+| `spells.json` | 319 | The spell |
+| `monsters.json` | 317 | The monster |
+| `magic-items.json` | 805 | The magic item. A weapon or armor item becomes one item per base weapon or armor, as the builder lists them |
+| `weapons.json` | 40 | The weapon |
+| `ammunition.json` | 5 | The ammunition |
+| `armor.json` | 14 | The armor or shield |
+| `equipment.json` | 162 | The gear, tool, pack, mount, or vehicle |
+| `treasure.json` | 11 | The coin or gem |
+
+Keywords are `"ns/name"` strings, as in `built`. Functions and the
+engine's `modifiers` and `selections` are left out. The lists hold the SRD
+only: homebrew content is in the homebrew itself.
+
+The `./content/*.json` export has no types condition, so TypeScript does
+not apply the package's types to these imports. To use the types in
+`types/index.d.ts`, cast each import to its `ContentLists` entry:
+
+```ts
+import type { ContentLists } from "@pubdoor/dmv";
+
+const spells = (await import("@pubdoor/dmv/content/spells.json", { with: { type: "json" } }))
+  .default as ContentLists["spells"];
+```
+
+## Load the engine as an async chunk
+
+`dist/pubdoor.js` is large, so load it with a dynamic `import()` behind a
+splash screen, not with a static import in the app's entry chunk:
+
+```js
+const engine = await import("@pubdoor/dmv");
+```
+
+A bundler such as Vite then puts the engine in its own chunk, which the
+browser caches between visits. Pages that need only content lists import
+the JSON files and never load the engine.
+
+## Bundle size
+
+On the `:advanced` release build, `dist/pubdoor.js` is about 1.5 MiB, or
+about 400 KiB gzipped. The 13 files in `dist/content/` add about 1.5 MiB,
+which the engine never loads. `monsters.json` is about 470 KiB of that.
+Before ORC-42, `dist/pubdoor.js` was about 2 MiB and held the monsters.
+`test/bundle.test.ts` logs the exact sizes in CI and fails if
+`dist/pubdoor.js` grows past its budget.
+
+The build leaves these namespaces out of `dist/pubdoor.js`:
+`character/random.cljc`, everything under `templates/`, `pdf_spec.cljc`,
+`char_decision_tree.cljc`, and the monster list in `monsters.cljc`.
+`test/bundle.test.ts` checks each one.
 
 ## The rules option
 
@@ -101,7 +174,7 @@ works. The package compiles the engine in place from `../src/cljc` and
 ```sh
 cd engine-js
 npm ci
-npm run build   # writes dist/pubdoor.js
+npm run build   # writes dist/pubdoor.js and dist/content/*.json
 npm test        # tsc --noEmit, then the vitest golden tests against ../fixtures
 ```
 
