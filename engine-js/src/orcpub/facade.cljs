@@ -4,7 +4,8 @@
   Nothing lazy crosses the boundary: every function takes and returns plain
   JS data. The conversion rules are the ones fixtures/README.md documents for
   expected.json (orcpub.oracle/->plain in scripts/orcpub/oracle.clj)."
-  (:require [cljs.spec.alpha :as spec]
+  (:require [cljs.pprint :as pprint]
+            [cljs.spec.alpha :as spec]
             [clojure.string :as str]
             [clojure.walk :as walk]
             [cognitect.transit :as transit]
@@ -639,6 +640,78 @@
                                (map (fn [[label items]]
                                       [label (mapv #(->plain (get % (content-fields label))) items)]))
                                content)}))))
+
+;;; ---------------------------------------------------------------------------
+;;; validateForExport, orcbrewToEdn (orc-alchemy docs/plan/04-homebrew.md)
+;;; ---------------------------------------------------------------------------
+
+(declare fail!)
+
+(defn- export-packs
+  "The packs of homebrew that options selects: the one named by pack, or
+  all of them."
+  [homebrew options]
+  (let [plugins (read-entity homebrew)
+        pack (some-> options (gobj/get "pack"))]
+    (cond (nil? pack) plugins
+          (contains? plugins pack) (select-keys plugins [pack])
+          :else (fail! "No pack named " (pr-str pack) " in homebrew"))))
+
+(defn ^:export validateForExport
+  "Checks packs before export as the old app's export buttons do, with
+  validate-before-export. homebrew is as for evaluate. options is {pack?}:
+  the one pack to check, or all of them without it.
+
+  Returns {valid, packs, filled}:
+    packs  per pack name, {valid, warnings, errors, missingFields}.
+           missingFields lists the items without a required field, such
+           as a name, per content type
+    filled homebrew with the placeholders the old app's \"export anyway\"
+           fills in for missing fields, in the checked packs only, in
+           evaluate's homebrew format
+  valid is false when any checked pack is invalid. The old app exported a
+  pack whose only problem was missing fields once the user chose \"export
+  anyway\", and refused to export any other invalid pack."
+  ([homebrew] (validateForExport homebrew nil))
+  ([homebrew options]
+   (let [plugins (read-entity homebrew)
+         packs (export-packs homebrew options)
+         results (into {} (map (fn [[pack plugin]]
+                                 [pack (import-val/validate-before-export plugin)]))
+                       packs)]
+     #js {"valid" (every? :valid (vals results))
+          "packs" (clj->js
+                   (->plain
+                    (into {} (map (fn [[pack result]]
+                                    [pack {"valid" (:valid result)
+                                           "warnings" (vec (:warnings result))
+                                           "errors" (vec (:errors result))
+                                           "missingFields" (vec (:missing-fields-issues result))}]))
+                          results)))
+          "filled" (write-entity
+                    (reduce (fn [plugins pack]
+                              (update plugins pack import-val/fill-missing-for-export))
+                            plugins
+                            (keys packs)))})))
+
+(defn ^:export orcbrewToEdn
+  "The .orcbrew text of homebrew's packs, as the old app's export buttons
+  write it. homebrew is as for evaluate. options is {pack?, pretty?}. With
+  pack, the text is that pack alone as a single-plugin map, which the old
+  app imports under the file's name; without it, all packs as the
+  multi-plugin map, the old app's all-content.orcbrew. pretty
+  pretty-prints the text, as the old pretty-print export does.
+
+  Nothing is validated or changed: run validateForExport first. The
+  packs are written as given, and the old app has no magic-item content
+  type, so leave magic items out of homebrew to omit them."
+  ([homebrew] (orcbrewToEdn homebrew nil))
+  ([homebrew options]
+   (let [packs (export-packs homebrew options)
+         data (if (some-> options (gobj/get "pack")) (val (first packs)) packs)]
+     (if (some-> options (gobj/get "pretty"))
+       (with-out-str (pprint/pprint data))
+       (pr-str data)))))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)

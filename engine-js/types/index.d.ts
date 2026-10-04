@@ -570,3 +570,64 @@ export interface BuiltTemplate {
  * same homebrew.
  */
 export function buildTemplate(homebrew?: Homebrew): BuiltTemplate;
+
+export interface ExportOptions {
+  /** The one pack to export or check. Without it, all packs. */
+  pack?: string;
+}
+
+/** One item's missing required fields. */
+export interface MissingFieldsItem {
+  key: string;
+  name: string | null;
+  /** The missing fields, such as "name". */
+  "missing-fields": string[];
+  /** How many of the item's traits have no name. */
+  "traits-missing-names": number;
+}
+
+/** A pack's validateForExport result. */
+export interface PackExportCheck {
+  valid: boolean;
+  warnings: string[];
+  errors: string[];
+  /** The items without a required field, per content type. */
+  missingFields: { "content-type": string; "invalid-items": MissingFieldsItem[] }[];
+}
+
+export interface ExportCheck {
+  /** false when any checked pack is invalid. */
+  valid: boolean;
+  /** Each checked pack's result, by pack name. */
+  packs: Record<string, PackExportCheck>;
+  /**
+   * The homebrew with placeholders for missing required fields in the
+   * checked packs, as the old app's "export anyway" filled them. Pass it to
+   * orcbrewToEdn to export anyway.
+   */
+  filled: Record<string, object>;
+}
+
+/**
+ * Checks packs before export, as the old app's export buttons did. The old
+ * app exported a pack whose only problem was missing fields once the user
+ * chose "export anyway" (filled), and refused to export any other invalid
+ * pack. Throws if options.pack is not in homebrew.
+ */
+export function validateForExport(homebrew: Homebrew, options?: ExportOptions): ExportCheck;
+
+export interface OrcbrewToEdnOptions extends ExportOptions {
+  /** Pretty-print the text, as the old pretty-print export did. */
+  pretty?: boolean;
+}
+
+/**
+ * The .orcbrew text of the homebrew, as the old app wrote it. With
+ * options.pack, that pack alone as a single-plugin map, which the old app
+ * imports under the file's name. Without it, all packs as the multi-plugin
+ * map, the old app's all-content.orcbrew. Nothing is validated or changed:
+ * run validateForExport first. The packs are written as given, and the old
+ * app has no magic-item content type, so leave magic items out of the
+ * homebrew to omit them. Throws if options.pack is not in homebrew.
+ */
+export function orcbrewToEdn(homebrew: Homebrew, options?: OrcbrewToEdnOptions): string;

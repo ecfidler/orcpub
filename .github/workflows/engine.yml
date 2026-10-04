@@ -72,3 +72,11 @@ jobs:
             fixtures/characters/fighter-3-wizard-2.expected.json \
             --selections fixtures/characters/fighter-3-wizard-2.selections.json
           git diff --exit-code fixtures/
+
+      # Contract C1: the old importer and the old ::e5/plugins spec accept
+      # every .orcbrew file that orcbrewToEdn writes for the fixture packs.
+      - name: Check .orcbrew exports against the old importer
+        working-directory: .
+        run: |
+          node engine-js/scripts/write-orcbrew-exports.mjs "$RUNNER_TEMP/orcbrew-exports"
+          scripts/oracle-env.sh scripts/check-orcbrew-exports.clj "$RUNNER_TEMP/orcbrew-exports"
