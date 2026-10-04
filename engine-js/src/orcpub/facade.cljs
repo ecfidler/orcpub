@@ -18,6 +18,7 @@
             [orcpub.dnd.e5 :as e5]
             [orcpub.dnd.e5.character :as char5e]
             [orcpub.dnd.e5.classes :as class5e]
+            [orcpub.dnd.e5.content-reconciliation :as recon]
             [orcpub.dnd.e5.event-handlers :as eh]
             [orcpub.dnd.e5.import-validation :as import-val]
             [orcpub.dnd.e5.template :as t5e]
@@ -640,6 +641,110 @@
                                (map (fn [[label items]]
                                       [label (mapv #(->plain (get % (content-fields label))) items)]))
                                content)}))))
+
+;;; ---------------------------------------------------------------------------
+;;; reconcileMissingContent (orc-alchemy docs/plan/03-character-import-and-storage.md, R8)
+;;; ---------------------------------------------------------------------------
+
+(def ^:private content-labels
+  "The old report's :content-label per content type (content_reconciliation.cljs)."
+  {:race "Race" :subrace "Subrace" :background "Background"
+   :class "Class" :subclass "Subclass" :feat "Feat"})
+
+(defn- content-type
+  "The content type of the option at path, an option path as
+  entity/flatten-options gives it, or nil when it is not a content
+  reference. selection is the template selection the option is chosen in,
+  or nil when that selection does not resolve. A subclass is chosen in a
+  selection tagged :subclass, or, when its class does not resolve, in one
+  of the old subclass-selection-keys."
+  [path selection]
+  (let [n (count path)
+        selection-key (nth path (- n 2))]
+    (cond (and (= n 2) (#{:race :background :class} selection-key)) selection-key
+          (and (= n 4) (= :race (first path)) (= :subrace selection-key)) :subrace
+          (and (= :class (first path))
+               (or (contains? (::t/tags selection) :subclass)
+                   (contains? recon/subclass-selection-keys selection-key))) :subclass
+          (= :feats selection-key) :feat)))
+
+;; COPIED: content_reconciliation.cljs:124-130 (infer-source-from-key, private there).
+(defn- infer-source-from-key
+  "Try to infer the source name from a key's suffix.
+   E.g., :artificer-kibbles-tasty → \"Kibbles Tasty\""
+  [key]
+  (let [parts (str/split (name key) #"-")]
+    (when (> (count parts) 1)
+      (str/join " " (map str/capitalize (rest parts))))))
+
+(defn- suggestion
+  "A suggestion as plain data. find-similar-content returns the content
+  item itself with :similarity and :inferred-source added; it has no
+  source key. The source is the item's :option-pack, or, for a class or
+  subclass without one, the :plugin-source that template/build adds."
+  [{:keys [key name similarity option-pack plugin-source]}]
+  {"key" (kw->str key)
+   "name" name
+   "source" (or option-pack plugin-source)
+   "similarity" similarity})
+
+(defn- missing-item
+  "The old report's item for the content reference at path."
+  [path content-type available-content]
+  (let [k (last path)]
+    {"key" (kw->str k)
+     "contentType" (name content-type)
+     "label" (content-labels content-type)
+     "path" (->plain path)
+     "inferredSource" (infer-source-from-key k)
+     "suggestions" (mapv suggestion
+                         (recon/find-similar-content
+                          k content-type
+                          (get available-content (recon/content-type->field content-type) [])))}))
+
+(defn ^:export reconcileMissingContent
+  "Checks every option key in entity against the template for homebrew, as
+  evaluate builds it, and reports the ones that do not resolve (quirk R8).
+  entity is as for evaluate. homebrew is the loaded packs, as for
+  evaluate's options.homebrew; without it, the SRD alone. Nothing is
+  changed: the entity keeps every choice.
+
+  An option resolves when entity/build would find it in the template: its
+  selection is active and lists its key. Returns {hasMissing, items,
+  unresolvedOptions}:
+    items             each unresolved race, subrace, background, class,
+                      subclass or feat, even under an unresolved parent,
+                      as {key, contentType, label, path, inferredSource,
+                      suggestions}. suggestions is what the old
+                      content_reconciliation.cljs scores from the plugin
+                      content of homebrew: up to 5 {key, name, source,
+                      similarity}, best first
+    unresolvedOptions each other unresolved option whose parent option
+                      resolves, as {key, path}. An unresolved option
+                      under an unresolved parent is not listed: its
+                      ancestor is
+  hasMissing is true when either list is not empty. Each path is the
+  option's path of keys, without indices, as the selections' paths are."
+  ([entity] (reconcileMissingContent entity nil))
+  ([entity homebrew]
+   (let [{:keys [template available-content]} (homebrew-content (some-> homebrew entity-text))
+         raw (char5e/from-strict (read-entity entity))
+         selections (entity/get-all-selections-aux-2 template (entity/make-path-map raw))
+         resolved (entity/make-template-option-map selections)
+         selection-at (into {} (map (juxt entity/actual-path identity)) selections)
+         resolved? #(or (empty? %) (contains? resolved %))
+         unresolved (for [{path ::t/path} (entity/flatten-options (::entity/options raw))
+                          :when (not (resolved? path))
+                          :let [selection-path (vec (butlast path))]]
+                      [path (content-type path (selection-at selection-path))])
+         items (for [[path ct] unresolved :when ct]
+                 (missing-item path ct available-content))
+         others (for [[path ct] unresolved
+                      :when (and (nil? ct) (resolved? (vec (drop-last 2 path))))]
+                  {"key" (kw->str (last path)) "path" (->plain path)})]
+     (clj->js {"hasMissing" (boolean (or (seq items) (seq others)))
+               "items" (vec items)
+               "unresolvedOptions" (vec others)}))))
 
 ;;; ---------------------------------------------------------------------------
 ;;; validateForExport, orcbrewToEdn (orc-alchemy docs/plan/04-homebrew.md)
