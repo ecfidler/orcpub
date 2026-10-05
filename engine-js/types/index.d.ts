@@ -503,7 +503,11 @@ export interface ParsedOrcbrew {
 /**
  * Reads .orcbrew text through the old importer: text fixes, parsing,
  * Unicode normalization, data cleaning, placeholders for required fields,
- * option deduplication, duplicate-key detection, and validation. A leading
+ * option deduplication, duplicate-key detection, and validation. It also
+ * fixes two forms the old engine ignored and logs each fix in log.changes:
+ * a bare ability key such as :con in abilities or ability-increases becomes
+ * :orcpub.dnd.e5.character/con (type "normalized-ability-key"), and a
+ * skill-options without choose gets choose 1 (type "defaulted-choose"). A leading
  * byte-order mark is removed. The result's data is all the loaded homebrew,
  * not only the file's packs. Key conflicts do not stop the import. The old
  * app asked the user to resolve them before it loaded the data.

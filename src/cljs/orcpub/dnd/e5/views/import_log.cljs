@@ -84,6 +84,17 @@
                 (when (seq parts)
                   [:span " \u2014 " (str/join "; " parts)]))])])])
 
+     :normalized-ability-key
+     [:span [:i.fa.fa-exchange.m-r-5 {:style {:color "#47eaf8"}}]
+      "Rewrote ability key " [:code {:style code-style} (pr-str from)]
+      " \u2192 " [:code {:style code-style} (pr-str to)]
+      " at " [:code {:style code-style-sm} (str path)]]
+
+     :defaulted-choose
+     [:span [:i.fa.fa-pencil.m-r-5 {:style {:color "#47eaf8"}}]
+      "Set skill choice to " [:code {:style code-style} (str to)]
+      " at " [:code {:style code-style-sm} (str path)]]
+
      :key-renamed
      [:span [:i.fa.fa-tag.m-r-5 {:style {:color "#47eaf8"}}]
       "Renamed key " [:code {:style code-style} (pr-str from)]
@@ -178,7 +189,8 @@
       ;; Grouped change sections
       (let [changes (:changes log)
             user-types #{:key-renamed :filled-required-fields
-                         :string-fix :text-normalization :renamed-plugin-key}
+                         :string-fix :text-normalization :renamed-plugin-key
+                         :normalized-ability-key :defaulted-choose}
             sections [{:types #{:key-renamed}
                        :title-fn #(str "Key Renames (" (count %) ")")
                        :icon "fa-tag" :icon-color "#47eaf8"
@@ -191,7 +203,8 @@
                                        (str "Field Fixes (" (count items) ")"))))
                        :icon "fa-pencil" :icon-color "#f0a100"
                        :bg-color "rgba(240, 161, 0, 0.1)" :border-color "#f0a100"}
-                      {:types #{:string-fix :text-normalization :renamed-plugin-key}
+                      {:types #{:string-fix :text-normalization :renamed-plugin-key
+                                :normalized-ability-key :defaulted-choose}
                        :title-fn #(str "Data Cleanup (" (count %) ")")
                        :icon "fa-wrench" :icon-color "#47eaf8"
                        :bg-color "rgba(71, 234, 248, 0.08)" :border-color "#47eaf8"}]

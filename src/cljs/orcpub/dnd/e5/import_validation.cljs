@@ -1264,6 +1264,143 @@
     (find-similar-keys missing-key available)))
 
 ;; ============================================================================
+;; Engine-field normalization - Rewrite fields the engine would ignore
+;; ============================================================================
+
+(def bare-ability-keys
+  "Unqualified ability keys and the qualified keys the engine reads. A race's
+   or subrace's :abilities and a feat's :ability-increases must use the
+   qualified form: ?abilities sums only those keys, and feat-modifiers
+   intersects :ability-increases with them, so {:con 2} or #{:con} adds
+   nothing (fixtures/README.md finding 4, Linear ORC-40)."
+  {:str :orcpub.dnd.e5.character/str
+   :dex :orcpub.dnd.e5.character/dex
+   :con :orcpub.dnd.e5.character/con
+   :int :orcpub.dnd.e5.character/int
+   :wis :orcpub.dnd.e5.character/wis
+   :cha :orcpub.dnd.e5.character/cha})
+
+(def default-skill-choose
+  "The :choose the builder shows for :skill-options when it is unset
+   (views.cljs option-proficiency-choice). The builder writes :choose only
+   when the author changes the dropdown, so a saved :skill-options without
+   :choose means 1 skill."
+  1)
+
+(defn- ability-key-change [path field from to item-key]
+  {:type :normalized-ability-key
+   :path (conj path field)
+   :from from
+   :to to
+   :description (str "Rewrote ability key " (pr-str from) " as " (pr-str to)
+                     " in the " (name field) " of " (pr-str item-key))})
+
+(defn- normalize-ability-keys
+  "Rewrites bare ability keys in item's :abilities map and :ability-increases
+   collection. When both forms are present, the qualified entry, the one
+   the engine already applied, is kept. Returns [item changes]."
+  [item path item-key]
+  (let [changes (atom [])
+        abilities (:abilities item)
+        increases (:ability-increases item)
+        item (cond-> item
+               (map? abilities)
+               (assoc :abilities
+                      (reduce-kv
+                       (fn [m k v]
+                         (if-let [to (bare-ability-keys k)]
+                           (do (swap! changes conj (ability-key-change path :abilities k to item-key))
+                               (if (contains? abilities to) m (assoc m to v)))
+                           (assoc m k v)))
+                       (empty abilities)
+                       abilities))
+
+               (and (coll? increases) (not (map? increases)))
+               (assoc :ability-increases
+                      (let [rewrite (fn [k]
+                                      (if-let [to (bare-ability-keys k)]
+                                        (do (swap! changes conj (ability-key-change path :ability-increases k to item-key))
+                                            to)
+                                        k))]
+                        (if (seq? increases)
+                          (apply list (map rewrite increases))
+                          (into (empty increases) (map rewrite) increases)))))]
+    [item @changes]))
+
+(defn- default-skill-options-choose
+  "Adds :choose to an item's [:profs :skill-options] when it has options
+   but no :choose. The engine builds such a selection with no maximum, so
+   the old app let a character pick any number of skills, and on the JVM
+   options.cljc proficiency-help throws on the nil. Returns [item changes]."
+  [item path item-key]
+  (let [skill-options (get-in item [:profs :skill-options])]
+    (if (and (map? skill-options)
+             (seq (:options skill-options))
+             (nil? (:choose skill-options)))
+      [(assoc-in item [:profs :skill-options :choose] default-skill-choose)
+       [{:type :defaulted-choose
+         :path (conj path :profs :skill-options)
+         :field :choose
+         :to default-skill-choose
+         :description (str "Set the skill proficiency choice of " (pr-str item-key)
+                           " to " default-skill-choose ", the builder's default")}]]
+      [item []])))
+
+(defn- normalize-plugin-fields
+  "Applies the engine-field normalizations to every item of a plugin.
+   path is the plugin's path in the import data. Returns {:plugin :changes}."
+  [plugin path]
+  (reduce-kv
+   (fn [acc content-type content]
+     (if (and (qualified-keyword? content-type)
+              (= (namespace content-type) "orcpub.dnd.e5")
+              (not= content-type :orcpub.dnd.e5/monsters)
+              (map? content))
+       (let [result (reduce-kv
+                     (fn [inner item-key item]
+                       (if (map? item)
+                         (let [item-path (conj path content-type item-key)
+                               [item ability-changes] (normalize-ability-keys item item-path item-key)
+                               [item choose-changes] (default-skill-options-choose item item-path item-key)]
+                           {:items (assoc (:items inner) item-key item)
+                            :changes (-> (:changes inner)
+                                         (into ability-changes)
+                                         (into choose-changes))})
+                         {:items (assoc (:items inner) item-key item)
+                          :changes (:changes inner)}))
+                     {:items (empty content) :changes []}
+                     content)]
+         {:plugin (assoc (:plugin acc) content-type (:items result))
+          :changes (into (:changes acc) (:changes result))})
+       {:plugin (assoc (:plugin acc) content-type content)
+        :changes (:changes acc)}))
+   {:plugin (empty plugin) :changes []}
+   plugin))
+
+(defn normalize-engine-fields
+  "Rewrites fields that the old engine accepted but ignored, so that the
+   content works as its author intended (Linear ORC-40 and ORC-39):
+   bare ability keys in :abilities and :ability-increases become qualified,
+   and :skill-options without :choose gets the builder's default of 1.
+   Each rewrite is one change, with :path from the top of data.
+   Handles single and multi-plugin formats. Returns {:data :changes}."
+  [data]
+  (if (is-multi-plugin? data)
+    (reduce-kv
+     (fn [acc plugin-name plugin]
+       (let [{:keys [plugin changes]} (if (map? plugin)
+                                        (normalize-plugin-fields plugin [plugin-name])
+                                        {:plugin plugin :changes []})]
+         {:data (assoc (:data acc) plugin-name plugin)
+          :changes (into (:changes acc) changes)}))
+     {:data (empty data) :changes []}
+     data)
+    (if (map? data)
+      (let [{:keys [plugin changes]} (normalize-plugin-fields data [])]
+        {:data plugin :changes changes})
+      {:data data :changes []})))
+
+;; ============================================================================
 ;; Main Validation Entry Point
 ;; ============================================================================
 
@@ -1346,24 +1483,31 @@
                              (dedup-options-in-import (:data fill-result))
                              {:data (:data fill-result) :changes []})
 
+              ;; Step 3.9: Normalize fields the engine would ignore
+              ;; (bare ability keys, :skill-options without :choose)
+              normalize-result (if auto-clean
+                                 (normalize-engine-fields (:data dedup-result))
+                                 {:data (:data dedup-result) :changes []})
+
               all-changes (vec (concat @string-changes
                                        (when text-normalized?
                                          [{:type :text-normalization
                                            :description "Normalized Unicode characters (smart quotes, dashes, etc.) to ASCII"}])
                                        (:changes clean-result)
                                        (:changes fill-result)
-                                       (:changes dedup-result)))
+                                       (:changes dedup-result)
+                                       (:changes normalize-result)))
 
-              ;; Step 4: Detect duplicate keys (uses deduped data)
-              key-conflicts (detect-duplicate-keys (:data dedup-result)
+              ;; Step 4: Detect duplicate keys (uses normalized data)
+              key-conflicts (detect-duplicate-keys (:data normalize-result)
                                                    existing-plugins
                                                    import-source-name)
               key-warnings (format-duplicate-key-warnings key-conflicts)
 
-              ;; Step 5: Validate structure based on strategy (uses deduped data)
+              ;; Step 5: Validate structure based on strategy (uses normalized data)
               validation-result (if (= strategy :strict)
-                                  (import-all-or-nothing (:data dedup-result))
-                                  (import-progressive (:data dedup-result)))]
+                                  (import-all-or-nothing (:data normalize-result))
+                                  (import-progressive (:data normalize-result)))]
 
           ;; Add changes and key conflict info to result
           (assoc validation-result
