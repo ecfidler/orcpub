@@ -17,16 +17,16 @@
     },
     {
       "actual": {
-        "con": 2
+        "orcpub.dnd.e5.character/con": 2
       },
       "expected": {
-        "con": 2
+        "orcpub.dnd.e5.character/con": 2
       },
       "pass": true
     },
     {
-      "actual": 15,
-      "expected": 15,
+      "actual": 17,
+      "expected": 17,
       "pass": true
     }
   ],

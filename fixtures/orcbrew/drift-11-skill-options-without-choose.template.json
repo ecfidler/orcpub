@@ -18,10 +18,7 @@
       "warlock",
       "wizard"
     ],
-    "feats": [
-      "ox-heart",
-      "hawk-eye"
-    ],
+    "feats": [],
     "invocations": [],
     "languages": [
       "common",
@@ -44,7 +41,10 @@
     "plugin-monsters": [],
     "plugin-selections": [],
     "plugin-spells": [],
-    "plugin-subclasses": [],
+    "plugin-subclasses": [
+      "lorekeeper",
+      "pathfinder"
+    ],
     "plugin-subraces": [],
     "races": [
       "dragonborn",
@@ -54,49 +54,26 @@
       "half-elf",
       "half-orc",
       "halfling",
-      "hawkkin",
       "human",
-      "oxkin",
       "tiefling"
     ]
   },
   "import": {
     "changes": [
       {
-        "description": "Rewrote ability key :con as :orcpub.dnd.e5.character/con in the abilities of :oxkin",
-        "from": "con",
+        "description": "Set the skill proficiency choice of :lorekeeper to 1, the builder's default",
+        "field": "choose",
         "path": [
-          "orcpub.dnd.e5/races",
-          "oxkin",
-          "abilities"
+          "orcpub.dnd.e5/subclasses",
+          "lorekeeper",
+          "profs",
+          "skill-options"
         ],
-        "to": "orcpub.dnd.e5.character/con",
-        "type": "normalized-ability-key"
-      },
-      {
-        "description": "Rewrote ability key :str as :orcpub.dnd.e5.character/str in the abilities of :oxkin",
-        "from": "str",
-        "path": [
-          "orcpub.dnd.e5/races",
-          "oxkin",
-          "abilities"
-        ],
-        "to": "orcpub.dnd.e5.character/str",
-        "type": "normalized-ability-key"
-      },
-      {
-        "description": "Rewrote ability key :con as :orcpub.dnd.e5.character/con in the ability-increases of :ox-heart",
-        "from": "con",
-        "path": [
-          "orcpub.dnd.e5/feats",
-          "ox-heart",
-          "ability-increases"
-        ],
-        "to": "orcpub.dnd.e5.character/con",
-        "type": "normalized-ability-key"
+        "to": 1,
+        "type": "defaulted-choose"
       }
     ],
-    "imported-count": 4,
+    "imported-count": 2,
     "key-conflicts": {
       "external-conflicts": [],
       "internal-conflicts": []
@@ -105,128 +82,177 @@
     "skipped-items": [],
     "success": true
   },
-  "pack": "drift-10-ability-key-forms",
+  "pack": "drift-11-skill-options-without-choose",
   "plugins": {
-    "drift-10-ability-key-forms": {
-      "orcpub.dnd.e5/feats": [
-        "hawk-eye",
-        "ox-heart"
-      ],
-      "orcpub.dnd.e5/races": [
-        "hawkkin",
-        "oxkin"
+    "drift-11-skill-options-without-choose": {
+      "orcpub.dnd.e5/subclasses": [
+        "lorekeeper",
+        "pathfinder"
       ]
     }
   },
   "templateDelta": {
     "selections": [
       {
-        "key": "race",
+        "key": "class",
         "options": [
           {
-            "key": "hawkkin",
-            "modifiers": [
+            "key": "rogue",
+            "selections": [
               {
-                "key": "race"
-              },
-              {
-                "key": "size"
-              },
-              {
-                "key": "speed",
-                "name": "speed",
-                "value": "+30"
-              },
-              {
-                "key": "ability-increases",
-                "name": "DEX",
-                "value": "+2"
-              },
-              {
-                "key": "race-ability-increases"
-              },
-              {
-                "key": "ability-increases",
-                "name": "WIS",
-                "value": "+1"
-              },
-              {
-                "key": "race-ability-increases"
-              },
-              {
-                "key": "traits"
+                "key": "levels",
+                "options": [
+                  {
+                    "key": "level-3",
+                    "selections": [
+                      {
+                        "key": "roguish-archetype",
+                        "options": [
+                          {
+                            "key": "lorekeeper",
+                            "modifiers": [
+                              {
+                                "key": "levels"
+                              },
+                              {
+                                "key": "levels"
+                              },
+                              {
+                                "key": "traits"
+                              }
+                            ],
+                            "name": "Lorekeeper",
+                            "selections": [
+                              {
+                                "key": "skill-proficiency",
+                                "max": 1,
+                                "min": 1,
+                                "multiselect": true,
+                                "name": "Skill Proficiency",
+                                "options": [
+                                  {
+                                    "key": "arcana",
+                                    "modifiers": [
+                                      {
+                                        "key": "skill-profs",
+                                        "name": "Arcana",
+                                        "value": "proficiency"
+                                      }
+                                    ],
+                                    "name": "Arcana",
+                                    "prereqs": 1
+                                  },
+                                  {
+                                    "key": "history",
+                                    "modifiers": [
+                                      {
+                                        "key": "skill-profs",
+                                        "name": "History",
+                                        "value": "proficiency"
+                                      }
+                                    ],
+                                    "name": "History",
+                                    "prereqs": 1
+                                  },
+                                  {
+                                    "key": "religion",
+                                    "modifiers": [
+                                      {
+                                        "key": "skill-profs",
+                                        "name": "Religion",
+                                        "value": "proficiency"
+                                      }
+                                    ],
+                                    "name": "Religion",
+                                    "prereqs": 1
+                                  }
+                                ],
+                                "order": 0,
+                                "tags": [
+                                  "lorekeeper",
+                                  "profs",
+                                  "rogue",
+                                  "skill-profs"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "key": "pathfinder",
+                            "modifiers": [
+                              {
+                                "key": "levels"
+                              },
+                              {
+                                "key": "levels"
+                              },
+                              {
+                                "key": "traits"
+                              }
+                            ],
+                            "name": "Pathfinder",
+                            "selections": [
+                              {
+                                "key": "skill-proficiency",
+                                "max": 2,
+                                "min": 2,
+                                "multiselect": true,
+                                "name": "Skill Proficiency",
+                                "options": [
+                                  {
+                                    "key": "nature",
+                                    "modifiers": [
+                                      {
+                                        "key": "skill-profs",
+                                        "name": "Nature",
+                                        "value": "proficiency"
+                                      }
+                                    ],
+                                    "name": "Nature",
+                                    "prereqs": 1
+                                  },
+                                  {
+                                    "key": "perception",
+                                    "modifiers": [
+                                      {
+                                        "key": "skill-profs",
+                                        "name": "Perception",
+                                        "value": "proficiency"
+                                      }
+                                    ],
+                                    "name": "Perception",
+                                    "prereqs": 1
+                                  },
+                                  {
+                                    "key": "survival",
+                                    "modifiers": [
+                                      {
+                                        "key": "skill-profs",
+                                        "name": "Survival",
+                                        "value": "proficiency"
+                                      }
+                                    ],
+                                    "name": "Survival",
+                                    "prereqs": 1
+                                  }
+                                ],
+                                "order": 0,
+                                "tags": [
+                                  "pathfinder",
+                                  "profs",
+                                  "rogue",
+                                  "skill-profs"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
-            ],
-            "name": "Hawkkin"
-          },
-          {
-            "key": "oxkin",
-            "modifiers": [
-              {
-                "key": "race"
-              },
-              {
-                "key": "size"
-              },
-              {
-                "key": "speed",
-                "name": "speed",
-                "value": "+30"
-              },
-              {
-                "key": "ability-increases",
-                "name": "CON",
-                "value": "+2"
-              },
-              {
-                "key": "race-ability-increases"
-              },
-              {
-                "key": "ability-increases",
-                "name": "STR",
-                "value": "+1"
-              },
-              {
-                "key": "race-ability-increases"
-              },
-              {
-                "key": "traits"
-              }
-            ],
-            "name": "Oxkin"
-          }
-        ]
-      },
-      {
-        "key": "feats",
-        "options": [
-          {
-            "key": "ox-heart",
-            "modifiers": [
-              {
-                "key": "ability-increases",
-                "name": "CON",
-                "value": "+1"
-              },
-              {
-                "key": "traits"
-              }
-            ],
-            "name": "Ox Heart"
-          },
-          {
-            "key": "hawk-eye",
-            "modifiers": [
-              {
-                "key": "ability-increases",
-                "name": "WIS",
-                "value": "+1"
-              },
-              {
-                "key": "traits"
-              }
-            ],
-            "name": "Hawk Eye"
+            ]
           }
         ]
       }
@@ -273,9 +299,7 @@
         "half-elf",
         "half-orc",
         "halfling",
-        "hawkkin",
         "human",
-        "oxkin",
         "tiefling"
       ]
     },
@@ -293,9 +317,7 @@
       "max": 0,
       "min": 0,
       "optionKeys": [
-        "grappler",
-        "ox-heart",
-        "hawk-eye"
+        "grappler"
       ]
     },
     {

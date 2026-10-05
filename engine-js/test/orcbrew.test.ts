@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseOrcbrew } from "@pubdoor/dmv";
+import { contentKeys } from "./support.js";
 
 // Each fixtures/orcbrew/<pack>.template.json records what the old importer
 // returned for that pack (its "import" block) and the keys it loaded
@@ -26,28 +27,9 @@ const packs = readdirSync(orcbrew)
   .map((file) => file.slice(0, -".orcbrew".length))
   .sort();
 
-/** The pack's content keys per type, as the fixture's "plugins" block lists them. */
-function contentKeys(data: Record<string, object>): Record<string, Record<string, string[]>> {
-  return Object.fromEntries(
-    Object.entries(data).map(([pack, plugin]) => [
-      pack,
-      Object.fromEntries(
-        Object.entries(plugin as Record<string, unknown>)
-          .filter(([, items]) => items !== null && typeof items === "object" && !Array.isArray(items))
-          .map(([type, items]) => [
-            type.slice("~:".length),
-            Object.keys(items as object)
-              .map((k) => k.slice("~:".length))
-              .sort(),
-          ]),
-      ),
-    ]),
-  );
-}
-
 describe("parseOrcbrew", () => {
   it("finds the fixture packs", () => {
-    expect(packs.length).toBe(16);
+    expect(packs.length).toBe(17);
   });
 
   for (const pack of packs) {

@@ -1,7 +1,7 @@
 {
   "abilities": {
     "orcpub.dnd.e5.character/cha": 8,
-    "orcpub.dnd.e5.character/con": 15,
+    "orcpub.dnd.e5.character/con": 17,
     "orcpub.dnd.e5.character/dex": 14,
     "orcpub.dnd.e5.character/int": 13,
     "orcpub.dnd.e5.character/str": 10,
@@ -9,14 +9,14 @@
   },
   "ability-bonuses": {
     "orcpub.dnd.e5.character/cha": -1,
-    "orcpub.dnd.e5.character/con": 2,
+    "orcpub.dnd.e5.character/con": 3,
     "orcpub.dnd.e5.character/dex": 2,
     "orcpub.dnd.e5.character/int": 1,
     "orcpub.dnd.e5.character/str": 0,
     "orcpub.dnd.e5.character/wis": 1
   },
   "ability-increases": {
-    "con": 2
+    "orcpub.dnd.e5.character/con": 2
   },
   "actions": [],
   "age": null,
@@ -115,7 +115,7 @@
   "flaws": null,
   "hair": null,
   "height": null,
-  "hit-point-level-bonus": 2,
+  "hit-point-level-bonus": 3,
   "ideals": null,
   "image-url": null,
   "image-url-failed": null,
@@ -138,7 +138,7 @@
   "magic-items": null,
   "magic-weapons": null,
   "main-hand-weapon": null,
-  "max-hit-points": 24,
+  "max-hit-points": 27,
   "notes": null,
   "number-of-attacks": 1,
   "off-hand-weapon": null,
@@ -154,13 +154,13 @@
   "public?": null,
   "race": "Ironwrought",
   "race-ability-increases": {
-    "con": 2
+    "orcpub.dnd.e5.character/con": 2
   },
   "reactions": [],
   "resistances": [],
   "save-bonuses": {
     "orcpub.dnd.e5.character/cha": -1,
-    "orcpub.dnd.e5.character/con": 2,
+    "orcpub.dnd.e5.character/con": 3,
     "orcpub.dnd.e5.character/dex": 2,
     "orcpub.dnd.e5.character/int": 1,
     "orcpub.dnd.e5.character/str": 0,
@@ -201,7 +201,7 @@
   "speed-with-armor": null,
   "spell-attack-modifier": {
     "orcpub.dnd.e5.character/cha": 1,
-    "orcpub.dnd.e5.character/con": 4,
+    "orcpub.dnd.e5.character/con": 5,
     "orcpub.dnd.e5.character/dex": 4,
     "orcpub.dnd.e5.character/int": 3,
     "orcpub.dnd.e5.character/str": 2,
@@ -210,7 +210,7 @@
   "spell-modifiers": {},
   "spell-save-dc": {
     "orcpub.dnd.e5.character/cha": 9,
-    "orcpub.dnd.e5.character/con": 12,
+    "orcpub.dnd.e5.character/con": 13,
     "orcpub.dnd.e5.character/dex": 12,
     "orcpub.dnd.e5.character/int": 11,
     "orcpub.dnd.e5.character/str": 10,

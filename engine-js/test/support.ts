@@ -33,6 +33,23 @@ export const kw = (k: string): string => `~:${k}`;
 /** The keyword's name without the "~:" prefix. */
 export const unkw = (s: string): string => s.replace(/^~:/, "");
 
+/**
+ * Each pack's content keys per type, as a fixture's "plugins" block lists
+ * them: pack name → "orcpub.dnd.e5/<type>" → sorted keys.
+ */
+export function contentKeys(data: Record<string, object>): Record<string, Record<string, string[]>> {
+  return Object.fromEntries(
+    Object.entries(data).map(([pack, plugin]) => [
+      pack,
+      Object.fromEntries(
+        Object.entries(plugin as Record<string, unknown>)
+          .filter(([, items]) => items !== null && typeof items === "object" && !Array.isArray(items))
+          .map(([type, items]) => [unkw(type), Object.keys(items as object).map(unkw).sort()]),
+      ),
+    ]),
+  );
+}
+
 /** One homebrew item, such as a class, as Transit-JSON. */
 export type ContentItem = Record<string, unknown>;
 

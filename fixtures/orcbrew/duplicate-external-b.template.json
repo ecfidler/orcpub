@@ -66,7 +66,19 @@
     ]
   },
   "import": {
-    "changes": [],
+    "changes": [
+      {
+        "description": "Rewrote ability key :con as :orcpub.dnd.e5.character/con in the abilities of :ironwrought",
+        "from": "con",
+        "path": [
+          "orcpub.dnd.e5/races",
+          "ironwrought",
+          "abilities"
+        ],
+        "to": "orcpub.dnd.e5.character/con",
+        "type": "normalized-ability-key"
+      }
+    ],
     "imported-count": 8,
     "key-conflicts": {
       "external-conflicts": [],

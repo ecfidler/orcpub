@@ -1,0 +1,15 @@
+{:orcpub.dnd.e5/subclasses
+ {:lorekeeper
+  {:key :lorekeeper
+   :name "Lorekeeper"
+   :class :rogue
+   :option-pack "Drift 11"
+   :profs {:skill-options {:options {:arcana true :history true :religion true}}}
+   :traits [{:name "Old Tongues" :level 3 :description "You can read any language you have seen written at least once."}]}
+  :pathfinder
+  {:key :pathfinder
+   :name "Pathfinder"
+   :class :rogue
+   :option-pack "Drift 11"
+   :profs {:skill-options {:choose 2 :options {:nature true :survival true :perception true}}}
+   :traits [{:name "Trailblazer" :level 3 :description "Difficult terrain does not slow your group's travel."}]}}}
