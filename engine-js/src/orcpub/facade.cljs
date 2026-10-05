@@ -329,7 +329,7 @@
 
   entity is the strict entity as Transit-JSON: the text, or the value
   JSON.parse returns for it. options is {rules?, homebrew?}. rules defaults
-  to \"2014\", the only edition 0.1 supports. homebrew is the loaded packs,
+  to \"2014\", the only edition the engine supports. homebrew is the loaded packs,
   the multi-plugin map as verbose Transit-JSON (parseOrcbrew's data);
   without it the character builds against the SRD only.
 
