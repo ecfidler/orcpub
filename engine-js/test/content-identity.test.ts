@@ -3,39 +3,26 @@
 // files refer to content by key, so key derivation (common/name-to-kw, the
 // explicit spell keys, subclass selection keys) must never change. This
 // suite fails when it does: every fixture's option keys must still resolve.
-import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildTemplate, importCharacter, keys, parseOrcbrew, reconcileMissingContent } from "@pubdoor/dmv";
 import type { Homebrew, MissingContent, ReconcileReport, UnresolvedOption } from "@pubdoor/dmv";
-import { baselineKeySets } from "./template-keys.js";
+import { baselineKeySets, builtInKeys, danglingReferences, fixtureNames, readFixture, readFixtureText } from "./support.js";
 
-const fixtures = new URL("../../fixtures/", import.meta.url);
-
-function read(path: string): unknown {
-  return JSON.parse(readFileSync(new URL(path, fixtures), "utf8"));
-}
-
-function names(dir: string, suffix: string): string[] {
-  return readdirSync(new URL(`${dir}/`, fixtures))
-    .filter((file) => file.endsWith(suffix))
-    .map((file) => file.slice(0, -suffix.length))
-    .sort();
-}
-
-type Item = Pick<MissingContent, "contentType" | "key" | "path">;
+/** A missing-content item as .meta.json records it: without suggestions. */
+type ReconcileItem = Pick<MissingContent, "contentType" | "key" | "path">;
 
 interface Meta {
   orcbrew: string[];
   quirk?: string;
   /** The keys the fixture is known not to resolve (fixtures/README.md, finding 17). */
-  unresolved?: { reason: string; items: Item[]; unresolvedOptions: UnresolvedOption[] };
+  unresolved?: { reason: string; items: ReconcileItem[]; unresolvedOptions: UnresolvedOption[] };
 }
 
 /** The character's packs, imported in order as the old app would. */
 function homebrew(files: string[]): Homebrew | undefined {
   if (files.length === 0) return undefined;
   return files.reduce<Homebrew>((loaded, file) => {
-    const text = readFileSync(new URL(`orcbrew/${file}`, fixtures), "utf8");
+    const text = readFixtureText(`orcbrew/${file}`);
     const parsed = parseOrcbrew(text, { name: file.slice(0, -".orcbrew".length), existing: loaded });
     expect(parsed.success).toBe(true);
     return parsed.data!;
@@ -55,12 +42,12 @@ function reported(report: ReconcileReport) {
 
 describe("C3: every fixture character's keys resolve", () => {
   for (const dir of ["characters", "legacy"]) {
-    for (const name of names(dir, ".strict.json")) {
-      const meta = read(`${dir}/${name}.meta.json`) as Meta;
+    for (const name of fixtureNames(dir, ".strict.json")) {
+      const meta = readFixture(`${dir}/${name}.meta.json`) as Meta;
       const label = `${dir}/${name}${meta.orcbrew.length ? ` with ${meta.orcbrew.join(", ")}` : ""}`;
 
       it(meta.unresolved ? `${label} leaves only its recorded keys unresolved` : `${label} resolves every key`, () => {
-        const strict = read(`${dir}/${name}.strict.json`) as object;
+        const strict = readFixture(`${dir}/${name}.strict.json`) as object;
         // R5 and R7 fixtures are read as the new app reads them.
         const entity = meta.quirk === "R5" || meta.quirk === "R7" ? importCharacter(strict).entity : strict;
         const expected = {
@@ -76,84 +63,45 @@ describe("C3: every fixture character's keys resolve", () => {
   }
 });
 
-// Transit-JSON verbose: a keyword is "~:name", and a map's keyword keys are too.
-const kw = (k: string): string => `~:${k}`;
-const unkw = (s: string): string => s.replace(/^~:/, "");
-type Plugin = Record<string, Record<string, Record<string, unknown>> | undefined>;
-interface Reference {
-  /** The content type the reference points into. */
-  to: "classes" | "races" | "selections";
-  key: string;
-  /** The item that holds the reference. */
-  from: string;
-}
-
-/**
- * Each content reference in a parsed pack, by the content type it refers to,
- * as import_validation.cljs key-reference-map lists them: a subclass's class,
- * a subrace's race, the classes on a spell's spell list, a class's or
- * subclass's spell-list-kw, a feat's race prerequisites, and the plugin
- * selections that level-selections use.
- */
-function references(plugin: Plugin): Reference[] {
-  const out: (Omit<Reference, "key"> & { key: unknown })[] = [];
-  const items = (type: string) => Object.entries(plugin[kw(`orcpub.dnd.e5/${type}`)] ?? {});
-  for (const [k, item] of items("subclasses")) {
-    out.push({ to: "classes", key: item[kw("class")], from: `subclass ${unkw(k)}` });
-  }
-  for (const [k, item] of items("subraces")) {
-    out.push({ to: "races", key: item[kw("race")], from: `subrace ${unkw(k)}` });
-  }
-  for (const [k, item] of items("spells")) {
-    for (const cls of Object.keys((item[kw("spell-lists")] ?? {}) as object)) {
-      out.push({ to: "classes", key: cls, from: `spell ${unkw(k)}` });
-    }
-  }
-  for (const [k, item] of items("feats")) {
-    const races = (item[kw("path-prereqs")] as Record<string, object> | undefined)?.[kw("race")] ?? {};
-    for (const race of Object.keys(races)) out.push({ to: "races", key: race, from: `feat ${unkw(k)}` });
-  }
-  for (const type of ["classes", "subclasses"]) {
-    for (const [k, item] of items(type)) {
-      const spellListKw = (item[kw("spellcasting")] as Record<string, unknown> | undefined)?.[kw("spell-list-kw")];
-      if (spellListKw != null) out.push({ to: "classes", key: spellListKw, from: `${type} ${unkw(k)}` });
-      for (const selection of (item[kw("level-selections")] ?? []) as Record<string, unknown>[]) {
-        out.push({ to: "selections", key: selection[kw("type")], from: `${type} ${unkw(k)}` });
-      }
-    }
-  }
-  // A missing reference shows as "undefined", which never resolves.
-  return out.map((ref) => ({ ...ref, key: typeof ref.key === "string" ? unkw(ref.key) : String(ref.key) }));
-}
-
 describe("C3: every reference in a fixture pack resolves", () => {
-  // The built-in classes and races are the SRD template's options.
-  const summary = buildTemplate().summary;
-  const builtIn = (key: string) => summary.find((selection) => selection.key === key)!.optionKeys;
-  const builtIns = { classes: builtIn("class"), races: builtIn("race"), selections: [] as string[] };
+  const builtIns = builtInKeys();
 
   it("reads the built-in classes and races from the template", () => {
     expect(builtIns.classes).toContain("wizard");
     expect(builtIns.races).toContain("elf");
   });
 
-  for (const pack of names("orcbrew", ".orcbrew")) {
+  // The old template looks a level-selections type up only in the loaded
+  // packs' selections, so a template selection key builds a selection with
+  // no name and no options. The check reports it.
+  it("counts no template selection as built in", () => {
+    const parsed = parseOrcbrew(
+      `{:orcpub.dnd.e5/classes {:tinker {:key :tinker :name "Tinker" :option-pack "T" :hit-die 8
+         :ability-increase-levels [4] :subclass-level 3 :subclass-title "Guild"
+         :level-selections [{:type :skill-proficiency :level 1 :num 1}]}}}`,
+      { name: "sk" },
+    );
+    expect(parsed.success).toBe(true);
+    const tinker = buildTemplate(parsed.data!)
+      .shape.find((selection) => selection.key === "class")!
+      .options.find((option) => option.key === "tinker")!;
+    const level1 = tinker.selections!
+      .find((selection) => selection.key === "levels")!
+      .options.find((option) => option.key === "level-1")!;
+    const levelSelection = level1.selections!.find((selection) => selection.key === "skill-proficiency")!;
+
+    expect(levelSelection.options).toStrictEqual([]);
+    expect(danglingReferences(parsed.data!, builtIns)).toStrictEqual([
+      { to: "selections", key: "skill-proficiency", from: "classes tinker" },
+    ]);
+  });
+
+  for (const pack of fixtureNames("orcbrew", ".orcbrew")) {
     it(`${pack} refers only to built-in or same-file keys`, () => {
-      const parsed = parseOrcbrew(readFileSync(new URL(`orcbrew/${pack}.orcbrew`, fixtures), "utf8"), { name: pack });
+      const parsed = parseOrcbrew(readFixtureText(`orcbrew/${pack}.orcbrew`), { name: pack });
       expect(parsed.success).toBe(true);
-      const plugins = Object.values(parsed.data!) as Plugin[];
-      // Every pack in the file, so a multi-plugin file's packs see each other.
-      const sameFile = (type: string) =>
-        plugins.flatMap((plugin) => Object.keys(plugin[kw(`orcpub.dnd.e5/${type}`)] ?? {}).map(unkw));
-      const known = {
-        classes: new Set([...builtIns.classes, ...sameFile("classes")]),
-        races: new Set([...builtIns.races, ...sameFile("races")]),
-        selections: new Set([...builtIns.selections, ...sameFile("selections")]),
-      };
 
-      const dangling = plugins.flatMap(references).filter((ref) => !known[ref.to].has(ref.key));
-
-      expect(dangling).toStrictEqual([]);
+      expect(danglingReferences(parsed.data!, builtIns)).toStrictEqual([]);
     });
   }
 });

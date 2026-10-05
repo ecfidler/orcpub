@@ -739,12 +739,31 @@ export interface OrcbrewToEdnOptions extends ExportOptions {
  */
 export function orcbrewToEdn(homebrew: Homebrew, options?: OrcbrewToEdnOptions): string;
 
+/**
+ * A homebrew content type, as the old importer names it
+ * (import_validation.cljs content-type-names).
+ */
+export type ContentType =
+  | "orcpub.dnd.e5/classes"
+  | "orcpub.dnd.e5/subclasses"
+  | "orcpub.dnd.e5/races"
+  | "orcpub.dnd.e5/subraces"
+  | "orcpub.dnd.e5/backgrounds"
+  | "orcpub.dnd.e5/feats"
+  | "orcpub.dnd.e5/spells"
+  | "orcpub.dnd.e5/monsters"
+  | "orcpub.dnd.e5/invocations"
+  | "orcpub.dnd.e5/boons"
+  | "orcpub.dnd.e5/selections"
+  | "orcpub.dnd.e5/languages"
+  | "orcpub.dnd.e5/encounters";
+
 /** One key rename in one pack, as the old conflict modal's "rename" applies it. */
 export interface KeyRename {
   /** The pack that holds the item, such as a KeyConflict's import-source. */
   pack: string;
-  /** The content type as a KeyConflict gives it, such as "orcpub.dnd.e5/classes". */
-  contentType: string;
+  /** The content type, such as a KeyConflict's content-type. */
+  contentType: ContentType;
   /** The item's current key, such as "artificer". */
   from: string;
   /** The new key, such as a KeyConflict's suggested-new-key. */

@@ -3,7 +3,8 @@
 // import_validation.cljs key-reference-map lists, so content renamed to
 // resolve a key conflict keeps working.
 import { describe, expect, it } from "vitest";
-import { parseOrcbrew, reconcileMissingContent, renameKey } from "@pubdoor/dmv";
+import { parseOrcbrew, reconcileMissingContent, renameKey, type KeyRename } from "@pubdoor/dmv";
+import { builtInKeys, contentOf as packContent, danglingReferences, kw, type ContentMap, type Plugin } from "./support.js";
 
 // A spellcasting class with a subclass, a plugin selection used through
 // level-selections, and two spells on the class's spell list.
@@ -36,11 +37,11 @@ function tinker() {
 }
 
 // Strict entities as Transit-JSON (verbose).
-const KEY = "~:orcpub.entity.strict/key";
+const KEY = kw("orcpub.entity.strict/key");
 const opt = (key: string, selections?: object[]) =>
-  selections ? { [KEY]: `~:${key}`, "~:orcpub.entity.strict/selections": selections } : { [KEY]: `~:${key}` };
-const one = (key: string, option: object) => ({ [KEY]: `~:${key}`, "~:orcpub.entity.strict/option": option });
-const many = (key: string, options: object[]) => ({ [KEY]: `~:${key}`, "~:orcpub.entity.strict/options": options });
+  selections ? { [KEY]: kw(key), [kw("orcpub.entity.strict/selections")]: selections } : { [KEY]: kw(key) };
+const one = (key: string, option: object) => ({ [KEY]: kw(key), [kw("orcpub.entity.strict/option")]: option });
+const many = (key: string, options: object[]) => ({ [KEY]: kw(key), [kw("orcpub.entity.strict/options")]: options });
 
 /**
  * A level 1 Tinker of the Gearwright guild with a gadget, a cantrip and a
@@ -49,7 +50,7 @@ const many = (key: string, options: object[]) => ({ [KEY]: `~:${key}`, "~:orcpub
  */
 function tinkerCharacter(classKey: string, gadgetSelection = "gadgets"): object {
   return {
-    "~:orcpub.entity.strict/selections": [
+    [kw("orcpub.entity.strict/selections")]: [
       many("class", [
         opt(classKey, [
           many("levels", [opt("level-1", [one(gadgetSelection, opt("spring-boots")), one("tinker-guild", opt("gearwright"))])]),
@@ -61,9 +62,9 @@ function tinkerCharacter(classKey: string, gadgetSelection = "gadgets"): object 
   };
 }
 
-type Item = Record<string, unknown>;
-const contentOf = (homebrew: Record<string, object>, type: string) =>
-  (homebrew[PACK] as Record<string, Record<string, Item>>)[`~:orcpub.dnd.e5/${type}`]!;
+/** The items of one content type in the tinker pack. */
+const contentOf = (homebrew: Record<string, object>, type: string): ContentMap =>
+  packContent(homebrew[PACK] as Plugin, type);
 
 describe("renameKey", () => {
   it("builds the character with every key resolved before a rename", () => {
@@ -86,11 +87,26 @@ describe("renameKey", () => {
   it("leaves no dangling reference for a character using the renamed class", () => {
     const renamed = renameKey(tinker(), { pack: PACK, contentType: "orcpub.dnd.e5/classes", from: "tinker", to: "tinker-rt" });
 
+    // The pack's own references all resolve (the C3 pack check)...
+    expect(danglingReferences(renamed, builtInKeys())).toStrictEqual([]);
+    // ...and so do the character's keys.
     expect(reconcileMissingContent(tinkerCharacter("tinker-rt"), renamed)).toStrictEqual({
       hasMissing: false,
       items: [],
       unresolvedOptions: [],
     });
+    // The old rename moved only the class and its subclasses' :class, and
+    // the same check finds the spells it left behind.
+    const oldStyle = tinker();
+    const classes = contentOf(oldStyle, "classes");
+    classes["~:tinker-rt"] = { ...classes["~:tinker"]!, "~:key": "~:tinker-rt" };
+    delete classes["~:tinker"];
+    contentOf(oldStyle, "subclasses")["~:gearwright"]!["~:class"] = "~:tinker-rt";
+    expect(danglingReferences(oldStyle, builtInKeys()).map((ref) => ref.from).sort()).toStrictEqual([
+      "spell cog-shield",
+      "spell spark",
+    ]);
+
     // The character saved with the old key now needs a remap.
     expect(reconcileMissingContent(tinkerCharacter("tinker"), renamed).items.map((item) => item.key)).toStrictEqual([
       "tinker",
@@ -103,6 +119,7 @@ describe("renameKey", () => {
     expect(contentOf(renamed, "classes")["~:tinker"]!["~:level-selections"]).toStrictEqual([
       { "~:type": "~:gizmos", "~:level": 1, "~:num": 1 },
     ]);
+    expect(danglingReferences(renamed, builtInKeys())).toStrictEqual([]);
     expect(reconcileMissingContent(tinkerCharacter("tinker", "gizmos"), renamed).hasMissing).toBe(false);
   });
 
@@ -117,14 +134,14 @@ describe("renameKey", () => {
   });
 
   it("accepts homebrew as text", () => {
-    const rename = { pack: PACK, contentType: "orcpub.dnd.e5/classes", from: "tinker", to: "tinker-rt" };
+    const rename: KeyRename = { pack: PACK, contentType: "orcpub.dnd.e5/classes", from: "tinker", to: "tinker-rt" };
 
     expect(renameKey(JSON.stringify(tinker()), rename)).toStrictEqual(renameKey(tinker(), rename));
   });
 
   it("throws for a missing pack or key, or a key already taken", () => {
     const homebrew = tinker();
-    const classes = { pack: PACK, contentType: "orcpub.dnd.e5/classes" };
+    const classes = { pack: PACK, contentType: "orcpub.dnd.e5/classes" } as const;
 
     expect(() => renameKey(homebrew, { ...classes, pack: "nope", from: "tinker", to: "x" })).toThrow(/No pack named "nope"/);
     expect(() => renameKey(homebrew, { ...classes, from: "wizard", to: "x" })).toThrow('Pack "tinker" has no key "wizard" in orcpub.dnd.e5/classes');
