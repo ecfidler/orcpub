@@ -191,7 +191,9 @@ does not exist, or when the SRD template's keys differ from the baseline.
 
 ## Publish a version
 
-Publishing is manual. You must be a member of the `pubdoor` npm org.
+Publishing is manual. You must be a member of the `pubdoor` npm org, and
+you need a JDK on your path, because the build compiles the ClojureScript
+on the JVM. CI uses Java 21.
 
 1. Set `version` in `package.json`.
 2. Run `npm install --package-lock-only`.
