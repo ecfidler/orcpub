@@ -329,9 +329,10 @@
 
   entity is the strict entity as Transit-JSON: the text, or the value
   JSON.parse returns for it. options is {rules?, homebrew?}. rules defaults
-  to \"2014\", the only edition the engine supports. homebrew is the loaded packs,
-  the multi-plugin map as verbose Transit-JSON (parseOrcbrew's data);
-  without it the character builds against the SRD only.
+  to \"2014\", the only edition this package supports. homebrew is the
+  loaded packs, the multi-plugin map as verbose Transit-JSON
+  (parseOrcbrew's data); without it the character builds against the SRD
+  only.
 
   Weapon bonuses read the hand slots in the entity's values,
   :orcpub.dnd.e5.character/main-hand-weapon and off-hand-weapon, each a
