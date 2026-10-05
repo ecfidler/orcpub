@@ -29,7 +29,7 @@ const packs = readdirSync(orcbrew)
 
 describe("parseOrcbrew", () => {
   it("finds the fixture packs", () => {
-    expect(packs.length).toBe(17);
+    expect(packs.length).toBe(18);
   });
 
   for (const pack of packs) {

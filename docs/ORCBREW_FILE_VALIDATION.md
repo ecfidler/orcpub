@@ -121,8 +121,8 @@ The system automatically fixes these common corruption patterns:
 | `:field-name nil` | (removed) |
 | `option-pack ""` | `option-pack "Default Option Source"` |
 | Empty plugin name `""` | `"Default Option Source"` |
-| Bare ability key, such as `:abilities {:con 2}` or `:ability-increases #{:con}` (not in monsters) | `:orcpub.dnd.e5.character/con`, which the engine reads. Logged as `normalized-ability-key` |
-| `:skill-options` with `:options` and no `:choose` | `:choose 1`, the builder's default. Logged as `defaulted-choose` |
+| Bare ability key, such as `:abilities {:con 2}`, in `:abilities`, `:ability-increases`, a feat's `:prereqs`, `[:profs :save]`, `[:spellcasting :ability]` or a `:spell` level-modifier's `:ability` (not in monsters) | `:orcpub.dnd.e5.character/con`, which the engine reads. If the item already has the qualified key, the bare entry is dropped. Logged as `normalized-ability-key` |
+| `:skill-options` or `:multiclass-skill-options` with `:options` and no `:choose` | `:choose 1`, the builder's default. Logged as `defaulted-choose` |
 
 **This happens automatically** - you don't need to do anything!
 
