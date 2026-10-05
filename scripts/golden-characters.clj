@@ -48,6 +48,20 @@
                     class? (assoc ::equip/class-starting-equipment? true)
                     bg? (assoc ::equip/background-starting-equipment? true))})
 
+;; A fixture whose option keys do not all resolve against its template
+;; records them under :unresolved, as reconcileMissingContent reports them
+;; (contract C3; engine-js/test/content-identity.test.ts).
+
+(defn unresolved-item
+  "A content reference that does not resolve: {contentType, key, path}."
+  [content-type & path]
+  {"contentType" content-type "key" (name (last path)) "path" (mapv name path)})
+
+(defn unresolved-option
+  "Any other option that does not resolve: {key, path}."
+  [& path]
+  {"key" (name (last path)) "path" (mapv name path)})
+
 (def die-average {6 4, 8 5, 10 6, 12 7})
 
 (defn class-levels
@@ -261,7 +275,7 @@
            :languages [(opt :dwarvish) (opt :giant) (opt :orc)]
            :background acolyte
            :class [(opt :barbarian {:starting-equipment-martial-weapon (opt :greataxe)
-                                    :starting-equipment-simple-weapon (opt :handaxe)
+                                    :starting-equipment-simple-weapon (opt :handaxe-2-)
                                     :skill-proficiency [(opt :athletics) (opt :survival)]
                                     :levels (class-levels 5 12 {3 {:primal-path (opt :path-of-the-berserker)}
                                                                 4 {:asi-or-feat (asi A C)}})})]
@@ -387,6 +401,16 @@
    {:name "warlock-10-drow"
     :description "The warlock_test.clj entity: level 10 Dark Elf (Drow) warlock of the Archfey, Spy background, Keen Mind feat, Pact of the Tome, five invocations. Needs warlock-test-content.orcbrew for the Drow subrace, Spy and Keen Mind."
     :orcbrew ["warlock-test-content.orcbrew"]
+    :unresolved {"reason" "The warlock_test.clj entity was written against content that is not in the SRD: the Archfey patron, its expanded spells Sleep, Faerie Fire and Dominate Person, Crown of Madness, and the cantrips Friends, Blade Ward and Thorn Whip. Its starting weapon choice uses the old key any-simple-weapon, which the template now calls simple-weapon."
+                 "items" [(unresolved-item "subclass" :class :warlock :levels :level-1 :otherworldly-patron :the-archfey)]
+                 "unresolvedOptions" [(unresolved-option :class :warlock :warlock-cantrips-known :friends)
+                                      (unresolved-option :class :warlock :levels :level-3 :pact-boon :pact-of-the-tome :book-of-shadows-cantrips :blade-ward)
+                                      (unresolved-option :class :warlock :levels :level-3 :pact-boon :pact-of-the-tome :book-of-shadows-cantrips :thorn-whip)
+                                      (unresolved-option :class :warlock :starting-equipment-weapon :any-simple-weapon)
+                                      (unresolved-option :class :warlock :warlock-spells-known :sleep)
+                                      (unresolved-option :class :warlock :warlock-spells-known :dominate-person)
+                                      (unresolved-option :class :warlock :warlock-spells-known :crown-of-madness)
+                                      (unresolved-option :class :warlock :warlock-spells-known :faerie-fire)]}
     :raw (do (require 'orcpub.dnd.e5.warlock-test)
              @(resolve 'orcpub.dnd.e5.warlock-test/warlock-entity))
     :checks (fn [b] [[10 (char5e/total-levels b)]
@@ -457,10 +481,20 @@
     :strict (character-test-strict 'strict-round-trip)}
    {:name "character-test-2"
     :description "Real Datomic entity from character_test.clj strict-round-trip-2: level 8 human (Damaran) fighter with Eldritch Knight (non-SRD, unresolved), Noble background (non-SRD, unresolved), Ritual Caster feat (unresolved), rolled hit points, magic items, custom equipment, an owner. Exercises R8 (unresolved keys) with real data."
-    :strict (character-test-strict 'strict-round-trip-2)}
+    :strict (character-test-strict 'strict-round-trip-2)
+    :unresolved {"reason" "A real saved character built against the SRD alone. Eldritch Knight, Noble and Ritual Caster are not in the SRD. The armor-of-resistance key names no damage type, and skill-profs is a top-level selection that the template no longer has."
+                 "items" [(unresolved-item "subclass" :class :fighter :levels :level-3 :martial-archetype :eldritch-knight)
+                          (unresolved-item "background" :background :noble)
+                          (unresolved-item "feat" :feats :ritual-caster)]
+                 "unresolvedOptions" [(unresolved-option :magic-armor :armor-of-resistance-half-plate)
+                                      (unresolved-option :skill-profs :animal-handling)
+                                      (unresolved-option :skill-profs :intimidation)]}}
    {:name "character-test-3"
     :description "Real Datomic entity from character_test.clj strict-round-trip-3: warlock 1 / druid 1 multiclass with Spy background (unresolved without the warlock pack) and background starting equipment."
-    :strict (character-test-strict 'strict-round-trip-3)}
+    :strict (character-test-strict 'strict-round-trip-3)
+    :unresolved {"reason" "A real saved character built against the SRD alone. The Spy background, a Criminal variant, is not in the SRD. warlock-test-content.orcbrew defines Spy, but this fixture loads no pack, so it shows the character as the old app shows it without homebrew."
+                 "items" [(unresolved-item "background" :background :spy)]
+                 "unresolvedOptions" []}}
    {:name "r3-slots-used-vectors"
     :quirk "R3"
     :description "slots-used values stored as vectors instead of sets, and a stray :db/id inside features-used (update-values-from-strict handles both)."
@@ -522,7 +556,13 @@
    {:name "r8-unresolved-keys"
     :quirk "R8"
     :description "The ironwrought-artificer-3 character without its pack: race, subrace, class and subclass keys do not resolve. Built against SRD only; content_reconciliation is the new app's job."
-    :strict (char5e/to-strict (:raw (first (filter #(= "ironwrought-artificer-3" (:name %)) golden-characters))))}
+    :strict (char5e/to-strict (:raw (first (filter #(= "ironwrought-artificer-3" (:name %)) golden-characters))))
+    :unresolved {"reason" "Quirk R8: the homebrew race, subrace, class and subclass do not resolve without duplicate-external-b.orcbrew."
+                 "items" [(unresolved-item "race" :race :ironwrought)
+                          (unresolved-item "subrace" :race :ironwrought :subrace :envoy)
+                          (unresolved-item "class" :class :artificer)
+                          (unresolved-item "subclass" :class :artificer :levels :level-3 :artificer-specialization :alchemist)]
+                 "unresolvedOptions" []}}
    {:name "r9-duplicate-options"
     :quirk "R9"
     :description "A multi-select option key repeated (magic-missile twice in wizard-spells-known); has-duplicate-selections? flags it, the build tolerates it."
@@ -570,7 +610,7 @@
     (assoc-in expected [key i field] browser)))
 
 (defn write-fixture!
-  [dir {:keys [name description quirk orcbrew raw strict checks overrides] :or {orcbrew []}}]
+  [dir {:keys [name description quirk orcbrew raw strict checks overrides unresolved] :or {orcbrew []}}]
   (println "==" name)
   (let [strict (or strict (char5e/to-strict raw))
         strict-path (str dir "/" name ".strict.json")
@@ -597,7 +637,8 @@
                                      "unfilledSelections" (mapv #(get % "actualPath") unfilled)
                                      "checks" (or check-results [])}
                               quirk (assoc "quirk" quirk)
-                              overrides (assoc "overrides" overrides)))
+                              overrides (assoc "overrides" overrides)
+                              unresolved (assoc "unresolved" unresolved)))
     (println (format "  levels=%s hp=%s ac=%s unfilled=%d checks=%s"
                      (pr-str (into {} (map (fn [[k v]] [k (:class-level v)])) (char5e/levels built)))
                      (char5e/max-hit-points built)

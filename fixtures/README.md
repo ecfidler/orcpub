@@ -14,8 +14,13 @@ raw entities of the golden characters, the synthetic `.orcbrew` packs, and
 the browser values that an `overrides` entry in `.meta.json` records in place
 of the JVM's (finding 13).
 
-Produced from engine source at commit **`bcd9d68`** (branch `engine`; the
-engine source is unchanged from `develop` at that point). Regenerate whenever
+First produced from engine source at commit **`bcd9d68`** (branch
+`engine`; the engine source is unchanged from `develop` at that point).
+Last regenerated for ORC-37 from engine source at commit **`e3588976`**,
+which includes patch D4 (ORC-35), with `scripts/golden-characters.clj` and
+`scripts/dump-template.clj` for every pack. Only `barbarian-5` changed
+(finding 16) and four `.meta.json` files gained `unresolved` (finding 17).
+The SRD baseline was not regenerated. Regenerate whenever
 `src/cljc` or one of the three `src/cljs` files the engine reads changes (see
 *Regenerating*): `orcpub/dnd/e5.cljc`, `spell_subs.cljs` and
 `equipment_subs.cljs`, the last copied into `engine-js/src/orcpub/facade/template.cljs`.
@@ -125,6 +130,12 @@ the legacy set. `overrides`, when present, lists the values in
 `expected.json` that record the browser's result instead of the JVM
 oracle's. Each entry names the `key`, the entry `name`, and the `field`, and
 gives the `jvm` and `browser` values and the `reason` (finding 13).
+`unresolved`, when present, lists the option keys that do not resolve
+against the character's template, exactly as `reconcileMissingContent`
+reports them: `items` (`{contentType, key, path}`) and `unresolvedOptions`
+(`{key, path}`), with the `reason`. Every other fixture resolves fully.
+`engine-js/test/content-identity.test.ts` checks both (contract C3,
+finding 17).
 
 ### `<pack>.template.json`
 
@@ -558,3 +569,22 @@ Line numbers are for commit `bcd9d68`.
     `engine-js/test/template.test.ts` compares only the option sets of these
     selections, and it checks the 9th-level spells separately. ORC-28 found
     this.
+16. **`barbarian-5` picked an option key that does not exist.** Its
+    simple-weapon choice was `:handaxe`, but the barbarian's option is
+    "Handaxe (2)", whose key is `:handaxe-2-`. `entity/build` skips an
+    option it cannot find, so the character silently had no handaxes.
+    ORC-37 found this with the content-identity test. The generator now
+    picks `:handaxe-2-`, and regenerating added the two handaxes to
+    `weapons` and `weapon-modifiers`.
+17. **Four fixtures do not resolve fully, and only one of them is meant
+    to.** The content-identity test (ORC-37) checks every fixture's option
+    keys against its template. `r8-unresolved-keys` is unresolved by
+    design. `character-test-2` and `character-test-3` are real saved
+    characters built against the SRD alone, so their non-SRD content
+    does not resolve. `warlock-10-drow` is the `warlock_test.clj` entity,
+    written against content that is not in the SRD (the Archfey and its
+    expanded spells, three non-SRD cantrips, Crown of Madness) and with an
+    old starting-equipment key, `:any-simple-weapon`. Each records its
+    keys under `unresolved` in its `.meta.json`. Plan doc 01 §C3 asks for
+    zero unresolved keys across every golden character, which these
+    fixtures cannot give without changing what they test.

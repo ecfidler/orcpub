@@ -64,6 +64,7 @@ full signatures and the types.
 - `parseOrcbrew(text, options?)` reads an `.orcbrew` file through the old importer and returns `{ success, data, log, conflicts, skipped }`. `data` is homebrew, the packs as verbose Transit-JSON keyed by pack name: `options.existing` with the file merged in, as the old app merged it.
 - `validateForExport(homebrew, options?)` checks packs before export, as the old app's export buttons did, and checks each item's key, pack, and nils. It returns `{ valid, packs, filled }`. `filled` is the homebrew with those items repaired and with placeholders for missing required fields, which the old app's "export anyway" wrote.
 - `orcbrewToEdn(homebrew, options?)` returns `.orcbrew` text: all packs as the old app's `all-content.orcbrew`, or with `options.pack` one pack alone. `options.pretty` pretty-prints it.
+- `renameKey(homebrew, { pack, contentType, from, to })` renames one item's key in one pack, as the old conflict modal's rename did, and returns the new homebrew. It also rewrites the pack's references to the item: a class's subclasses, the spells that list it, and the classes and subclasses that use its spell list; a race's subraces and the feats that require it; a selection's `level-selections`. Pass a `KeyConflict`'s `content-type`, `key`, and suggested key. Saved characters keep the old key, so `reconcileMissingContent` reports them for a remap.
 - `reconcileMissingContent(entity, homebrew?)` checks every option key in a character against the template for homebrew, or for the SRD alone, and returns `{ hasMissing, items, unresolvedOptions }`. `items` lists each race, subrace, background, class, subclass, or feat that does not resolve, with the old app's suggestions from the loaded packs. `unresolvedOptions` lists any other choice that does not resolve under a parent that does. The entity is not changed.
 - `buildTemplate(homebrew?)` builds the template for homebrew, or for the SRD alone, and returns `{ summary, shape, content }`: the top-level selections and their option keys, the template's structure without functions, and the content lists, such as races and classes.
 - `keys.selectionKeys(homebrew?)` and `keys.optionKeys(homebrew?)` return every selection key and every option key in the template for homebrew, or for the SRD alone, once each and sorted. Saved characters and `.orcbrew` files refer to content by these keys.
@@ -177,6 +178,11 @@ npm ci
 npm run build   # writes dist/pubdoor.js and dist/content/*.json
 npm test        # tsc --noEmit, then the vitest golden tests against ../fixtures
 ```
+
+`test/content-identity.test.ts` is the contract C3 check. It fails when
+key derivation changes: when a fixture character's option keys stop
+resolving, when a fixture pack refers to a class, race, or selection that
+does not exist, or when the SRD template's keys differ from the baseline.
 
 ## Publish a version
 

@@ -1384,10 +1384,22 @@
 ;; ============================================================================
 
 (def key-reference-map
-  "Maps content types to fields that reference other content keys.
-   Used to update internal references when renaming keys."
-  {:orcpub.dnd.e5/subclasses {:class :orcpub.dnd.e5/classes}    ; :class field references a class key
-   :orcpub.dnd.e5/subraces {:race :orcpub.dnd.e5/races}})       ; :race field references a race key
+  "Maps each content type to the places where its items reference other
+   content keys, and the content type each place references. Used to
+   update internal references when renaming keys.
+
+   A place is a field that holds a key, or a path of fields. In a path,
+   ::each steps into every element of a vector, and a final ::map-keys
+   means that the keys of the map at that point are the references."
+  {:orcpub.dnd.e5/subclasses {:class :orcpub.dnd.e5/classes                    ; the class it belongs to
+                              [:spellcasting :spell-list-kw] :orcpub.dnd.e5/classes ; whose spell list it uses
+                              [:spellcasting :spell-list] :orcpub.dnd.e5/classes    ; options.cljc subclass-option
+                              [:level-selections ::each :type] :orcpub.dnd.e5/selections}
+   :orcpub.dnd.e5/subraces {:race :orcpub.dnd.e5/races}                         ; the race it belongs to
+   :orcpub.dnd.e5/classes {[:spellcasting :spell-list-kw] :orcpub.dnd.e5/classes
+                           [:level-selections ::each :type] :orcpub.dnd.e5/selections}
+   :orcpub.dnd.e5/spells {[:spell-lists ::map-keys] :orcpub.dnd.e5/classes}     ; {class-key true-or-false}
+   :orcpub.dnd.e5/feats {[:path-prereqs :race ::map-keys] :orcpub.dnd.e5/races}})
 
 (defn generate-new-key
   "Generate a new key by appending source identifier.
@@ -1399,20 +1411,35 @@
 
 (defn update-references-in-item
   "Update references to a renamed key within a single item.
-   reference-field: the field in this item that may reference the old key
+   place: where in this item a reference may be, a field or a path of
+   fields as in key-reference-map
    old-key: the original key being renamed
    new-key: the new key it's being renamed to"
-  [item reference-field old-key new-key]
-  (if (= (get item reference-field) old-key)
-    (assoc item reference-field new-key)
-    item))
+  [item place old-key new-key]
+  (let [rewrite (fn rewrite [x [step & more :as path]]
+                  (cond
+                    (empty? path) (if (= x old-key) new-key x)
+
+                    (= ::map-keys step)
+                    (if (and (map? x) (contains? x old-key))
+                      (-> x (dissoc old-key) (assoc new-key (get x old-key)))
+                      x)
+
+                    (= ::each step)
+                    (if (sequential? x) (mapv #(rewrite % more) x) x)
+
+                    (and (map? x) (contains? x step))
+                    (update x step rewrite more)
+
+                    :else x))]
+    (rewrite item (if (keyword? place) [place] place))))
 
 (defn update-references-in-content-group
   "Update all references to a renamed key within a content group."
-  [items reference-field old-key new-key]
+  [items place old-key new-key]
   (into {}
         (map (fn [[k v]]
-               [k (update-references-in-item v reference-field old-key new-key)])
+               [k (update-references-in-item v place old-key new-key)])
              items)))
 
 (defn rename-key-in-plugin
@@ -1425,34 +1452,39 @@
    - new-key: the new key to use
 
    Returns the updated plugin with:
-   1. The item moved to the new key
-   2. All internal references updated (e.g., subclasses pointing to renamed class)"
+   1. The item moved to the new key, with its :key set to the new key
+   2. All internal references updated (see key-reference-map), e.g.
+      subclasses that belong to a renamed class, spells on its spell list,
+      and level-selections of a renamed selection
+   The plugin is unchanged when it has no item under old-key."
   [plugin content-type old-key new-key]
-  (if-let [content-group (get plugin content-type)]
-    (let [;; Step 1: Rename the key in its content group
-          item (get content-group old-key)
-          updated-group (-> content-group
-                            (dissoc old-key)
-                            (assoc new-key item))
+  (let [content-group (get plugin content-type)]
+    (if (and (map? content-group) (contains? content-group old-key))
+      (let [;; Step 1: Rename the key in its content group
+            item (get content-group old-key)
+            updated-group (-> content-group
+                              (dissoc old-key)
+                              (assoc new-key (cond-> item
+                                               (map? item) (assoc :key new-key))))
 
-          ;; Step 2: Find content types that reference this type
-          referencing-types (keep (fn [[ct refs]]
-                                    (when (some #(= (val %) content-type) refs)
-                                      [ct (key (first (filter #(= (val %) content-type) refs)))]))
-                                  key-reference-map)
+            ;; Step 2: Find the places that reference this content type
+            references (for [[ref-content-type places] key-reference-map
+                             [place target] places
+                             :when (= target content-type)]
+                         [ref-content-type place])]
 
-          ;; Step 3: Update references in those content types
-          updated-plugin (reduce
-                          (fn [p [ref-content-type ref-field]]
-                            (if-let [ref-group (get p ref-content-type)]
-                              (assoc p ref-content-type
-                                     (update-references-in-content-group
-                                      ref-group ref-field old-key new-key))
-                              p))
-                          (assoc plugin content-type updated-group)
-                          referencing-types)]
-      updated-plugin)
-    plugin))
+        ;; Step 3: Update references in those places
+        (reduce
+         (fn [p [ref-content-type place]]
+           (let [ref-group (get p ref-content-type)]
+             (if (map? ref-group)
+               (assoc p ref-content-type
+                      (update-references-in-content-group
+                       ref-group place old-key new-key))
+               p)))
+         (assoc plugin content-type updated-group)
+         references))
+      plugin)))
 
 (defn rename-key-in-plugins
   "Rename a key within a multi-plugin structure.

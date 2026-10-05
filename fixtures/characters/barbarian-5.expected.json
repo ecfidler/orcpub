@@ -389,6 +389,22 @@
       "dual-wield?": false,
       "has-prof?": true
     },
+    "handaxe": {
+      "attack": {
+        "finesse": 6,
+        "standard": 6
+      },
+      "best-attack": 6,
+      "best-damage": 3,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 3,
+        "off-hand": 0,
+        "standard": 3
+      },
+      "dual-wield?": true,
+      "has-prof?": true
+    },
     "javelin": {
       "attack": {
         "finesse": 6,
@@ -414,6 +430,10 @@
     "greataxe": {
       "orcpub.dnd.e5.character.equipment/equipped?": true,
       "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "handaxe": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 2
     },
     "javelin": {
       "orcpub.dnd.e5.character.equipment/class-starting-equipment?": true,

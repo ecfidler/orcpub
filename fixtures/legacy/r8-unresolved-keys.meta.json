@@ -5,5 +5,49 @@
   "orcbrew": [],
   "quirk": "R8",
   "strictRoundTrip": true,
-  "unfilledSelections": []
+  "unfilledSelections": [],
+  "unresolved": {
+    "items": [
+      {
+        "contentType": "race",
+        "key": "ironwrought",
+        "path": [
+          "race",
+          "ironwrought"
+        ]
+      },
+      {
+        "contentType": "subrace",
+        "key": "envoy",
+        "path": [
+          "race",
+          "ironwrought",
+          "subrace",
+          "envoy"
+        ]
+      },
+      {
+        "contentType": "class",
+        "key": "artificer",
+        "path": [
+          "class",
+          "artificer"
+        ]
+      },
+      {
+        "contentType": "subclass",
+        "key": "alchemist",
+        "path": [
+          "class",
+          "artificer",
+          "levels",
+          "level-3",
+          "artificer-specialization",
+          "alchemist"
+        ]
+      }
+    ],
+    "reason": "Quirk R8: the homebrew race, subrace, class and subclass do not resolve without duplicate-external-b.orcbrew.",
+    "unresolvedOptions": []
+  }
 }
