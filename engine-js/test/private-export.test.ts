@@ -40,7 +40,15 @@ const newChangeTypes = new Set(["normalized-ability-key", "defaulted-choose"]);
 // different orders (fixtures/README.md findings 13 and 15). The lists below
 // come from iterating the packs' maps, so they are compared as sorted lists.
 const sorted = <T>(xs: T[]): T[] => [...xs].sort();
-const sortedJson = (xs: unknown[]): string[] => xs.map((x) => JSON.stringify(x)).sort();
+// The oracle writes JSON with sorted keys, and the engine's objects keep
+// ClojureScript map order, so keys are sorted before comparing.
+const canonical = (x: unknown): unknown =>
+  Array.isArray(x)
+    ? x.map(canonical)
+    : x && typeof x === "object"
+      ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, canonical((x as Record<string, unknown>)[k])]))
+      : x;
+const sortedJson = (xs: unknown[]): string[] => xs.map((x) => JSON.stringify(canonical(x))).sort();
 
 describe.skipIf(!exportPresent)("real export: private/all-content3.orcbrew (ORC-39)", () => {
   const summary = readFixture("orcbrew/private/all-content3.summary.json") as Summary;
