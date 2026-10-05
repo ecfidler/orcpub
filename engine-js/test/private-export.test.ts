@@ -11,7 +11,7 @@ import { contentKeys, fixtures, readFixture } from "./support.js";
 // the JVM oracle. See fixtures/README.md, "Private exports".
 
 const exportFile = new URL("orcbrew/private/all-content3.orcbrew", fixtures);
-const present = existsSync(exportFile);
+const exportPresent = existsSync(exportFile);
 
 interface Summary {
   pack: string;
@@ -42,7 +42,7 @@ const newChangeTypes = new Set(["normalized-ability-key", "defaulted-choose"]);
 const sorted = <T>(xs: T[]): T[] => [...xs].sort();
 const sortedJson = (xs: unknown[]): string[] => xs.map((x) => JSON.stringify(x)).sort();
 
-describe.skipIf(!present)("real export: private/all-content3.orcbrew (ORC-39)", () => {
+describe.skipIf(!exportPresent)("real export: private/all-content3.orcbrew (ORC-39)", () => {
   const summary = readFixture("orcbrew/private/all-content3.summary.json") as Summary;
   let parsed: ParsedOrcbrew;
   let template: BuiltTemplate;
@@ -56,7 +56,7 @@ describe.skipIf(!present)("real export: private/all-content3.orcbrew (ORC-39)", 
     const text = readFileSync(exportFile, "utf8");
 
     expect(statSync(exportFile).size).toBe(summary.bytes);
-    expect(text.startsWith("﻿")).toBe(summary.bomStripped);
+    expect(text.startsWith("\uFEFF")).toBe(summary.bomStripped);
   });
 
   it("imports with nothing skipped", () => {
@@ -72,33 +72,38 @@ describe.skipIf(!present)("real export: private/all-content3.orcbrew (ORC-39)", 
     const conflicts = parsed.log["key-conflicts"]!;
     const expected = summary.import["key-conflicts"];
 
-    expect(conflicts["internal-conflicts"]).toHaveLength(86);
+    expect(expected["internal-conflicts"]).toHaveLength(86);
+    expect(conflicts["internal-conflicts"]).toHaveLength(expected["internal-conflicts"].length);
     expect(sortedJson(conflicts["internal-conflicts"])).toStrictEqual(sortedJson(expected["internal-conflicts"]));
     expect(conflicts["external-conflicts"]).toStrictEqual(expected["external-conflicts"]);
   });
 
   it("makes the same auto-clean changes", () => {
-    const old = (changes: object[]) =>
+    const oldImporterChanges = (changes: object[]) =>
       sortedJson((changes as Record<string, unknown>[]).filter((c) => !newChangeTypes.has(c["type"] as string)));
 
-    expect(old(parsed.log.changes)).toStrictEqual(old(summary.import.changes));
+    expect(oldImporterChanges(parsed.log.changes)).toStrictEqual(oldImporterChanges(summary.import.changes));
   });
 
-  it("leaves no :skill-options without :choose", () => {
+  // fixtures/README.md finding 9: four subclasses in this export have
+  // :skill-options without :choose.
+  it("defaults :choose on the export's skill choices that lack it", () => {
+    const skillChoices = ["~:skill-options", "~:multiclass-skill-options"];
     const missing = Object.values(parsed.data!).flatMap((plugin) =>
       Object.values(plugin as Record<string, unknown>)
         .filter((items): items is Record<string, Record<string, unknown>> => !!items && typeof items === "object")
         .flatMap((items) => Object.entries(items))
         .filter(([, item]) => {
           const profs = item?.["~:profs"] as Record<string, Record<string, unknown>> | undefined;
-          const skillOptions = profs?.["~:skill-options"];
-          return skillOptions?.["~:options"] != null && skillOptions["~:choose"] == null;
+          return skillChoices.some(
+            (field) => profs?.[field]?.["~:options"] != null && profs[field]!["~:choose"] == null,
+          );
         })
         .map(([key]) => key),
     );
     const defaulted = parsed.log.changes.filter((c) => (c as Record<string, unknown>)["type"] === "defaulted-choose");
-    console.log(`defaulted-choose changes: ${defaulted.length}`);
 
+    expect(defaulted.length).toBeGreaterThan(0);
     expect(missing).toStrictEqual([]);
   });
 
@@ -116,14 +121,7 @@ describe.skipIf(!present)("real export: private/all-content3.orcbrew (ORC-39)", 
   it("builds the same top-level selections", () => {
     const entries = (s: BuiltTemplate["summary"]) =>
       s.map((entry) => ({ ...entry, optionKeys: sorted(entry.optionKeys) }));
-    const count = (key: string) => template.summary.find((entry) => entry.key === key)!.optionKeys.length;
 
     expect(entries(template.summary)).toStrictEqual(entries(summary.templateSummary));
-    expect({
-      race: count("race"),
-      class: count("class"),
-      background: count("background"),
-      feats: count("feats"),
-    }).toStrictEqual({ race: 52, class: 15, background: 63, feats: 115 });
   });
 });
