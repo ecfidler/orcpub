@@ -1,0 +1,41 @@
+{:orcpub.dnd.e5/classes
+ {:warden
+  {:key :warden
+   :name "Warden"
+   :option-pack "Drift 12"
+   :hit-die 10
+   :ability-increase-levels [4 8 12 16 19]
+   :subclass-level 3
+   :subclass-title "Warden Oath"
+   :profs {:save {:con true :orcpub.dnd.e5.character/wis true}
+           :skill-options {:choose 2 :options {:nature true :survival true :perception true}}
+           :multiclass-skill-options {:options {:nature true :survival true}}}
+   :spellcasting {:level-factor 2 :ability :wis :spell-list-kw :druid}
+   :traits [{:name "Watchful" :level 1 :description "You cannot be surprised while you are conscious."}]
+   :level-modifiers []}}
+ :orcpub.dnd.e5/subclasses
+ {:ember-scholar
+  {:key :ember-scholar
+   :name "Ember Scholar"
+   :class :wizard
+   :option-pack "Drift 12"
+   :level-modifiers [{:type :spell :level 2 :value {:level 0 :ability :int :key :produce-flame}}
+                     {:type :spell :level 2 :value {:level 0 :ability :orcpub.dnd.e5.character/int :key :fire-bolt}}]
+   :traits [{:name "Kindled Mind" :level 2 :description "You learn two fire cantrips."}]}}
+ :orcpub.dnd.e5/races
+ {:stonekin
+  {:key :stonekin
+   :name "Stonekin"
+   :option-pack "Drift 12"
+   :speed 25
+   :size :medium
+   :abilities {:con 2 :orcpub.dnd.e5.character/con 1}
+   :traits [{:name "Stone Skin" :description "Your skin is hard as granite."}]}}
+ :orcpub.dnd.e5/feats
+ {:mighty-grip
+  {:key :mighty-grip
+   :name "Mighty Grip"
+   :option-pack "Drift 12"
+   :description "Prerequisite: Strength 13 or higher. Increase your Strength or Dexterity by 1."
+   :prereqs #{:str}
+   :ability-increases #{:str :orcpub.dnd.e5.character/dex :dex}}}}

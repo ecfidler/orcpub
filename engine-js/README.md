@@ -61,7 +61,7 @@ full signatures and the types.
 - `increaseAbility(entity, path, abilityKey, options?)` adds one to an ability in an ability score improvement.
 - `decreaseAbility(entity, path, abilityKey, options?)` removes one pick of an ability from an ability score improvement.
 - `autofill(entity, options?)` fills a character at random, as the builder's random character button does.
-- `parseOrcbrew(text, options?)` reads an `.orcbrew` file through the old importer and returns `{ success, data, log, conflicts, skipped }`. `data` is homebrew, the packs as verbose Transit-JSON keyed by pack name: `options.existing` with the file merged in, as the old app merged it.
+- `parseOrcbrew(text, options?)` reads an `.orcbrew` file through the old importer and returns `{ success, data, log, conflicts, skipped }`. `data` is homebrew, the packs as verbose Transit-JSON keyed by pack name: `options.existing` with the file merged in, as the old app merged it. Two forms that the old engine ignored are fixed on import, each fix logged in `log.changes`: an ability key such as `:con` becomes `:orcpub.dnd.e5.character/con` in a race's `abilities`, a feat's `ability-increases` and `prereqs`, a class's `profs` `save`, a class's or subclass's `spellcasting` `ability`, and a `:spell` level-modifier's `ability` (`normalized-ability-key`). A `skill-options` or `multiclass-skill-options` without `choose` gets `choose` 1, the builder's default (`defaulted-choose`).
 - `validateForExport(homebrew, options?)` checks packs before export, as the old app's export buttons did, and checks each item's key, pack, and nils. It returns `{ valid, packs, filled }`. `filled` is the homebrew with those items repaired and with placeholders for missing required fields, which the old app's "export anyway" wrote.
 - `orcbrewToEdn(homebrew, options?)` returns `.orcbrew` text: all packs as the old app's `all-content.orcbrew`, or with `options.pack` one pack alone. `options.pretty` pretty-prints it.
 - `renameKey(homebrew, { pack, contentType, from, to })` renames one item's key in one pack, as the old conflict modal's rename did, and returns the new homebrew. It also rewrites the pack's references to the item: a class's subclasses, the spells that list it, and the classes and subclasses that use its spell list; a race's subraces and the feats that require it; a selection's `level-selections`. Pass a `KeyConflict`'s `content-type`, `key`, and suggested key. Saved characters keep the old key, so `reconcileMissingContent` reports them for a remap.
@@ -178,6 +178,11 @@ npm ci
 npm run build   # writes dist/pubdoor.js and dist/content/*.json
 npm test        # tsc --noEmit, then the vitest golden tests against ../fixtures
 ```
+
+`test/private-export.test.ts` imports a real `all-content.orcbrew` and
+compares the result with its committed summary. It runs only when the
+export is at `fixtures/orcbrew/private/all-content3.orcbrew`, which git
+ignores. See `fixtures/README.md`, *Private exports*.
 
 `test/content-identity.test.ts` is the contract C3 check. It fails when
 key derivation changes: when a fixture character's option keys stop

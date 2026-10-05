@@ -440,9 +440,10 @@
                            ::char5e/worn-armor :scale-mail}}
     :checks (fn [b] [[3 (char5e/total-levels b)] ["Ironwrought" (char5e/race b)] ["Envoy" (char5e/subrace b)]
                      ;; the pack's :abilities {:con 2} uses an unqualified key (drift
-                     ;; form 10); the old engine keeps it verbatim, so CON stays 15
-                     [{:con 2} (char5e/race-ability-increases b)]
-                     [15 (:orcpub.dnd.e5.character/con (char5e/ability-values b))]])}])
+                     ;; form 10). The importer rewrites it as ::char5e/con (ORC-40),
+                     ;; so the +2 applies and CON is 15 + 2
+                     [{:orcpub.dnd.e5.character/con 2} (char5e/race-ability-increases b)]
+                     [17 (:orcpub.dnd.e5.character/con (char5e/ability-values b))]])}])
 
 ;;; ---------------------------------------------------------------------------
 ;;; Legacy fixtures

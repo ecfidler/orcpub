@@ -1525,6 +1525,890 @@
           }
         ],
         "type": "filled-required-fields"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :deep-stalker",
+        "from": "wis",
+        "path": [
+          "UA - The Ranger Revised - (mattswymer#7833)",
+          "orcpub.dnd.e5/subclasses",
+          "deep-stalker",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 1 value ability of :deep-stalker",
+        "from": "wis",
+        "path": [
+          "UA - The Ranger Revised - (mattswymer#7833)",
+          "orcpub.dnd.e5/subclasses",
+          "deep-stalker",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 2 value ability of :deep-stalker",
+        "from": "wis",
+        "path": [
+          "UA - The Ranger Revised - (mattswymer#7833)",
+          "orcpub.dnd.e5/subclasses",
+          "deep-stalker",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 3 value ability of :deep-stalker",
+        "from": "wis",
+        "path": [
+          "UA - The Ranger Revised - (mattswymer#7833)",
+          "orcpub.dnd.e5/subclasses",
+          "deep-stalker",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 4 value ability of :deep-stalker",
+        "from": "wis",
+        "path": [
+          "UA - The Ranger Revised - (mattswymer#7833)",
+          "orcpub.dnd.e5/subclasses",
+          "deep-stalker",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :light-domain",
+        "from": "wis",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "light-domain",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :way-of-the-shadow",
+        "from": "wis",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-shadow",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 1 value ability of :way-of-the-shadow",
+        "from": "wis",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-shadow",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 2 value ability of :way-of-the-shadow",
+        "from": "wis",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-shadow",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 3 value ability of :way-of-the-shadow",
+        "from": "wis",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-shadow",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 4 value ability of :way-of-the-shadow",
+        "from": "wis",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-shadow",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :gloom-stalker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "gloom-stalker",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 1 value ability of :gloom-stalker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "gloom-stalker",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 2 value ability of :gloom-stalker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "gloom-stalker",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 3 value ability of :gloom-stalker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "gloom-stalker",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 4 value ability of :gloom-stalker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "gloom-stalker",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :horizon-walker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "horizon-walker",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 1 value ability of :horizon-walker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "horizon-walker",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 2 value ability of :horizon-walker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "horizon-walker",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 3 value ability of :horizon-walker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "horizon-walker",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 4 value ability of :horizon-walker",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "horizon-walker",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :path-of-the-ancestral-guardian",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "path-of-the-ancestral-guardian",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 1 value ability of :path-of-the-ancestral-guardian",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "path-of-the-ancestral-guardian",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :monster-slayer",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "monster-slayer",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 1 value ability of :monster-slayer",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "monster-slayer",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 2 value ability of :monster-slayer",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "monster-slayer",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 3 value ability of :monster-slayer",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "monster-slayer",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 4 value ability of :monster-slayer",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "monster-slayer",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :way-of-the-sun-soul",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-sun-soul",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :grave-domain",
+        "from": "wis",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "grave-domain",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 0 value ability of :the-celestial",
+        "from": "cha",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "the-celestial",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 1 value ability of :the-celestial",
+        "from": "cha",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "the-celestial",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 0 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 1 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 2 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 3 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 4 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 5 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          5,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 6 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          6,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 7 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          7,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 8 value ability of :storm-magic",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "storm-magic",
+          "level-modifiers",
+          8,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :wis as :orcpub.dnd.e5.character/wis in the level-modifiers 0 value ability of :way-of-the-sun-soul",
+        "from": "wis",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "way-of-the-sun-soul",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/wis",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 0 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          0,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 1 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          1,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 2 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          2,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 3 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          3,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 4 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          4,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 5 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          5,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 6 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          6,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 7 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          7,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 8 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          8,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Rewrote ability key :cha as :orcpub.dnd.e5.character/cha in the level-modifiers 9 value ability of :oath-of-the-crown",
+        "from": "cha",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "oath-of-the-crown",
+          "level-modifiers",
+          9,
+          "value",
+          "ability"
+        ],
+        "to": "orcpub.dnd.e5.character/cha",
+        "type": "normalized-ability-key"
+      },
+      {
+        "description": "Set the skill proficiency choice of :nature-domain to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Player's Handbook (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "nature-domain",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :samurai- to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Xanathar's Guide to Everything (110818)",
+          "orcpub.dnd.e5/subclasses",
+          "samurai-",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :variant-keen-senses to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Sword Coast Adventurer's Guide (110818)",
+          "orcpub.dnd.e5/subraces",
+          "variant-keen-senses",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :college-of-satire to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "UA - Classics Revised - (Gaza#7326)",
+          "orcpub.dnd.e5/subclasses",
+          "college-of-satire",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :order-domain to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Guildmasters' Guide to Ravnica",
+          "orcpub.dnd.e5/subclasses",
+          "order-domain",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :centaur to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Guildmasters' Guide to Ravnica",
+          "orcpub.dnd.e5/races",
+          "centaur",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :minotaur to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Guildmasters' Guide to Ravnica",
+          "orcpub.dnd.e5/races",
+          "minotaur",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
+      },
+      {
+        "description": "Set the skill proficiency choice of :vedalken to 1, the builder's default",
+        "field": "choose",
+        "path": [
+          "Guildmasters' Guide to Ravnica",
+          "orcpub.dnd.e5/races",
+          "vedalken",
+          "profs",
+          "skill-options"
+        ],
+        "to": 1,
+        "type": "defaulted-choose"
       }
     ],
     "imported-count": 1412,

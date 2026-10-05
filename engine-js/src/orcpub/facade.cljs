@@ -456,7 +456,10 @@
 (defn ^:export parseOrcbrew
   "Runs .orcbrew text through the old importer, validate-import with
   auto-clean on, as the ::e5/import-plugin event does. A leading byte-order
-  mark is removed first.
+  mark is removed first. Auto-clean includes two steps the old importer did
+  not have: normalize-ability-keys-in-import makes bare ability keys
+  qualified (Linear ORC-40), and default-skill-choose-in-import gives a
+  skill choice without :choose :choose 1 (ORC-39).
 
   options is {name?, existing?, strict?}. name is the pack name for a
   single-plugin file, the file name without .orcbrew in the old app, and
