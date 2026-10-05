@@ -1,6 +1,6 @@
 {
   "name": "@pubdoor/dmv",
-  "version": "0.2.0-alpha.1",
+  "version": "0.2.0",
   "description": "The Dungeon Master's Vault 5e rules engine, compiled from ClojureScript",
   "license": "EPL-2.0",
   "repository": {

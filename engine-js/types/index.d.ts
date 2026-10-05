@@ -6,7 +6,7 @@
  */
 export type StrictEntity = string | object;
 
-/** The rules edition. 0.1 supports only "2014". */
+/** The rules edition. This package supports only "2014". */
 export type Rules = "2014";
 
 export interface EvaluateOptions {
