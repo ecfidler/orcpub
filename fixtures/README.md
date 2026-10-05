@@ -14,8 +14,13 @@ raw entities of the golden characters, the synthetic `.orcbrew` packs, and
 the browser values that an `overrides` entry in `.meta.json` records in place
 of the JVM's (finding 13).
 
-Produced from engine source at commit **`bcd9d68`** (branch `engine`; the
-engine source is unchanged from `develop` at that point). Regenerate whenever
+First produced from engine source at commit **`bcd9d68`** (branch
+`engine`; the engine source is unchanged from `develop` at that point).
+Last regenerated for ORC-37 from engine source at commit **`e3588976`**,
+which includes patch D4 (ORC-35), with `scripts/golden-characters.clj` and
+`scripts/dump-template.clj` for every pack. Only `barbarian-5` changed
+(finding 16) and four `.meta.json` files gained `unresolved` (finding 17).
+The SRD baseline was not regenerated. Regenerate whenever
 `src/cljc` or one of the three `src/cljs` files the engine reads changes (see
 *Regenerating*): `orcpub/dnd/e5.cljc`, `spell_subs.cljs` and
 `equipment_subs.cljs`, the last copied into `engine-js/src/orcpub/facade/template.cljs`.
