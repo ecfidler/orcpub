@@ -132,11 +132,15 @@ the legacy set. `overrides`, when present, lists the values in
 oracle's. Each entry names the `key`, the entry `name`, and the `field`, and
 gives the `jvm` and `browser` values and the `reason` (finding 13).
 `unresolved`, when present, lists the option keys that do not resolve
-against the character's template, exactly as `reconcileMissingContent`
-reports them: `items` (`{contentType, key, path}`) and `unresolvedOptions`
-(`{key, path}`), with the `reason`. Every other fixture resolves fully.
-`engine-js/test/content-identity.test.ts` checks both (contract C3,
-finding 17).
+against the character's template, built with the packs in `orcbrew`
+loaded. It holds the keys that `reconcileMissingContent` reports, in no
+particular order: `items` (`{contentType, key, path}`) and
+`unresolvedOptions` (`{key, path}`), with the `reason`. Compare them as
+sets: `engine-js/test/content-identity.test.ts` sorts both by path. Every
+other fixture resolves fully with its packs loaded. Without its packs, a
+fixture that names packs has more unresolved keys: `r8-unresolved-keys` is
+`ironwrought-artificer-3` with no packs. The test checks both (contract
+C3, finding 17).
 
 ### `<pack>.template.json`
 
