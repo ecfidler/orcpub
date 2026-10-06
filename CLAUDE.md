@@ -94,6 +94,21 @@ Do not contradict these without checking the source.
 - Do not edit the plan documents' cited line numbers by hand. If the code
   moves, regenerate them from the source.
 
+## Documentation
+
+- Do not edit the upstream Dungeon Master's Vault documents, for example
+  `README.md`, `CHANGELOG.md`, and `docs/*.md`.
+  `docs/pubdoor/doc-ownership.md` lists which documents are upstream and
+  which the fork owns.
+- Put new project documents in orc-alchemy `docs/`. Put a document here
+  only when it describes only the fork. Then put it in `docs/pubdoor/`,
+  an Open Knowledge Format (OKF) v0.2 bundle.
+- orc-alchemy `docs/conventions/okf-profile.md` gives the OKF rules. To
+  check this bundle from an orc-alchemy checkout next to this one, run
+  `bun scripts/okf-check.ts ../orcpub/docs/pubdoor` there.
+- orc-alchemy `docs/conventions/writing-standard.md` is the writing
+  standard: ASD-STE100 Simplified Technical English at about 80 percent.
+
 ## Agent skills
 
 Run `/technical-writing` on docs, PR bodies, Linear issues, and commit
