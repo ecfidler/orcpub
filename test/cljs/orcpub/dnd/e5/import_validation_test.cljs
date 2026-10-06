@@ -929,9 +929,15 @@
     (is (= [{:key "bad" :errors ["The pack is not a map"]}] (:skipped-items result)))))
 
 (deftest test-progressive-import-fails-when-no-pack-is-a-map
-  (let [result (import-val/validate-import "{\"bad\" \"text\"}" {:strategy :progressive})]
+  (doseq [edn ["{\"bad\" \"text\"}" "{\"bad\" 5 \"worse\" :x}"]]
+    (let [result (import-val/validate-import edn {:strategy :progressive})]
+      (is (not (:success result)) edn)
+      (is (= ["No pack in the file is a map"] (:errors result)) edn))))
+
+(deftest test-progressive-import-fails-on-a-vector
+  (let [result (import-val/validate-import "[1 2]" {:strategy :progressive})]
     (is (not (:success result)))
-    (is (= ["No pack in the file is a map"] (:errors result)))))
+    (is (= ["Plugin is not a valid map structure"] (:errors result)))))
 
 (deftest test-progressive-import-skips-non-map-items
   (let [multi (import-val/validate-import "{\"bad\" {:orcpub.dnd.e5/spells {:x 5}}}"

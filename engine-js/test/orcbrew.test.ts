@@ -138,11 +138,13 @@ describe("parseOrcbrew", () => {
   });
 
   it("fails when no pack is a map", () => {
-    const { success, data, log } = parseOrcbrew('{"bad" "text"}');
+    for (const input of ['{"bad" "text"}', '{"bad" 5 "worse" :x}']) {
+      const { success, data, log } = parseOrcbrew(input);
 
-    expect(success).toBe(false);
-    expect(data).toBeNull();
-    expect(log.errors).toStrictEqual(["No pack in the file is a map"]);
+      expect(success, input).toBe(false);
+      expect(data, input).toBeNull();
+      expect(log.errors, input).toStrictEqual(["No pack in the file is a map"]);
+    }
   });
 
   it("skips an item that is not a map", () => {

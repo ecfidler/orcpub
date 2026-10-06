@@ -833,9 +833,10 @@
                            (+ total (count-items-in-plugin inner-plugin)))
                          0
                          data)]
-        (if (and (empty? data) (seq skipped-items))
+        (if (empty? data)
           {:success false
            :errors ["No pack in the file is a map"]
+           :skipped-count (count skipped-items)
            :skipped-items skipped-items}
           {:success true
            :data data

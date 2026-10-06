@@ -139,8 +139,8 @@ particular order: `items` (`{contentType, key, path}`) and
 sets: `engine-js/test/content-identity.test.ts` sorts both by path. Every
 other fixture resolves fully with its packs loaded. Without its packs, a
 fixture that names packs has more unresolved keys: `r8-unresolved-keys` is
-`ironwrought-artificer-3` with no packs. The test checks both (contract
-C3, finding 17).
+`ironwrought-artificer-3` with no packs. The test checks the fixtures
+with and without `unresolved` (contract C3, finding 17).
 
 ### `<pack>.template.json`
 
