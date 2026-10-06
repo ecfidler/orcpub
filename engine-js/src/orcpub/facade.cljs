@@ -480,7 +480,8 @@
               failure, parse-error, line and hint
     conflicts the key conflicts with suggested keys, as the old
               conflict-resolution modal lists them
-    skipped   the items the progressive strategy left out, {key, errors}
+    skipped   the items the progressive strategy left out, {key, errors},
+              with plugin, the pack, for an item of a multi-plugin file
   Key conflicts do not stop an import. The old app asked the user to
   resolve them before it loaded the data."
   ([text] (parseOrcbrew text nil))

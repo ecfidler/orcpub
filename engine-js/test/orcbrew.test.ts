@@ -124,4 +124,43 @@ describe("parseOrcbrew", () => {
     expect(log["parse-error"]).toBe(true);
     expect(log.errors).toHaveLength(1);
   });
+
+  // Linear ORC-116: these threw a ClojureScript protocol error in 0.2.0.
+  it("skips a pack that is not a map", () => {
+    const { success, data, log, skipped } = parseOrcbrew(
+      '{"bad" "text" "good" {:orcpub.dnd.e5/languages {:a {:name "A" :key :a :option-pack "good"}}}}',
+    );
+
+    expect(success).toBe(true);
+    expect(Object.keys(data!)).toEqual(["good"]);
+    expect(skipped).toStrictEqual([{ key: "bad", errors: ["The pack is not a map"] }]);
+    expect(log["skipped-count"]).toBe(1);
+  });
+
+  it("fails when no pack is a map", () => {
+    for (const input of ['{"bad" "text"}', '{"bad" 5 "worse" :x}']) {
+      const { success, data, log } = parseOrcbrew(input);
+
+      expect(success, input).toBe(false);
+      expect(data, input).toBeNull();
+      expect(log.errors, input).toStrictEqual(["No pack in the file is a map"]);
+    }
+  });
+
+  it("skips an item that is not a map", () => {
+    const multi = parseOrcbrew('{"bad" {:orcpub.dnd.e5/spells {:x 5}}}');
+    const single = parseOrcbrew('{:orcpub.dnd.e5/spells {:x 5 :y "s"}}');
+
+    expect(multi.success).toBe(true);
+    expect(multi.skipped.map(({ key }) => key)).toEqual(["x"]);
+    expect(single.success).toBe(true);
+    expect(single.skipped.map(({ key }) => key).sort()).toEqual(["x", "y"]);
+  });
+
+  it("fails on a file that is not a map", () => {
+    const { success, data } = parseOrcbrew("[1 2]");
+
+    expect(success).toBe(false);
+    expect(data).toBeNull();
+  });
 });

@@ -445,6 +445,8 @@ export interface ParseOrcbrewOptions {
 export interface SkippedItem {
   key: string;
   errors: unknown;
+  /** The pack of a skipped item in a multi-plugin file. */
+  plugin?: string;
 }
 
 /** The old app's import log for one file. Keywords are "ns/name" strings. */
