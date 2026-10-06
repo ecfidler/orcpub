@@ -917,3 +917,29 @@
         (is (= #{"Alpha" "Beta"} (set (map :name options)))))
       ;; Should have a dedup change logged
       (is (some #(= :dedup-selection-options (:type %)) (:changes result))))))
+
+;; Linear ORC-116: a pack or item that is not a map is skipped and logged,
+;; not thrown on.
+(deftest test-progressive-import-skips-non-map-pack
+  (let [result (import-val/validate-import
+                "{\"bad\" \"text\" \"good\" {:orcpub.dnd.e5/spells {:a {:option-pack \"good\" :name \"A\"}}}}"
+                {:strategy :progressive})]
+    (is (:success result))
+    (is (= ["good"] (keys (:data result))))
+    (is (= [{:key "bad" :errors ["The pack is not a map"]}] (:skipped-items result)))))
+
+(deftest test-progressive-import-fails-when-no-pack-is-a-map
+  (let [result (import-val/validate-import "{\"bad\" \"text\"}" {:strategy :progressive})]
+    (is (not (:success result)))
+    (is (= ["No pack in the file is a map"] (:errors result)))))
+
+(deftest test-progressive-import-skips-non-map-items
+  (let [multi (import-val/validate-import "{\"bad\" {:orcpub.dnd.e5/spells {:x 5}}}"
+                                          {:strategy :progressive})
+        single (import-val/validate-import "{:orcpub.dnd.e5/spells {:x 5}}"
+                                           {:strategy :progressive})]
+    (is (:success multi))
+    (is (= [:x] (map :key (:skipped-items multi))))
+    (is (= {} (get-in multi [:data "bad" :orcpub.dnd.e5/spells])))
+    (is (:success single))
+    (is (= [:x] (map :key (:skipped-items single))))))

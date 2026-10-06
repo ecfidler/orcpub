@@ -289,37 +289,43 @@
                :options-fixed options-changes}}))
 
 (defn fill-missing-in-content-group
-  "Fill missing fields for all items in a content group.
+  "Fill missing fields for all items in a content group. An item that is not
+   a map is kept as is, for validation to skip (Linear ORC-116).
    Returns {:items updated-items :changes [{:key :changes}...]}"
   [content-type items]
   (reduce-kv
    (fn [acc item-key item]
-     (let [{:keys [item changes]} (fill-all-missing-fields item content-type)]
-       (if (or (seq (:fields changes)) (pos? (:traits-fixed changes)) (pos? (:options-fixed changes)))
-         {:items (assoc (:items acc) item-key item)
-          :changes (conj (:changes acc) {:key item-key :changes changes})}
-         {:items (assoc (:items acc) item-key item)
-          :changes (:changes acc)})))
+     (if-not (map? item)
+       (assoc-in acc [:items item-key] item)
+       (let [{:keys [item changes]} (fill-all-missing-fields item content-type)]
+         (if (or (seq (:fields changes)) (pos? (:traits-fixed changes)) (pos? (:options-fixed changes)))
+           {:items (assoc (:items acc) item-key item)
+            :changes (conj (:changes acc) {:key item-key :changes changes})}
+           {:items (assoc (:items acc) item-key item)
+            :changes (:changes acc)}))))
    {:items {} :changes []}
    items))
 
 (defn fill-missing-in-plugin
-  "Fill all missing required fields in a plugin.
+  "Fill all missing required fields in a plugin. A plugin that is not a map
+   is returned as is (Linear ORC-116).
    Returns {:plugin updated-plugin :all-changes [...]}"
   [plugin]
-  (reduce-kv
-   (fn [acc content-type content]
-     (if (and (qualified-keyword? content-type)
-              (= (namespace content-type) "orcpub.dnd.e5")
-              (map? content))
-       (let [{:keys [items changes]} (fill-missing-in-content-group content-type content)]
-         {:plugin (assoc (:plugin acc) content-type items)
-          :all-changes (into (:all-changes acc)
-                             (map #(assoc % :content-type content-type) changes))})
-       {:plugin (assoc (:plugin acc) content-type content)
-        :all-changes (:all-changes acc)}))
-   {:plugin {} :all-changes []}
-   plugin))
+  (if-not (map? plugin)
+    {:plugin plugin :all-changes []}
+    (reduce-kv
+     (fn [acc content-type content]
+       (if (and (qualified-keyword? content-type)
+                (= (namespace content-type) "orcpub.dnd.e5")
+                (map? content))
+         (let [{:keys [items changes]} (fill-missing-in-content-group content-type content)]
+           {:plugin (assoc (:plugin acc) content-type items)
+            :all-changes (into (:all-changes acc)
+                               (map #(assoc % :content-type content-type) changes))})
+         {:plugin (assoc (:plugin acc) content-type content)
+          :all-changes (:all-changes acc)}))
+     {:plugin {} :all-changes []}
+     plugin)))
 
 (defn fill-missing-in-import
   "Fill missing required fields during import.
@@ -435,30 +441,33 @@
     [item []]))
 
 (defn dedup-options-in-plugin
-  "Dedup options in all selections across all content types in a plugin.
+  "Dedup options in all selections across all content types in a plugin. A
+   plugin that is not a map is returned as is (Linear ORC-116).
    Returns {:plugin updated-plugin :changes [change-descriptions]}."
   [plugin]
-  (reduce-kv
-   (fn [acc content-type content]
-     (if (and (qualified-keyword? content-type)
-              (= (namespace content-type) "orcpub.dnd.e5")
-              (map? content))
-       (let [result (reduce-kv
-                     (fn [inner-acc item-key item]
-                       (let [[updated-item changes] (dedup-options-in-item item)]
-                         {:items (assoc (:items inner-acc) item-key updated-item)
-                          :changes (into (:changes inner-acc)
-                                         (map #(assoc % :item-key item-key
-                                                        :content-type content-type)
-                                              changes))}))
-                     {:items {} :changes []}
-                     content)]
-         {:plugin (assoc (:plugin acc) content-type (:items result))
-          :changes (into (:changes acc) (:changes result))})
-       {:plugin (assoc (:plugin acc) content-type content)
-        :changes (:changes acc)}))
-   {:plugin {} :changes []}
-   plugin))
+  (if-not (map? plugin)
+    {:plugin plugin :changes []}
+    (reduce-kv
+     (fn [acc content-type content]
+       (if (and (qualified-keyword? content-type)
+                (= (namespace content-type) "orcpub.dnd.e5")
+                (map? content))
+         (let [result (reduce-kv
+                       (fn [inner-acc item-key item]
+                         (let [[updated-item changes] (dedup-options-in-item item)]
+                           {:items (assoc (:items inner-acc) item-key updated-item)
+                            :changes (into (:changes inner-acc)
+                                           (map #(assoc % :item-key item-key
+                                                          :content-type content-type)
+                                                changes))}))
+                       {:items {} :changes []}
+                       content)]
+           {:plugin (assoc (:plugin acc) content-type (:items result))
+            :changes (into (:changes acc) (:changes result))})
+         {:plugin (assoc (:plugin acc) content-type content)
+          :changes (:changes acc)}))
+     {:plugin {} :changes []}
+     plugin)))
 
 (defn dedup-options-in-import
   "Dedup selection options during import. Handles single and multi-plugin formats.
@@ -768,6 +777,40 @@
    0
    plugin))
 
+(defn- remove-non-map-packs-and-items
+  "Removes the packs of multi-plugin data that are not maps, and the items
+   in each pack that are not maps. Other items are not validated, as before.
+   Returns {:data :skipped-items}, each skipped item {:key :errors} with
+   :plugin for an item (Linear ORC-116)."
+  [plugins]
+  (reduce-kv
+   (fn [acc plugin-name plugin]
+     (if-not (map? plugin)
+       (update acc :skipped-items conj {:key plugin-name
+                                        :errors ["The pack is not a map"]})
+       (let [{:keys [plugin skipped]}
+             (reduce-kv
+              (fn [inner content-type items]
+                (if (and (qualified-keyword? content-type)
+                         (= (namespace content-type) "orcpub.dnd.e5")
+                         (map? items))
+                  (let [bad (remove (comp map? val) items)]
+                    {:plugin (assoc (:plugin inner) content-type
+                                    (reduce dissoc items (map key bad)))
+                     :skipped (into (:skipped inner)
+                                    (map (fn [[k v]]
+                                           (-> (validate-item k v)
+                                               (select-keys [:errors])
+                                               (assoc :key k :plugin plugin-name))))
+                                    bad)})
+                  (update inner :plugin assoc content-type items)))
+              {:plugin (empty plugin) :skipped []}
+              plugin)]
+         {:data (assoc (:data acc) plugin-name plugin)
+          :skipped-items (into (:skipped-items acc) skipped)})))
+   {:data (empty plugins) :skipped-items []}
+   plugins))
+
 (defn import-progressive
   "Progressive import: imports valid items and reports invalid ones.
 
@@ -783,18 +826,23 @@
   [plugin]
   (if (map? plugin)
     (if (is-multi-plugin? plugin)
-      ;; Multi-plugin: aggregate counts from all inner plugins
-      (let [total-items (reduce
+      ;; Multi-plugin: skip packs and items that are not maps, aggregate counts
+      (let [{:keys [data skipped-items]} (remove-non-map-packs-and-items plugin)
+            total-items (reduce
                          (fn [total [_plugin-name inner-plugin]]
                            (+ total (count-items-in-plugin inner-plugin)))
                          0
-                         plugin)]
-        {:success true
-         :data plugin
-         :imported-count total-items
-         :skipped-count 0
-         :skipped-items []
-         :had-errors false})
+                         data)]
+        (if (and (empty? data) (seq skipped-items))
+          {:success false
+           :errors ["No pack in the file is a map"]
+           :skipped-items skipped-items}
+          {:success true
+           :data data
+           :imported-count total-items
+           :skipped-count (count skipped-items)
+           :skipped-items skipped-items
+           :had-errors (boolean (seq skipped-items))}))
       ;; Single-plugin: use existing validation
       (let [validation (validate-plugin-progressive plugin)
             cleaned-plugin (into {}
