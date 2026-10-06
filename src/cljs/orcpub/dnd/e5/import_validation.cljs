@@ -1080,24 +1080,27 @@
         items))
 
 (defn collect-all-keys-from-plugin
-  "Collects all content keys from a single plugin.
+  "Collects all content keys from a single plugin. A plugin that is not a
+   map has none (Linear ORC-116).
    Returns {:content-type [{:key :source :name} ...]}."
   [plugin source-name]
-  (reduce
-   (fn [acc [content-type items]]
-     (if (and (qualified-keyword? content-type)
-              (= (namespace content-type) "orcpub.dnd.e5")
-              (map? items))
-       (update acc content-type
-               (fnil into [])
-               (mapv (fn [[k v]]
-                       {:key k
-                        :source source-name
-                        :name (or (:name v) (common/kw-to-name k))})
-                     items))
-       acc))
-   {}
-   plugin))
+  (if-not (map? plugin)
+    {}
+    (reduce
+     (fn [acc [content-type items]]
+       (if (and (qualified-keyword? content-type)
+                (= (namespace content-type) "orcpub.dnd.e5")
+                (map? items))
+         (update acc content-type
+                 (fnil into [])
+                 (mapv (fn [[k v]]
+                         {:key k
+                          :source source-name
+                          :name (or (:name v) (common/kw-to-name k))})
+                       items))
+         acc))
+     {}
+     plugin)))
 
 (defn collect-all-keys-from-plugins
   "Collects all content keys from multiple plugins.
