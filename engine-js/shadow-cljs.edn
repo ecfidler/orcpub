@@ -27,8 +27,8 @@
    :output-dir "dist"
    :modules {:pubdoor {:exports {evaluate orcpub.facade/evaluate
                                          importCharacter orcpub.facade/importCharacter
-                                         exportCharacter orcpub.facade/exportCharacter
                                          readServerEdn orcpub.facade/readServerEdn
+                                         exportCharacter orcpub.facade/exportCharacter
                                          emptyCharacter orcpub.facade/emptyCharacter
                                          select orcpub.facade/select
                                          deselect orcpub.facade/deselect

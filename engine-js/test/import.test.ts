@@ -158,9 +158,9 @@ describe("importCharacter on the old server's EDN (ORC-107)", () => {
     });
   }
 
-  // fighter-1.server.edn is the GET /dnd/5e/characters/<id> response for the
-  // fighter that Ethan built in the hosted app's UI on 2026-09-24 for ORC-11,
-  // copied from the issue's comment, with the owner renamed to "example-user".
+  // fighter-1.server.edn is the GET /dnd/5e/characters/<id> response for a
+  // fighter built in the hosted app's UI on 2026-09-24 for ORC-11, copied
+  // from the issue's comment, with the owner renamed to "example-user".
   it("imports a character captured from the hosted app (ORC-11), owner renamed", () => {
     const text = readFileSync(new URL("fixtures/fighter-1.server.edn", import.meta.url), "utf8");
     const { entity, legacyId } = importCharacter(text);
@@ -168,9 +168,10 @@ describe("importCharacter on the old server's EDN (ORC-107)", () => {
     expect(legacyId).toBe("17592373603283");
     expect(JSON.stringify(entity)).not.toContain(DB_ID);
     expect(JSON.stringify(entity)).not.toContain(OWNER);
-    // The same build as its Transit-JSON form, which readServerEdn gives.
-    expect(evaluate(entity).built).toStrictEqual(evaluate(importCharacter(readServerEdn(text)[0]).entity).built);
-    expect(evaluate(entity).built).toMatchObject({
+    const { built } = evaluate(entity);
+    // The text path and the parsed-value path agree. The per-fixture test above compares EDN with Transit-JSON.
+    expect(built).toStrictEqual(evaluate(importCharacter(readServerEdn(text)[0]).entity).built);
+    expect(built).toMatchObject({
       "character-name": "Brannor Ironfist",
       classes: ["fighter"],
       race: "Human",
@@ -208,7 +209,11 @@ describe("readServerEdn", () => {
     expect(readServerEdn("({:db/id 1} {:db/id 2})")).toStrictEqual([{ "~:db/id": 1 }, { "~:db/id": 2 }]);
   });
 
-  it.each([["("], [""], ["hello"], ["42"]])("throws for %j, which is not an EDN list, vector or map", (text) => {
-    expect(() => readServerEdn(text)).toThrow();
+  it("throws for text that is not EDN", () => {
+    expect(() => readServerEdn("(")).toThrow();
+  });
+
+  it.each([["hello"], ["42"], [":a"]])("throws for %j, which is not an EDN list, vector or map", (text) => {
+    expect(() => readServerEdn(text)).toThrow(/not an EDN list, vector or map/);
   });
 });

@@ -394,7 +394,7 @@
       (assoc-in raw [::entity/values ::char5e/xps] (char5e/parse-int (str/trim xps)))
       raw)))
 
-(defn- read-character
+(defn- read-transit-or-edn
   "A strict entity from Transit-JSON, as for evaluate, or from the old
   server's EDN text. Throws if text is neither, or is EDN but not a map."
   [entity]
@@ -403,15 +403,15 @@
     (try
       (read-strict entity)
       (catch :default json-error
-        (let [error (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
+        (let [message (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
                          (.-message json-error) ". As EDN, ")
               value (try
                       (read-edn entity)
                       (catch :default edn-error
-                        (throw (js/Error. (str error (.-message edn-error))))))]
+                        (throw (js/Error. (str message (.-message edn-error))))))]
           (if (map? value)
             value
-            (throw (js/Error. (str error "it is not a map.")))))))))
+            (throw (js/Error. (str message "it is not a map.")))))))))
 
 (defn ^:export importCharacter
   "Imports a character saved by the old app: the strict entity as
@@ -423,7 +423,7 @@
   Returns {entity, legacyId}: entity in evaluate's input format, and
   legacyId the old top-level :db/id as a string, or null."
   [entity]
-  (let [strict (read-character entity)
+  (let [strict (read-transit-or-edn entity)
         legacy-id (:db/id strict)
         raw (-> strict
                 strip-ownership
