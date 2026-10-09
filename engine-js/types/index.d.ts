@@ -295,7 +295,8 @@ export interface Evaluation {
 }
 
 /**
- * Builds a strict entity. The result is memoized on the entity's JSON text.
+ * Builds a strict entity. The result is memoized on the JSON text of the
+ * entity, the homebrew and the magic items.
  * Throws when options.rules names an unsupported edition.
  */
 export function evaluate(entity: StrictEntity, options?: EvaluateOptions): Evaluation;
@@ -608,7 +609,8 @@ export interface BuiltTemplate {
 /**
  * Builds the template for the homebrew, or for the SRD alone without it, and
  * describes it as plain data. The template is the one evaluate uses for the
- * same homebrew.
+ * same homebrew and magic items. The magic items add options, not content
+ * lists.
  */
 export function buildTemplate(homebrew?: Homebrew, options?: MagicItemsOptions): BuiltTemplate;
 

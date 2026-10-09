@@ -323,16 +323,19 @@
                        (some-> items read-magic-items))
        @srd-template))))
 
-(defn- homebrew-text [options]
-  (some-> options (gobj/get "homebrew") entity-text))
-
 (defn- magic-items-text [options]
   (some-> options (gobj/get "magicItems") entity-text))
+
+(defn- template-key
+  "The template-content key for homebrew, as for evaluate's
+  options.homebrew, and options {magicItems?}."
+  [homebrew options]
+  [(some-> homebrew entity-text) (magic-items-text options)])
 
 (defn- content-key
   "The template-content key for options {homebrew?, magicItems?}."
   [options]
-  [(homebrew-text options) (magic-items-text options)])
+  (template-key (some-> options (gobj/get "homebrew")) options))
 
 (defn- evaluate* [text content]
   (let [{:keys [template]} content
@@ -672,8 +675,7 @@
   ([] (buildTemplate nil))
   ([homebrew] (buildTemplate homebrew nil))
   ([homebrew options]
-   (let [{:keys [template content]} (template-content [(some-> homebrew entity-text)
-                                                       (magic-items-text options)])]
+   (let [{:keys [template content]} (template-content (template-key homebrew options))]
      (clj->js {"summary" (template-summary template)
                "shape" (mapv selection-shape (::t/selections template))
                "content" (into {}
@@ -706,7 +708,7 @@
   (memo-previous #(template-key-sets (:template (template-content %)))))
 
 (defn- sorted-keys [homebrew options which]
-  (->> (template-keys [(some-> homebrew entity-text) (magic-items-text options)])
+  (->> (template-keys (template-key homebrew options))
        which
        (map kw->str)
        sort
@@ -716,6 +718,7 @@
   "Every selection key in the template for homebrew, or for the SRD alone
   without it, once each, sorted. options is {magicItems?}, as for
   evaluate."
+  ([] (selection-keys nil nil))
   ([homebrew] (selection-keys homebrew nil))
   ([homebrew options]
    (sorted-keys homebrew options :selection-keys)))
@@ -724,6 +727,7 @@
   "Every option key in the template for homebrew, or for the SRD alone
   without it, once each, sorted. options is {magicItems?}, as for
   evaluate."
+  ([] (option-keys nil nil))
   ([homebrew] (option-keys homebrew nil))
   ([homebrew options]
    (sorted-keys homebrew options :option-keys)))
@@ -821,8 +825,7 @@
   ([entity] (reconcileMissingContent entity nil))
   ([entity homebrew] (reconcileMissingContent entity homebrew nil))
   ([entity homebrew options]
-   (let [{:keys [template available-content]} (template-content [(some-> homebrew entity-text)
-                                                                 (magic-items-text options)])
+   (let [{:keys [template available-content]} (template-content (template-key homebrew options))
          raw (char5e/from-strict (read-entity entity))
          selections (entity/get-all-selections-aux-2 template (entity/make-path-map raw))
          resolved (entity/make-template-option-map selections)
@@ -1687,11 +1690,11 @@
   taken, it undoes that choice and picks another, unlike the old button.
   It never undoes an option the entity already had.
 
-  options is {seed?, keep?, keepAll?, rules?, homebrew?, magicItems?}. By default the old
-  button's behaviour: the result keeps only the options at the keep paths
-  (the builder's locked components, such as [\"race\"]) and the enabled
-  plugins (:optional-content). It fills the rest, including the class and
-  level, and drops the values such as the name. With keepAll, it keeps
+  options is {seed?, keep?, keepAll?, rules?, homebrew?, magicItems?}. By
+  default the old button's behaviour: the result keeps only the options at
+  the keep paths (the builder's locked components, such as [\"race\"]) and
+  the enabled plugins (:optional-content). It fills the rest, including the
+  class and level, and drops the values such as the name. With keepAll, it keeps
   every option and value and fills only the selections with picks
   remaining. seed is a 32-bit integer; the same seed
   and entity give the same result. Without one, it uses Math.random.
