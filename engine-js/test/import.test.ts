@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { exportCharacter, importCharacter, readServerEdn } from "@pubdoor/dmv";
+import { evaluate, exportCharacter, importCharacter, readServerEdn } from "@pubdoor/dmv";
 
 const fixtures = new URL("../../fixtures/", import.meta.url);
 
@@ -107,54 +107,91 @@ describe("exportCharacter(importCharacter(x))", () => {
 
 /**
  * The EDN text of a value in verbose Transit-JSON, as the old server writes
- * it: a keyword "~:k" is :k, {"~#set": [...]} is #{...}, a map key "~i1" is
- * the integer 1.
+ * a Datomic pull: a keyword "~:k" is :k, a map key "~i1" is the integer 1,
+ * and a set is a vector, as a card-many attribute comes back. Each map gets
+ * the next :db/id from ids unless it has one.
  */
-function toEdn(x: unknown): string {
-  if (Array.isArray(x)) return `[${x.map(toEdn).join(" ")}]`;
+function toEdn(x: unknown, ids: { next: number }): string {
+  if (Array.isArray(x)) return `[${x.map((v) => toEdn(v, ids)).join(" ")}]`;
   if (x === null) return "nil";
   if (typeof x === "string") {
     if (x.startsWith("~:")) return `:${x.slice(2)}`;
     if (x.startsWith("~i")) return x.slice(2);
-    return JSON.stringify(x.startsWith("~~") ? x.slice(1) : x);
+    return JSON.stringify(/^~[~^`]/.test(x) ? x.slice(1) : x);
   }
   if (typeof x === "object") {
     const entries = Object.entries(x);
-    if (entries.length === 1 && entries[0][0] === "~#set") return `#{${(entries[0][1] as unknown[]).map(toEdn).join(" ")}}`;
-    return `{${entries.map(([k, v]) => `${toEdn(k)} ${toEdn(v)}`).join(", ")}}`;
+    if (entries.length === 1 && entries[0][0] === "~#set") return toEdn(entries[0][1], ids);
+    const id = DB_ID in x ? [] : [`:db/id ${ids.next++}`];
+    return `{${[...id, ...entries.map(([k, v]) => `${toEdn(k, ids)} ${toEdn(v, ids)}`)].join(", ")}}`;
   }
   return String(x);
 }
 
-/** A character as GET /dnd/5e/characters/<id> returns it: EDN, with the server's tags and summary. */
-function serverEdn(strict: unknown): string {
+const SERVER_ID = 17592186045418;
+
+/**
+ * A character as GET /dnd/5e/characters/<id> returns it (fixtures/README.md
+ * finding 10): EDN, a :db/id on every map, and the owner, tags and summary.
+ */
+function serverEdn(strict: object, ids = { next: SERVER_ID }): string {
   const tags =
-    ':orcpub.entity.strict/game :dnd :orcpub.entity.strict/game-version :e5 :orcpub.entity.strict/type :character ' +
-    ':orcpub.entity.strict/summary {:orcpub.dnd.e5.character/character-name "Summary"}';
-  return toEdn(strict).replace(/^\{/, `{${tags}, `);
+    ':orcpub.entity.strict/owner "example-user" :orcpub.entity.strict/game :dnd ' +
+    ":orcpub.entity.strict/game-version :e5 :orcpub.entity.strict/type :character " +
+    ':orcpub.entity.strict/summary {:db/id 1 :orcpub.dnd.e5.character/character-name "Summary"}';
+  const withoutOwner = Object.fromEntries(Object.entries(strict).filter(([k]) => k !== OWNER));
+  return toEdn(withoutOwner, ids).replace(/^\{/, `{${tags}, `);
 }
+
+/** The top-level :db/id that serverEdn gives strict: its own, or the first one serverEdn assigns. */
+const serverId = (strict: object) => String((strict as Record<string, unknown>)[DB_ID] ?? SERVER_ID);
 
 describe("importCharacter on the old server's EDN (ORC-107)", () => {
   for (const [dir, name] of strictFixtures()) {
     it(`imports ${dir}/${name} as EDN the same as Transit-JSON`, () => {
       const strict = read(dir, `${name}.strict.json`) as object;
 
-      expect(importCharacter(serverEdn(strict))).toStrictEqual(importCharacter(strict));
+      expect(importCharacter(serverEdn(strict))).toStrictEqual({
+        entity: importCharacter(strict).entity,
+        legacyId: serverId(strict),
+      });
     });
   }
 
-  it("throws for text that is neither Transit-JSON nor EDN", () => {
-    expect(() => importCharacter("{:orcpub.entity.strict/selections [")).toThrow(/not Transit-JSON or EDN/);
+  it("imports a character captured from the hosted app (ORC-11), owner renamed", () => {
+    const text = readFileSync(new URL("fixtures/fighter-1.server.edn", import.meta.url), "utf8");
+    const { entity, legacyId } = importCharacter(text);
+
+    expect(legacyId).toBe("17592373603283");
+    expect(JSON.stringify(entity)).not.toContain(DB_ID);
+    expect(JSON.stringify(entity)).not.toContain(OWNER);
+    // The same build as its Transit-JSON form, which readServerEdn gives.
+    expect(evaluate(entity).built).toStrictEqual(evaluate(importCharacter(readServerEdn(text)[0]).entity).built);
+    expect(evaluate(entity).built).toMatchObject({
+      "character-name": "Brannor Ironfist",
+      classes: ["fighter"],
+      race: "Human",
+      subrace: "Damaran",
+    });
   });
+
+  it.each([["{:orcpub.entity.strict/selections ["], [""], ["hello"], ["[:a :b]"]])(
+    "throws for %j, which is not Transit-JSON or an EDN map",
+    (text) => {
+      expect(() => importCharacter(text)).toThrow(/not Transit-JSON or EDN/);
+    },
+  );
 });
 
 describe("readServerEdn", () => {
+  // GET /dnd/5e/characters sends a vector (d/pull-many), and /dnd/5e/items a list.
   it("gives one value per character in GET /dnd/5e/characters, and each imports as its Transit-JSON", () => {
     const strict = ["character-test-1", "character-test-2"].map((name) => read("legacy", `${name}.strict.json`) as object);
-    const values = readServerEdn(`(${strict.map(serverEdn).join(" ")})`);
+    const ids = { next: SERVER_ID };
+    const values = readServerEdn(`[${strict.map((x) => serverEdn(x, ids)).join(" ")}]`);
 
     expect(values).toHaveLength(2);
-    values.forEach((value, i) => expect(importCharacter(value)).toStrictEqual(importCharacter(strict[i])));
+    values.forEach((value, i) => expect(importCharacter(value).entity).toStrictEqual(importCharacter(strict[i]).entity));
   });
 
   it("gives an empty array for an empty list, and a one-item array for a map", () => {
@@ -164,7 +201,11 @@ describe("readServerEdn", () => {
     ]);
   });
 
-  it("throws for text that is not EDN", () => {
-    expect(() => readServerEdn("(")).toThrow();
+  it("gives one value per item of a list, as GET /dnd/5e/items sends", () => {
+    expect(readServerEdn("({:db/id 1} {:db/id 2})")).toStrictEqual([{ "~:db/id": 1 }, { "~:db/id": 2 }]);
+  });
+
+  it.each([["("], [""], ["hello"], ["42"]])("throws for %j, which is not an EDN list, vector or map", (text) => {
+    expect(() => readServerEdn(text)).toThrow();
   });
 });

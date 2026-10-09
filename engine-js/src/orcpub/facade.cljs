@@ -363,20 +363,8 @@
   [text]
   (reader/read-string text))
 
-(defn- read-entity
-  "A strict entity from Transit-JSON (the text, or the value JSON.parse
-  returns for it) or from EDN text."
-  [entity]
-  (if (string? entity)
-    (try
-      (read-strict entity)
-      (catch :default json-error
-        (try
-          (read-edn entity)
-          (catch :default _
-            (throw (js/Error. (str "The character is not Transit-JSON or EDN: "
-                                   (.-message json-error))))))))
-    (read-strict (entity-text entity))))
+(defn- read-entity [entity]
+  (read-strict (entity-text entity)))
 
 (defn- write-entity
   "A strict entity or homebrew as verbose Transit-JSON, parsed: the format
@@ -406,6 +394,25 @@
       (assoc-in raw [::entity/values ::char5e/xps] (char5e/parse-int (str/trim xps)))
       raw)))
 
+(defn- read-character
+  "A strict entity from Transit-JSON, as for evaluate, or from the old
+  server's EDN text. Throws if text is neither, or is EDN but not a map."
+  [entity]
+  (if-not (string? entity)
+    (read-entity entity)
+    (try
+      (read-strict entity)
+      (catch :default json-error
+        (let [value (try
+                      (read-edn entity)
+                      (catch :default edn-error
+                        (throw (js/Error. (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
+                                               (.-message json-error) ". As EDN: " (.-message edn-error))))))]
+          (if (map? value)
+            value
+            (throw (js/Error. (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
+                                   (.-message json-error) ". As EDN, it is not a map.")))))))))
+
 (defn ^:export importCharacter
   "Imports a character saved by the old app: the strict entity as
   Transit-JSON text or its parsed value, or as the EDN text that the old
@@ -416,7 +423,7 @@
   Returns {entity, legacyId}: entity in evaluate's input format, and
   legacyId the old top-level :db/id as a string, or null."
   [entity]
-  (let [strict (read-entity entity)
+  (let [strict (read-character entity)
         legacy-id (:db/id strict)
         raw (-> strict
                 strip-ownership
@@ -427,14 +434,18 @@
          "legacyId" (some-> legacy-id str)}))
 
 (defn ^:export readServerEdn
-  "The EDN text of an old server response as an array of values in
-  evaluate's input format, verbose Transit-JSON parsed. A list or vector,
-  such as GET /dnd/5e/characters or /dnd/5e/items returns, gives one value
-  per item; any other value gives a one-item array. Pass a character to
-  importCharacter. Throws if the text is not EDN."
+  "Reads the EDN text of an old server response into an array of values,
+  each in evaluate's input format (parsed verbose Transit-JSON). A list or
+  vector, as GET /dnd/5e/characters and /dnd/5e/items return, gives one
+  value for each item. A map gives an array of one. Pass each character to
+  importCharacter. Throws if the text is not EDN, or is not a list, vector
+  or map."
   [text]
   (let [value (read-edn text)]
-    (into-array (map write-entity (if (sequential? value) value [value])))))
+    (cond
+      (sequential? value) (into-array (map write-entity value))
+      (map? value) (array (write-entity value))
+      :else (throw (js/Error. "The server response is not an EDN list, vector or map.")))))
 
 (defn ^:export exportCharacter
   "Normalizes an entity with char5e/from-strict and serializes it with
