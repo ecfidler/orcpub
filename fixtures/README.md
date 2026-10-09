@@ -37,6 +37,8 @@ fixtures/
     <name>.expected.json    built values: what evaluate(strict).built must equal
     <name>.selections.json  available selections, flattened with actualPath
     <name>.meta.json        packs needed, description, checks run, round-trip result
+  magic-items/
+    custom-items.edn          a user's custom magic items, as GET /dnd/5e/items sends them
   legacy/
     character-test-{1,2,3}.*  the three real Datomic entities from character_test.clj
     r{3..9}-*.*               one synthetic strict entity per import quirk (doc 01 §C2)
@@ -49,7 +51,7 @@ fixtures/
 
 | Set | Count |
 |---|---|
-| Golden characters | 12 (`characters/`) |
+| Golden characters | 13 (`characters/`) |
 | Legacy entities | 3 real + 8 synthetic (`legacy/`) |
 | `.orcbrew` packs | 18, each with a `.template.json`, plus the baseline |
 
@@ -123,7 +125,9 @@ with `min 2`); the old UI merges those.
 ### `<name>.meta.json`
 
 `orcbrew` (packs the character needs, in import order, relative to
-`fixtures/orcbrew/`), `description`, `strictRoundTrip` (whether
+`fixtures/orcbrew/`), `magicItems` when present (the custom magic items
+file the character needs, relative to `fixtures/magic-items/`),
+`description`, `strictRoundTrip` (whether
 `to-strict(from-strict(x)) = x`, or the exception it throws), `unfilledSelections`
 (required selections the UI would still flag), `checks` (hand-written
 assertions the generator ran, with expected/actual/pass), and `quirk` for
@@ -189,12 +193,13 @@ lines in `scripts/orcpub/oracle.clj`.
 
 All SRD except where a pack is listed. Ability scores, hit points (average
 per level) and every required selection are filled the way the old builder
-would; `unfilledSelections` is empty for all twelve.
+would; `unfilledSelections` is empty for all thirteen.
 
 | Name | What it covers | Packs |
 |---|---|---|
 | `fighter-1` | Human (standard) fighter 1, Acolyte, Defense, chain mail + longsword + shield | none |
 | `fighter-5` | Hill dwarf fighter 5, Champion, **Dueling** (+2 damage on the one-handed longsword: the `patch D2` case), ASI, Extra Attack, tool proficiency | none |
+| `fighter-5-custom-magic-items` | The `fighter-5` build with a user's custom magic items (ORC-126). It equips a custom sword, which expands to five swords, custom plate, and a custom wondrous item, and carries one more sword and one more item unequipped. Covers attack and damage bonuses, magical AC, and ability, save, resistance and speed modifiers | `magic-items/custom-items.edn` |
 | `fighter-11` | Half-orc fighter 11, Champion, Great Weapon Fighting, three attacks, three ASIs, greataxe | none |
 | `fighter-20` | Human fighter 20, Champion, Protection, four attacks, every ASI (one as the Grappler feat), plate + shield, a `+1` longsword and an attuned amulet of health | none |
 | `barbarian-5` | Human barbarian 5, Path of the Berserker, ASI, Fast Movement. Carries hide, chain mail, and a shield, so `speed-with-armor` shows 40 ft. unarmored and in hide, and 30 ft. in the heavy chain mail | none |
@@ -217,6 +222,16 @@ or `class-starting-equipment?`, plus items added by hand. Items from a starting-
 the fighter's chain mail or the wizard's quarterstaff, reach the built
 character through that option's modifiers and have no inventory entry
 (finding 11).
+
+## Custom magic items (`magic-items/`)
+
+`custom-items.edn` is written in the form that the old server sends for
+`GET /dnd/5e/items`: an EDN list, with a `:db/id` on each map and the owner
+`example-user`. The old app gives that body to its template chain without
+change, so the oracle puts it in app-db under `::mi5e/custom-items` and the
+facade takes it as `options.magicItems`, read with `readServerEdn`. A weapon
+or armor with `subtypes` expands to one item for each base item that
+matches, keyed `<name>-<base>`, such as `emberbrand-longsword`.
 
 ## Legacy fixtures
 
@@ -318,7 +333,7 @@ lein run -m clojure.main scripts/golden-characters.clj          # characters/ an
 lein run -m clojure.main scripts/dump-template.clj --baseline fixtures/orcbrew/_srd-baseline.template.json.gz
 lein run -m clojure.main scripts/dump-template.clj fixtures/orcbrew/<pack>.orcbrew fixtures/orcbrew/<pack>.template.json
 lein run -m clojure.main scripts/dump-built-character.clj <in.strict.json> <out.expected.json> \
-     [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...]
+     [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...] [--items <items.edn>]
 ```
 
 `scripts/event-handler-fixtures.clj` writes the entities of

@@ -10,9 +10,12 @@
   positional arguments, and the unused query vector is dropped). `build`
   composes them in the order re-frame would, computing each input once.
 
-  State mirrored: app-db `:plugins` = the `plugins` argument, no logged-in
-  user, so `::mi5e/custom-items` = [] (`equipment_subs.cljs:48-50`). This is
-  what the M0 oracle (`scripts/orcpub/oracle.clj`, `load-old-subs!`) uses.
+  State mirrored: app-db `:plugins` = the `plugins` argument, and app-db
+  `::mi5e/custom-items` = the `items` argument, a logged-in user's
+  magic items as GET /dnd/5e/items returns them (`equipment_subs.cljs:33-47`
+  stores the response there). Without it, [], as for no logged-in user. The
+  M0 oracle (`scripts/orcpub/oracle.clj`, `template-for-plugins`) mirrors
+  the same state.
 
   `orcpub.dnd.e5.equipment-subs` cannot be required (it reads `js/window` at
   load), so the non-subscription helpers it defines are copied here and
@@ -107,12 +110,13 @@
 (defn- plugins-sub [db]
   (get db :plugins))
 
-;; ::mi5e/custom-items — equipment_subs.cljs:48-50, the branch the old app
-;; registers when there is no js/window.location. The browser branch
-;; (:33-47) fetches a logged-in user's items over HTTP and reads app-db
-;; ::mi5e/custom-items, which is absent (so []) with no user logged in.
-(defn- custom-items []
-  [])
+;; ::mi5e/custom-items — equipment_subs.cljs:33-47, the browser branch,
+;; without its HTTP fetch: the reaction's body. The fetch stores the
+;; GET /dnd/5e/items body in app-db ::mi5e/custom-items unchanged; build's
+;; caller passes that body. Absent, it is [], as with no user logged in and
+;; as in the non-browser branch (:48-50).
+(defn- custom-items [db]
+  (get db ::mi5e/custom-items []))
 
 ;;; ---------------------------------------------------------------------------
 ;;; spell_subs.cljs
@@ -537,8 +541,11 @@
 
 (defn build
   "The old app's template for `plugins`, the value it keeps in app-db under
-  :plugins ({source-name plugin-map}; {} means SRD only), with no user
-  logged in.
+  :plugins ({source-name plugin-map}; {} means SRD only), and for `items`,
+  a logged-in user's custom magic items: the body of GET /dnd/5e/items, a
+  sequence of item maps, which the old app keeps in app-db under
+  ::mi5e/custom-items. Without items, the template is the one for no
+  logged-in user.
 
   Returns
     {:template        what @(subscribe [::char5e/template]) yields
@@ -554,10 +561,10 @@
      :content         the chain's intermediate lists, named as in
                       scripts/dump-template.clj: \"races\" is what
                       @(subscribe [::races5e/races]) yields, and so on}"
-  [plugins]
+  [plugins & [items]]
   (let [;; roots
         plugins (plugins-sub {:plugins plugins})
-        custom-items (custom-items)
+        custom-items (custom-items (cond-> {} items (assoc ::mi5e/custom-items items)))
 
         ;; plugin content
         plugin-vals (plugin-vals plugins)

@@ -5,6 +5,7 @@
 ;;   lein run -m clojure.main scripts/dump-built-character.clj \
 ;;       <in.strict.json> <out.expected.json> \
 ;;       [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...]
+;;       [--items <items.edn>]
 ;;
 ;;   scripts/oracle-env.sh scripts/dump-built-character.clj ...   ; no Leiningen/Clojars
 ;;
@@ -14,7 +15,8 @@
 ;; <in.strict.json> is a strict entity as Transit-JSON (what
 ;; GET /dnd/5e/characters/:id returns; verbose or normal mode). The character
 ;; is built against the old app's template: SRD content plus every --orcbrew
-;; pack, imported through the old importer in the order given.
+;; pack, imported through the old importer in the order given, plus the custom
+;; magic items in --items: an EDN file that holds a GET /dnd/5e/items body.
 ;; See fixtures/README.md for the output format.
 (load-file "scripts/orcpub/oracle.clj")
 
@@ -28,13 +30,14 @@
     (cond (nil? a) opts
           (= a "--selections") (recur (rest more) (assoc opts :selections (first more)))
           (= a "--orcbrew") (recur (rest more) (update opts :orcbrew conj (first more)))
+          (= a "--items") (recur (rest more) (assoc opts :items (first more)))
           (str/starts-with? a "--") (throw (ex-info (str "unknown option " a) {}))
           :else (recur more (update opts :positional conj a)))))
 
 (defn dump-built-character
-  [strict-path expected-path & {:keys [selections orcbrew] :or {orcbrew []}}]
+  [strict-path expected-path & {:keys [selections orcbrew items] :or {orcbrew []}}]
   (let [plugins (oracle/plugins-for-orcbrew-files orcbrew)
-        template (oracle/template-for-plugins plugins)
+        template (oracle/template-for-plugins plugins (some-> items oracle/read-items-file))
         strict (oracle/read-strict-file strict-path)
         {:keys [expected] sels :selections} (oracle/dump-character strict template)]
     (oracle/write-json-file expected-path expected)
@@ -44,13 +47,13 @@
     (when selections (println "wrote" selections))))
 
 (defn -main [& args]
-  (let [{:keys [positional selections orcbrew]} (parse-args args)
+  (let [{:keys [positional selections orcbrew items]} (parse-args args)
         [in out] positional]
     (when-not (and in out)
       (binding [*out* *err*]
-        (println "usage: dump-built-character.clj <in.strict.json> <out.expected.json> [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...]"))
+        (println "usage: dump-built-character.clj <in.strict.json> <out.expected.json> [--selections <out.selections.json>] [--orcbrew <pack.orcbrew> ...] [--items <items.edn>]"))
       (System/exit 2))
-    (dump-built-character in out :selections selections :orcbrew orcbrew)))
+    (dump-built-character in out :selections selections :orcbrew orcbrew :items items)))
 
 (when (seq *command-line-args*)
   (apply -main *command-line-args*)

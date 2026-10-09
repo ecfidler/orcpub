@@ -66,9 +66,9 @@ full signatures and the types.
 - `validateForExport(homebrew, options?)` checks packs before export, as the old app's export buttons did, and checks each item's key, pack, and nils. It returns `{ valid, packs, filled }`. `filled` is the homebrew with those items repaired and with placeholders for missing required fields, which the old app's "export anyway" wrote.
 - `orcbrewToEdn(homebrew, options?)` returns `.orcbrew` text: all packs as the old app's `all-content.orcbrew`, or with `options.pack` one pack alone. `options.pretty` pretty-prints it.
 - `renameKey(homebrew, { pack, contentType, from, to })` renames one item's key in one pack, as the old conflict modal's rename did, and returns the new homebrew. It also rewrites the pack's references to the item: a class's subclasses, the spells that list it, and the classes and subclasses that use its spell list; a race's subraces and the feats that require it; a selection's `level-selections`. Pass a `KeyConflict`'s `content-type`, `key`, and suggested key. Saved characters keep the old key, so `reconcileMissingContent` reports them for a remap.
-- `reconcileMissingContent(entity, homebrew?)` checks every option key in a character against the template for homebrew, or for the SRD alone, and returns `{ hasMissing, items, unresolvedOptions }`. `items` lists each race, subrace, background, class, subclass, or feat that does not resolve, with the old app's suggestions from the loaded packs. `unresolvedOptions` lists any other choice that does not resolve under a parent that does. The entity is not changed.
-- `buildTemplate(homebrew?)` builds the template for homebrew, or for the SRD alone, and returns `{ summary, shape, content }`: the top-level selections and their option keys, the template's structure without functions, and the content lists, such as races and classes.
-- `keys.selectionKeys(homebrew?)` and `keys.optionKeys(homebrew?)` return every selection key and every option key in the template for homebrew, or for the SRD alone, once each and sorted. Saved characters and `.orcbrew` files refer to content by these keys.
+- `reconcileMissingContent(entity, homebrew?, options?)` checks every option key in a character against the template for homebrew, or for the SRD alone, and returns `{ hasMissing, items, unresolvedOptions }`. `items` lists each race, subrace, background, class, subclass, or feat that does not resolve, with the old app's suggestions from the loaded packs. `unresolvedOptions` lists any other choice that does not resolve under a parent that does, such as a custom magic item when `options.magicItems` does not hold it. The entity is not changed.
+- `buildTemplate(homebrew?, options?)` builds the template for homebrew, or for the SRD alone, and returns `{ summary, shape, content }`: the top-level selections and their option keys, the template's structure without functions, and the content lists, such as races and classes.
+- `keys.selectionKeys(homebrew?, options?)` and `keys.optionKeys(homebrew?, options?)` return every selection key and every option key in the template for homebrew, or for the SRD alone, once each and sorted. Saved characters and `.orcbrew` files refer to content by these keys.
 
 Each mutation returns a new entity. It throws with the reason when the old
 builder would refuse the same change.
@@ -159,7 +159,22 @@ load a file, pass the current homebrew to `parseOrcbrew` as
 `options.existing` and replace it with the result's `data`. `parseOrcbrew`
 merges the file in as the old app did, so do not merge packs yourself.
 Without the option, characters build against the SRD only. The engine
-rebuilds its template only when the homebrew changes.
+rebuilds its template only when the homebrew or the magic items change.
+
+## The magic items option
+
+`evaluate`, `autofill`, the mutations, `buildTemplate`, `keys`, and
+`reconcileMissingContent` also take `{ magicItems }`: the user's custom
+magic items, as `readServerEdn` returns them for the old server's
+`GET /dnd/5e/items`. Pass that array as it is. The old app gave the same
+response to its template without change. With the option, the template's
+Magic Weapons, Magic Armor, and Other Magic Items selections list the
+custom items, so a character can carry and equip them, and an equipped
+item's modifiers and bonuses apply. A weapon or armor with `subtypes`
+becomes one option for each base item that matches, keyed
+`<name>-<base>`, such as `emberbrand-longsword`. Without the option, a
+character that carries a custom item builds without it, and
+`reconcileMissingContent` reports the item.
 
 ## Versions
 

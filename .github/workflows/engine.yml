@@ -73,6 +73,18 @@ jobs:
             --selections fixtures/characters/fighter-3-wizard-2.selections.json
           git diff --exit-code fixtures/
 
+      # The same for the golden character with custom magic items (ORC-126):
+      # the old template chain given the GET /dnd/5e/items body.
+      - name: Regenerate the custom magic items fixture
+        working-directory: .
+        run: |
+          scripts/oracle-env.sh scripts/dump-built-character.clj \
+            fixtures/characters/fighter-5-custom-magic-items.strict.json \
+            fixtures/characters/fighter-5-custom-magic-items.expected.json \
+            --selections fixtures/characters/fighter-5-custom-magic-items.selections.json \
+            --items fixtures/magic-items/custom-items.edn
+          git diff --exit-code fixtures/
+
       # Contract C1: the old importer and the old ::e5/plugins spec accept
       # every .orcbrew file that orcbrewToEdn writes for the fixture packs.
       - name: Check .orcbrew exports against the old importer
