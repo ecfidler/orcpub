@@ -8,7 +8,8 @@
 ;; fixtures/characters/<name>.strict.json, read back from that file and built
 ;; against the old app's template (SRD + the packs the character needs) to
 ;; produce <name>.expected.json and <name>.selections.json. <name>.meta.json
-;; records the packs, a description and the checks that were run.
+;; records the packs, the custom magic items file, a description and the checks
+;; that were run.
 ;; fixtures/legacy/ gets the three real Datomic entities from character_test.clj
 ;; and one synthetic strict entity per import quirk R2-R9 (doc 01 §C2).
 (load-file "scripts/orcpub/oracle.clj")
@@ -29,6 +30,7 @@
 (def characters-dir "fixtures/characters")
 (def legacy-dir "fixtures/legacy")
 (def orcbrew-dir "fixtures/orcbrew")
+(def magic-items-dir "fixtures/magic-items")
 
 ;;; ---------------------------------------------------------------------------
 ;;; Entity-building helpers
@@ -215,6 +217,35 @@
                      ;; Dueling: +2 damage with the one-handed longsword, none with the two-handed greataxe
                      [6 (char5e/weapon-damage-modifier b (:longsword orcpub.dnd.e5.weapons/weapons-map) false)]
                      [4 (char5e/weapon-damage-modifier b (:greataxe orcpub.dnd.e5.weapons/weapons-map) false)]])}
+
+   {:name "fighter-5-custom-magic-items"
+    :description "The fighter-5 build with a user's custom magic items from custom-items.edn, the body of the old server's GET /dnd/5e/items (ORC-126). Equipped: Emberbrand, Longsword in the main hand (one of five swords the weapon expands to; +1 attack, +2 damage, fire resistance), Warden's Plate (+2 AC, +1 CON saves) and the Circlet of the Hawk (WIS +2, speed +10). Carried but not equipped: Emberbrand, Greatsword and the Pearl of Stillwater, whose swimming speed must not apply."
+    :magic-items "custom-items.edn"
+    :raw {::entity/options
+          (merge {:ability-scores (val-opt :standard-roll (abilities 16 12 15 10 13 8))
+                  :alignment (opt :lawful-neutral)
+                  :race (opt :dwarf {:subrace (opt :hill-dwarf) :tool-proficiency (opt :smiths-tools)})
+                  :languages [(opt :giant) (opt :orc)]
+                  :background acolyte
+                  :class [(fighter-base 5 {3 {:martial-archetype (opt :champion)}
+                                           4 {:asi-or-feat (asi A A)}}
+                                        :style :dueling :skills [:athletics :intimidation])]
+                  :magic-weapons [(item :emberbrand-longsword 1) (item :emberbrand-greatsword 1 :equipped? false)]
+                  :magic-armor [(item :wardens-plate 1)]
+                  :other-magic-items [(item :circlet-of-the-hawk 1) (item :pearl-of-stillwater 1 :equipped? false)]}
+                 fighter-items)
+          ::entity/values {::char5e/character-name "Durga Anvilmar"
+                           ::char5e/xps 6500
+                           ::char5e/current-hit-points 40
+                           ::char5e/worn-armor :wardens-plate
+                           ::char5e/wielded-shield :shield
+                           ::char5e/main-hand-weapon :emberbrand-longsword
+                           ::char5e/off-hand-weapon :shield
+                           ::char5e/attuned-magic-items [:emberbrand-longsword :circlet-of-the-hawk]}}
+    :checks (fn [b] [[16 (:orcpub.dnd.e5.character/wis (char5e/ability-values b))]
+                     [true (contains? (set (map :value (char5e/damage-resistances b))) :fire)]
+                     [35 (char5e/base-land-speed b)]
+                     [0 (char5e/base-swimming-speed b)]])}
 
    {:name "fighter-11"
     :description "Level 11 half-orc fighter (Champion), Great Weapon Fighting, three attacks, ASIs at 4/6/8; greataxe main hand."
@@ -583,11 +614,12 @@
 
 (def template-cache (atom {}))
 
-(defn template-for [orcbrew-files]
-  (or (get @template-cache orcbrew-files)
+(defn template-for [orcbrew-files magic-items-file]
+  (or (get @template-cache [orcbrew-files magic-items-file])
       (let [plugins (oracle/plugins-for-orcbrew-files (map #(str orcbrew-dir "/" %) orcbrew-files))
-            template (oracle/template-for-plugins plugins)]
-        (swap! template-cache assoc orcbrew-files template)
+            items (some->> magic-items-file (str magic-items-dir "/") oracle/read-items-file)
+            template (oracle/template-for-plugins plugins items)]
+        (swap! template-cache assoc [orcbrew-files magic-items-file] template)
         template)))
 
 (defn run-checks [checks built]
@@ -611,7 +643,7 @@
     (assoc-in expected [key i field] browser)))
 
 (defn write-fixture!
-  [dir {:keys [name description quirk orcbrew raw strict checks overrides unresolved] :or {orcbrew []}}]
+  [dir {:keys [name description quirk orcbrew magic-items raw strict checks overrides unresolved] :or {orcbrew []}}]
   (println "==" name)
   (let [strict (or strict (char5e/to-strict raw))
         strict-path (str dir "/" name ".strict.json")
@@ -620,7 +652,7 @@
         _ (when (not= strict strict*) (println "  WARNING: strict entity did not survive the Transit round trip"))
         round-trip (try (if (= strict (char5e/to-strict (char5e/from-strict strict))) true false)
                         (catch Exception e (str "throws: " (.getMessage e))))
-        template (template-for orcbrew)
+        template (template-for orcbrew magic-items)
         {:keys [raw built]} (oracle/build-strict strict* template)
         expected (reduce apply-override (oracle/expected-values built) overrides)
         selections (oracle/selections-summary raw built template)
@@ -637,6 +669,7 @@
                                      "strictRoundTrip" round-trip
                                      "unfilledSelections" (mapv #(get % "actualPath") unfilled)
                                      "checks" (or check-results [])}
+                              magic-items (assoc "magicItems" magic-items)
                               quirk (assoc "quirk" quirk)
                               overrides (assoc "overrides" overrides)
                               unresolved (assoc "unresolved" unresolved)))

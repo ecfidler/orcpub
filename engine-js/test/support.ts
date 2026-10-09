@@ -2,7 +2,7 @@
 // C3 reference check, and template key sets.
 import { readdirSync, readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
-import { buildTemplate, type TemplateSelection } from "@pubdoor/dmv";
+import { buildTemplate, readServerEdn, type MagicItems, type TemplateSelection } from "@pubdoor/dmv";
 
 /** The repository's fixtures/ directory. */
 export const fixtures = new URL("../../fixtures/", import.meta.url);
@@ -15,6 +15,15 @@ export function readFixtureText(path: string): string {
 /** A fixture JSON file, parsed. path is relative to fixtures/. */
 export function readFixture(path: string): unknown {
   return JSON.parse(readFixtureText(path));
+}
+
+/**
+ * A fixture's custom magic items, as its .meta.json names them under
+ * magicItems, read as the app reads the server's response. undefined when
+ * it names none.
+ */
+export function fixtureMagicItems(meta: { magicItems?: string }): MagicItems | undefined {
+  return meta.magicItems ? readServerEdn(readFixtureText(`magic-items/${meta.magicItems}`)) : undefined;
 }
 
 /** The names of the files in fixtures/<dir> that end in suffix, without it, sorted. */

@@ -296,14 +296,46 @@
 ;; Homebrew crosses the boundary as the multi-plugin map, the old app's
 ;; :plugins ({pack-name plugin}), in verbose Transit-JSON: the text, or the
 ;; value JSON.parse returns for it, as for strict entities.
+;;
+;; Custom magic items cross it as the body of the old server's
+;; GET /dnd/5e/items, which the old app keeps in app-db as it is: the array
+;; that readServerEdn returns for that body, or its JSON text. Each item is
+;; in the server's form, with ::mi5e/modifiers as {::mod/key, ::mod/args},
+;; which the template chain reads directly (ORC-126).
 
-(def ^:private homebrew-content
-  "The template content for homebrew's Transit-JSON text, or the SRD's for
-  nil."
-  (memo-previous #(if % (template/build (read-strict %)) @srd-template)))
+(defn- read-magic-items
+  "The custom magic items in Transit-JSON text. Throws unless they are an
+  array of maps."
+  [text]
+  (let [items (read-strict text)]
+    (if (and (sequential? items) (every? map? items))
+      items
+      (throw (js/Error. (str "magicItems is not an array of magic items. Pass what "
+                             "readServerEdn returns for GET /dnd/5e/items."))))))
 
-(defn- homebrew-text [options]
-  (some-> options (gobj/get "homebrew") entity-text))
+(def ^:private template-content
+  "The template content for a memo-key: [homebrew items], each the
+  Transit-JSON text or nil. Both nil gives the SRD's."
+  (memo-previous
+   (fn [[homebrew items]]
+     (if (or homebrew items)
+       (template/build (if homebrew (read-strict homebrew) {})
+                       (some-> items read-magic-items))
+       @srd-template))))
+
+(defn- magic-items-text [options]
+  (some-> options (gobj/get "magicItems") entity-text))
+
+(defn- memo-key
+  "The template-content key for homebrew, as for evaluate's
+  options.homebrew, and options {magicItems?}."
+  [homebrew options]
+  [(some-> homebrew entity-text) (magic-items-text options)])
+
+(defn- options-memo-key
+  "The template-content key for options {homebrew?, magicItems?}."
+  [options]
+  (memo-key (some-> options (gobj/get "homebrew")) options))
 
 (defn- evaluate* [text content]
   (let [{:keys [template]} content
@@ -323,17 +355,19 @@
                              ". @pubdoor/dmv supports only \"2014\"."))))))
 
 (def ^:private evaluate-previous
-  (memo-previous (fn [[text homebrew]] (evaluate* text (homebrew-content homebrew)))))
+  (memo-previous (fn [[text k]] (evaluate* text (template-content k)))))
 
 (defn ^:export evaluate
   "Builds a strict entity and returns {built, selections} as plain JS.
 
   entity is the strict entity as Transit-JSON: the text, or the value
-  JSON.parse returns for it. options is {rules?, homebrew?}. rules defaults
-  to \"2014\", the only edition this package supports. homebrew is the
-  loaded packs, the multi-plugin map as verbose Transit-JSON
+  JSON.parse returns for it. options is {rules?, homebrew?, magicItems?}.
+  rules defaults to \"2014\", the only edition this package supports.
+  homebrew is the loaded packs, the multi-plugin map as verbose Transit-JSON
   (parseOrcbrew's data); without it the character builds against the SRD
-  only.
+  only. magicItems is the user's custom magic items, what readServerEdn
+  returns for the old server's GET /dnd/5e/items; the character can carry
+  and equip them, and their modifiers apply when equipped.
 
   Weapon bonuses read the hand slots in the entity's values,
   :orcpub.dnd.e5.character/main-hand-weapon and off-hand-weapon, each a
@@ -342,14 +376,15 @@
   set to something that is not a weapon, such as :shield. An empty off hand
   gives no bonus.
 
-  The result is memoized on the JSON text of the entity and the homebrew,
-  so calling evaluate again with both unchanged returns the same object.
-  The template is memoized on the homebrew alone."
+  The result is memoized on the JSON text of the entity, the homebrew and
+  the magic items, so calling evaluate again with all three unchanged
+  returns the same object. The template is memoized on the homebrew and the
+  magic items alone."
   ([entity] (evaluate entity nil))
   ([entity options]
-   ;; Not (content options): the memo key is the homebrew's text.
+   ;; Not (content options): the memo key is the content's text.
    (check-rules! options)
-   (evaluate-previous [(entity-text entity) (homebrew-text options)])))
+   (evaluate-previous [(entity-text entity) (options-memo-key options)])))
 
 ;;; ---------------------------------------------------------------------------
 ;;; importCharacter, exportCharacter (orc-alchemy docs/plan/03-character-import-and-storage.md)
@@ -634,11 +669,13 @@
             feats, languages, invocations, boons and the plugin-* lists),
             each item named by its key, or a background by its name
 
-  The template is the one evaluate uses for the same homebrew, and shares
-  its memo."
+  options is {magicItems?}, as for evaluate. The template is the one
+  evaluate uses for the same homebrew and magic items, and shares its memo.
+  The magic items add options to the template, not content lists."
   ([] (buildTemplate nil))
-  ([homebrew]
-   (let [{:keys [template content]} (homebrew-content (some-> homebrew entity-text))]
+  ([homebrew] (buildTemplate homebrew nil))
+  ([homebrew options]
+   (let [{:keys [template content]} (template-content (memo-key homebrew options))]
      (clj->js {"summary" (template-summary template)
                "shape" (mapv selection-shape (::t/selections template))
                "content" (into {}
@@ -667,11 +704,11 @@
        :option-keys (persistent! option-keys)})))
 
 (def ^:private template-keys
-  "template-key-sets for homebrew's Transit-JSON text, or the SRD's for nil."
-  (memo-previous #(template-key-sets (:template (homebrew-content %)))))
+  "template-key-sets for a memo-key."
+  (memo-previous #(template-key-sets (:template (template-content %)))))
 
-(defn- sorted-keys [homebrew which]
-  (->> (template-keys (some-> homebrew entity-text))
+(defn- sorted-keys [homebrew options which]
+  (->> (template-keys (memo-key homebrew options))
        which
        (map kw->str)
        sort
@@ -679,15 +716,21 @@
 
 (defn- selection-keys
   "Every selection key in the template for homebrew, or for the SRD alone
-  without it, once each, sorted."
-  [homebrew]
-  (sorted-keys homebrew :selection-keys))
+  without it, once each, sorted. options is {magicItems?}, as for
+  evaluate."
+  ([] (selection-keys nil nil))
+  ([homebrew] (selection-keys homebrew nil))
+  ([homebrew options]
+   (sorted-keys homebrew options :selection-keys)))
 
 (defn- option-keys
   "Every option key in the template for homebrew, or for the SRD alone
-  without it, once each, sorted."
-  [homebrew]
-  (sorted-keys homebrew :option-keys))
+  without it, once each, sorted. options is {magicItems?}, as for
+  evaluate."
+  ([] (option-keys nil nil))
+  ([homebrew] (option-keys homebrew nil))
+  ([homebrew options]
+   (sorted-keys homebrew options :option-keys)))
 
 (def keys
   "The key namespace of a template, the input to the content-identity
@@ -759,8 +802,9 @@
   "Checks every option key in entity against the template for homebrew, as
   evaluate builds it, and reports the ones that do not resolve (quirk R8).
   entity is as for evaluate. homebrew is the loaded packs, as for
-  evaluate's options.homebrew; without it, the SRD alone. Nothing is
-  changed: the entity keeps every choice.
+  evaluate's options.homebrew; without it, the SRD alone. options is
+  {magicItems?}, as for evaluate: without it, a carried custom magic item
+  does not resolve. Nothing is changed: the entity keeps every choice.
 
   An option resolves when entity/build would find it in the template: its
   selection is active and lists its key. Returns {hasMissing, items,
@@ -779,8 +823,9 @@
   hasMissing is true when either list is not empty. Each path is the
   option's path of keys, without indices, as the selections' paths are."
   ([entity] (reconcileMissingContent entity nil))
-  ([entity homebrew]
-   (let [{:keys [template available-content]} (homebrew-content (some-> homebrew entity-text))
+  ([entity homebrew] (reconcileMissingContent entity homebrew nil))
+  ([entity homebrew options]
+   (let [{:keys [template available-content]} (template-content (memo-key homebrew options))
          raw (char5e/from-strict (read-entity entity))
          selections (entity/get-all-selections-aux-2 template (entity/make-path-map raw))
          resolved (entity/make-template-option-map selections)
@@ -974,10 +1019,10 @@
 ;;; ---------------------------------------------------------------------------
 
 (defn- content
-  "The template content for options {rules?, homebrew?}."
+  "The template content for options {rules?, homebrew?, magicItems?}."
   [options]
   (check-rules! options)
-  (homebrew-content (homebrew-text options)))
+  (template-content (options-memo-key options)))
 
 (defn- read-raw [entity]
   (char5e/from-strict (read-entity entity)))
@@ -1645,14 +1690,14 @@
   taken, it undoes that choice and picks another, unlike the old button.
   It never undoes an option the entity already had.
 
-  options is {seed?, keep?, keepAll?, rules?, homebrew?}. By default the old
-  button's behaviour: the result keeps only the options at the keep paths
-  (the builder's locked components, such as [\"race\"]) and the enabled
-  plugins (:optional-content). It fills the rest, including the class and
-  level, and drops the values such as the name. With keepAll, it keeps
-  every option and value and fills only the selections with picks
-  remaining. seed is a 32-bit integer; the same seed
-  and entity give the same result. Without one, it uses Math.random.
+  options is {seed?, keep?, keepAll?, rules?, homebrew?, magicItems?}. By
+  default the old button's behaviour: the result keeps only the options at
+  the keep paths (the builder's locked components, such as [\"race\"]) and
+  the enabled plugins (:optional-content). It fills the rest, including the
+  class and level, and drops the values such as the name. With keepAll, it
+  keeps every option and value and fills only the selections with picks
+  remaining. seed is a 32-bit integer; the same seed and entity give the
+  same result. Without one, it uses Math.random.
 
   Names are not generated: character/random.cljc is not in the package."
   ([entity] (autofill entity nil))

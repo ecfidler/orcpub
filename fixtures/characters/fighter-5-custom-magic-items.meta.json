@@ -1,0 +1,30 @@
+{
+  "checks": [
+    {
+      "actual": 16,
+      "expected": 16,
+      "pass": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "actual": 35,
+      "expected": 35,
+      "pass": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "pass": true
+    }
+  ],
+  "description": "The fighter-5 build with a user's custom magic items from custom-items.edn, the body of the old server's GET /dnd/5e/items (ORC-126). Equipped: Emberbrand, Longsword in the main hand (one of five swords the weapon expands to; +1 attack, +2 damage, fire resistance), Warden's Plate (+2 AC, +1 CON saves) and the Circlet of the Hawk (WIS +2, speed +10). Carried but not equipped: Emberbrand, Greatsword and the Pearl of Stillwater, whose swimming speed must not apply.",
+  "magicItems": "custom-items.edn",
+  "name": "fighter-5-custom-magic-items",
+  "orcbrew": [],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

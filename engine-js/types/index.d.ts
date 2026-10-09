@@ -9,7 +9,7 @@ export type StrictEntity = string | object;
 /** The rules edition. This package supports only "2014". */
 export type Rules = "2014";
 
-export interface EvaluateOptions {
+export interface EvaluateOptions extends MagicItemsOptions {
   /** Defaults to "2014". Any other value throws. */
   rules?: Rules;
   /**
@@ -17,6 +17,27 @@ export interface EvaluateOptions {
    * the character builds against the SRD only.
    */
   homebrew?: Homebrew;
+}
+
+/**
+ * Custom magic items: the body of the old server's GET /dnd/5e/items, as
+ * readServerEdn returns it. That is an array of item maps in verbose
+ * Transit-JSON, or its JSON text. Each item keeps the server's form, such
+ * as { "~:orcpub.dnd.e5.magic-items/name": "Emberbrand", ... }. A weapon or
+ * armor with subtypes becomes one option for each matching base item, keyed
+ * "<name>-<base>", such as "emberbrand-longsword". Functions that take it
+ * throw if it is not an array of maps.
+ */
+export type MagicItems = string | object[];
+
+export interface MagicItemsOptions {
+  /**
+   * The user's custom magic items: what readServerEdn returns for the old
+   * server's GET /dnd/5e/items. The character can carry and equip them, and
+   * an equipped item's modifiers apply. Without it, only the SRD magic
+   * items are in the template.
+   */
+  magicItems?: MagicItems;
 }
 
 // The built character is plain JSON data keyed by the old app's
@@ -274,7 +295,8 @@ export interface Evaluation {
 }
 
 /**
- * Builds a strict entity. The result is memoized on the entity's JSON text.
+ * Builds a strict entity. The result is memoized on the JSON text of the
+ * entity, the homebrew and the magic items.
  * Throws when options.rules names an unsupported edition.
  */
 export function evaluate(entity: StrictEntity, options?: EvaluateOptions): Evaluation;
@@ -587,9 +609,10 @@ export interface BuiltTemplate {
 /**
  * Builds the template for the homebrew, or for the SRD alone without it, and
  * describes it as plain data. The template is the one evaluate uses for the
- * same homebrew.
+ * same homebrew and magic items. The magic items add options, not content
+ * lists.
  */
-export function buildTemplate(homebrew?: Homebrew): BuiltTemplate;
+export function buildTemplate(homebrew?: Homebrew, options?: MagicItemsOptions): BuiltTemplate;
 
 /**
  * The key namespace of a template: the keys that saved characters and
@@ -599,9 +622,9 @@ export function buildTemplate(homebrew?: Homebrew): BuiltTemplate;
  */
 export const keys: {
   /** Every selection key in the template, at any depth. */
-  selectionKeys(homebrew?: Homebrew): string[];
+  selectionKeys(homebrew?: Homebrew, options?: MagicItemsOptions): string[];
   /** Every option key in the template, at any depth. */
-  optionKeys(homebrew?: Homebrew): string[];
+  optionKeys(homebrew?: Homebrew, options?: MagicItemsOptions): string[];
 };
 
 /**
@@ -870,4 +893,8 @@ export interface ReconcileReport {
  * in the template. Nothing is changed: the entity keeps every choice, so
  * the app can offer a remap or ask for the pack to be imported first.
  */
-export function reconcileMissingContent(entity: StrictEntity, homebrew?: Homebrew): ReconcileReport;
+export function reconcileMissingContent(
+  entity: StrictEntity,
+  homebrew?: Homebrew,
+  options?: MagicItemsOptions,
+): ReconcileReport;

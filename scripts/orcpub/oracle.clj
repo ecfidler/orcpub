@@ -12,9 +12,10 @@
      so this namespace loads those two `.cljs` files verbatim through the
      Clojure reader, with only `js/` interop shimmed and the two subscriptions
      that fetch a logged-in user's custom magic items over HTTP replaced by
-     the empty-list subscription the old app itself registers when there is
-     no `js/window`. The template the oracle uses is therefore the one the
-     old app computes for a user with no custom magic items.
+     a subscription that reads them from app-db, where the browser branch
+     keeps them after the fetch. `template-for-plugins` puts them there; by
+     default there are none, so the template is the one the old app
+     computes for a user with no custom magic items.
    * `import_validation.cljs` (the `.orcbrew` auto-clean pipeline) is loaded
      the same way, with `cljs.reader` → `clojure.edn` and `cljs.spec.alpha`
      → `clojure.spec.alpha`.
@@ -24,6 +25,7 @@
    rules (`->plain`) are documented in fixtures/README.md and must be
    mirrored by the facade's one-pass extraction in M1."
   (:require [clojure.string :as str]
+            [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.data.json :as json]
             [clojure.spec.alpha :as spec]
@@ -163,7 +165,10 @@
                         ;; the two forms that fetch a user's custom magic
                         ;; items over HTTP (see ns docstring)
                         :skip? #(form-mentions? % "js/window" "http/get")})
-    (rf/reg-sub :orcpub.dnd.e5.magic-items/custom-items (fn [_ _] []))
+    ;; the browser branch's value: a logged-in user's items, which the old
+    ;; app keeps in app-db (template-for-plugins puts them there)
+    (rf/reg-sub :orcpub.dnd.e5.magic-items/custom-items
+                (fn [db _] (get db :orcpub.dnd.e5.magic-items/custom-items [])))
     (reset! old-subs-loaded? true)))
 
 (defonce ^:private import-validation-loaded? (atom false))
@@ -207,12 +212,22 @@
 (defn template-for-plugins
   "The old app's template for `plugins` ({source-name single-plugin-map}),
    i.e. what (subscribe [::char5e/template]) yields with that :plugins in
-   app-db. {} gives the SRD-only template."
-  [plugins]
+   app-db. {} gives the SRD-only template. `custom-items` is a logged-in
+   user's magic items, the body of GET /dnd/5e/items, which the old app
+   keeps in app-db under ::mi5e/custom-items; without it, none."
+  [plugins & [custom-items]]
   (load-old-subs!)
   (install-js-semantics!)
-  (swap! rfdb/app-db assoc :plugins plugins)
+  (swap! rfdb/app-db assoc
+         :plugins plugins
+         :orcpub.dnd.e5.magic-items/custom-items (vec custom-items))
   @(rf/subscribe [:orcpub.dnd.e5.character/template]))
+
+(defn read-items-file
+  "The custom magic items in an EDN file that holds a GET /dnd/5e/items
+   body, as the old server sends it."
+  [path]
+  (edn/read-string (slurp path)))
 
 (defn sub
   "Deref a registered subscription (after load-old-subs!)."
