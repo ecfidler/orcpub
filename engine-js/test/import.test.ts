@@ -158,6 +158,9 @@ describe("importCharacter on the old server's EDN (ORC-107)", () => {
     });
   }
 
+  // fighter-1.server.edn is the GET /dnd/5e/characters/<id> response for the
+  // fighter that Ethan built in the hosted app's UI on 2026-09-24 for ORC-11,
+  // copied from the issue's comment, with the owner renamed to "example-user".
   it("imports a character captured from the hosted app (ORC-11), owner renamed", () => {
     const text = readFileSync(new URL("fixtures/fighter-1.server.edn", import.meta.url), "utf8");
     const { entity, legacyId } = importCharacter(text);

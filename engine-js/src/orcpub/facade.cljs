@@ -403,15 +403,15 @@
     (try
       (read-strict entity)
       (catch :default json-error
-        (let [value (try
+        (let [error (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
+                         (.-message json-error) ". As EDN, ")
+              value (try
                       (read-edn entity)
                       (catch :default edn-error
-                        (throw (js/Error. (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
-                                               (.-message json-error) ". As EDN: " (.-message edn-error))))))]
+                        (throw (js/Error. (str error (.-message edn-error))))))]
           (if (map? value)
             value
-            (throw (js/Error. (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
-                                   (.-message json-error) ". As EDN, it is not a map.")))))))))
+            (throw (js/Error. (str error "it is not a map.")))))))))
 
 (defn ^:export importCharacter
   "Imports a character saved by the old app: the strict entity as
