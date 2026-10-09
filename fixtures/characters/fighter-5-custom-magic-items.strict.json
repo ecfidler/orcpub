@@ -320,6 +320,7 @@
       "~:circlet-of-the-hawk"
     ],
     "~:orcpub.dnd.e5.character/character-name": "Durga Anvilmar",
+    "~:orcpub.dnd.e5.character/current-hit-points": 40,
     "~:orcpub.dnd.e5.character/main-hand-weapon": "~:emberbrand-longsword",
     "~:orcpub.dnd.e5.character/off-hand-weapon": "~:shield",
     "~:orcpub.dnd.e5.character/wielded-shield": "~:shield",

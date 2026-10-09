@@ -236,6 +236,7 @@
                  fighter-items)
           ::entity/values {::char5e/character-name "Durga Anvilmar"
                            ::char5e/xps 6500
+                           ::char5e/current-hit-points 40
                            ::char5e/worn-armor :wardens-plate
                            ::char5e/wielded-shield :shield
                            ::char5e/main-hand-weapon :emberbrand-longsword
