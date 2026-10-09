@@ -69,6 +69,7 @@ full signatures and the types.
 - `reconcileMissingContent(entity, homebrew?, options?)` checks every option key in a character against the template for homebrew, or for the SRD alone, and returns `{ hasMissing, items, unresolvedOptions }`. `items` lists each race, subrace, background, class, subclass, or feat that does not resolve, with the old app's suggestions from the loaded packs. `unresolvedOptions` lists any other choice that does not resolve under a parent that does, such as a custom magic item when `options.magicItems` does not hold it. The entity is not changed.
 - `buildTemplate(homebrew?, options?)` builds the template for homebrew, or for the SRD alone, and returns `{ summary, shape, content }`: the top-level selections and their option keys, the template's structure without functions, and the content lists, such as races and classes.
 - `keys.selectionKeys(homebrew?, options?)` and `keys.optionKeys(homebrew?, options?)` return every selection key and every option key in the template for homebrew, or for the SRD alone, once each and sorted. Saved characters and `.orcbrew` files refer to content by these keys.
+- `validate.race(record)`, `validate.spell(record)`, and the other validators check one homebrew item as the old builders' save did, and return `{ ok, problems, item }`. See the validators section.
 
 Each mutation returns a new entity. It throws with the reason when the old
 builder would refuse the same change.
@@ -176,6 +177,31 @@ becomes one option for each base item that matches, keyed
 character that carries a custom item builds without it, and
 `reconcileMissingContent` reports the item.
 
+## The validators
+
+`validate` has one validator for each type that the old builders saved:
+`race`, `subrace`, `class`, `subclass`, `background`, `feat`, `spell`,
+`language`, `invocation`, `boon`, `selection`, `monster`, `encounter`, and
+`magicItem`. Each takes one record, as Transit-JSON text or its parsed value,
+and checks it with the spec that the old save used. It reports every
+problem, also when the old spec stopped at the first. It does not fill
+placeholders for missing fields, so a missing name is reported, and a
+spell needs a `level` and a `school`.
+
+The result is `{ ok, problems, item }`. Each problem is `{ path, reason,
+pred }`. `path` is the field's path, such as `["options", 0, "name"]`.
+`reason` is `"missing"` (also for a blank string), `"invalid"`, or
+`"duplicate"`; a selection reports `"duplicate"` for two options whose
+names have the same key.
+
+`item` is the record to store. When it has no key, its key is set from
+the name, then its text is normalized, as the old save did. An existing
+key is kept, so a save does not undo `renameKey`. When the name is
+missing, the missing key is not reported, because it comes from the name.
+A magic item is returned as it is, because the old server stored it so. A
+builder can show each problem next to its field and save `item` when `ok`
+is true.
+
 ## Versions
 
 The package follows semver. Every engine patch or facade addition bumps the
@@ -196,7 +222,9 @@ npm test        # tsc --noEmit, then the vitest golden tests against ../fixtures
 ```
 
 `test/private-export.test.ts` imports a real `all-content.orcbrew` and
-compares the result with its committed summary. It runs only when the
+compares the result with its committed summary, and
+`test/validate.test.ts` checks that each of its items passes. They run
+only when the
 export is at `fixtures/orcbrew/private/all-content3.orcbrew`, which git
 ignores. See `fixtures/README.md`, *Private exports*.
 

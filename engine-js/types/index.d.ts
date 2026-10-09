@@ -898,3 +898,56 @@ export function reconcileMissingContent(
   homebrew?: Homebrew,
   options?: MagicItemsOptions,
 ): ReconcileReport;
+
+/** A field that fails its type's save check. */
+export interface ValidationProblem {
+  /** The field's path of keys and indices, such as ["options", 0, "name"]. */
+  path: (string | number)[];
+  /**
+   * "missing" when a required field is absent or a blank string, "invalid" when a field has
+   * the wrong value, and "duplicate" when two options of a selection have
+   * names with the same key.
+   */
+  reason: "missing" | "invalid" | "duplicate";
+  /** The failed predicate as text, for diagnostics. */
+  pred: string;
+}
+
+export interface Validation {
+  /** true when problems is empty. */
+  ok: boolean;
+  problems: ValidationProblem[];
+  /**
+   * The item as the old save would store it. For each type except
+   * magicItem, its text is normalized and its key is set from the name
+   * when it has none. A magic item is returned as it is.
+   */
+  item: object;
+}
+
+/** Checks one record, as Transit-JSON text or its parsed value. */
+export type Validator = (record: string | object) => Validation;
+
+/**
+ * The homebrew validators (ORC-41): the checks the old builders ran when
+ * they saved an item, one for each type. Placeholders for missing fields
+ * are not filled, so a missing name is reported. An existing key is kept,
+ * so a save does not undo renameKey. Each throws if the record is not a map.
+ */
+export const validate: {
+  race: Validator;
+  subrace: Validator;
+  class: Validator;
+  subclass: Validator;
+  background: Validator;
+  feat: Validator;
+  spell: Validator;
+  language: Validator;
+  invocation: Validator;
+  boon: Validator;
+  selection: Validator;
+  monster: Validator;
+  encounter: Validator;
+  /** A custom magic item, as the old server's item save checked it. */
+  magicItem: Validator;
+};

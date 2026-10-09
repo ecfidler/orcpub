@@ -26,7 +26,8 @@
             [orcpub.dnd.e5.import-validation :as import-val]
             [orcpub.dnd.e5.template :as t5e]
             [orcpub.facade.plain :refer [kw->str ->plain]]
-            [orcpub.facade.template :as template]))
+            [orcpub.facade.template :as template]
+            [orcpub.facade.validators :as validators]))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Built-character values (character-subs, subs.cljs:628-736)
@@ -1009,6 +1010,40 @@
           (and (not= from to) (contains? items to))
           (fail! "Pack " (pr-str pack) " already has the key " (pr-str (kw->str to)) " in " (kw->str content-type)))
     (write-entity (update plugins pack import-val/rename-key-in-plugin content-type from to))))
+
+;;; ---------------------------------------------------------------------------
+;;; validate (ORC-41; orc-alchemy docs/plan/04-homebrew.md)
+;;; ---------------------------------------------------------------------------
+
+(defn- validator
+  "The exported validator for type, a key of validators/types."
+  [type]
+  (fn [record]
+    (let [item (read-entity record)]
+      (when-not (map? item)
+        (fail! "The " type " record is not a map."))
+      (let [{:keys [ok problems item]} (validators/check type item)]
+        #js {"ok" ok
+             "problems" (clj->js problems)
+             "item" (write-entity item)}))))
+
+(def validate
+  "The homebrew validators, one for each key of validators/types, the
+  types that the old builders save. Each takes one record, as verbose
+  Transit-JSON text or its parsed value, and checks it as the old save
+  does (orcpub.facade.validators). It returns {ok, problems, item}:
+    problems each {path, reason, pred}: path is the field's path of keys
+             and indices, such as [\"hit-points\", \"die\"]; reason is
+             \"missing\", \"invalid\" or \"duplicate\"
+    item     the record as the old save would store it, as verbose
+             Transit-JSON: text normalized and :key set from the name
+             when it has none, except for a magic item, which is
+             returned as it is
+  Throws if the record is not a map."
+  (let [fns #js {}]
+    (doseq [type (cljs.core/keys validators/types)]
+      (gobj/set fns type (validator type)))
+    fns))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)

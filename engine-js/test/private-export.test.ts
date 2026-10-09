@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
 import { buildTemplate, parseOrcbrew, type BuiltTemplate, type ParsedOrcbrew } from "@pubdoor/dmv";
-import { contentKeys, fixtures, readFixture } from "./support.js";
+import { contentKeys, privateExport, readFixture } from "./support.js";
 
 // The real-export regression (Linear ORC-39): the repo owner's 29-pack
 // all-content.orcbrew must import as the old importer did and build the
@@ -10,7 +10,7 @@ import { contentKeys, fixtures, readFixture } from "./support.js";
 // summary is committed: scripts/dump-template.clj --summary wrote it with
 // the JVM oracle. See fixtures/README.md, "Private exports".
 
-const exportFile = new URL("orcbrew/private/all-content3.orcbrew", fixtures);
+const exportFile = privateExport;
 const exportPresent = existsSync(exportFile);
 
 interface Summary {
