@@ -904,7 +904,7 @@ export interface ValidationProblem {
   /** The field's path of keys and indices, such as ["options", 0, "name"]. */
   path: (string | number)[];
   /**
-   * "missing" when a required field is absent, "invalid" when a field has
+   * "missing" when a required field is absent or a blank string, "invalid" when a field has
    * the wrong value, and "duplicate" when two options of a selection have
    * names with the same key.
    */
@@ -918,8 +918,9 @@ export interface Validation {
   ok: boolean;
   problems: ValidationProblem[];
   /**
-   * The item as the old save would store it: its text normalized and, for
-   * each type except magicItem, its key set from the name when it has none.
+   * The item as the old save would store it. For each type except
+   * magicItem, its text is normalized and its key is set from the name
+   * when it has none. A magic item is returned as it is.
    */
   item: object;
 }
@@ -930,8 +931,8 @@ export type Validator = (record: string | object) => Validation;
 /**
  * The homebrew validators (ORC-41): the checks the old builders ran when
  * they saved an item, one for each type. Placeholders for missing fields
- * are not filled, so a missing name is reported. Each throws if the record
- * is not a map.
+ * are not filled, so a missing name is reported. An existing key is kept,
+ * so a save does not undo renameKey. Each throws if the record is not a map.
  */
 export const validate: {
   race: Validator;

@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseOrcbrew, validate, type Validation, type ValidationProblem } from "@pubdoor/dmv";
-import { fixtureNames, fixtures, kw, readFixtureText } from "./support.js";
+import { fixtureNames, fixtures, kw, readFixtureText, unkw } from "./support.js";
 
 /** The validator for each pack content type. */
 const validators: Record<string, (record: object) => Validation> = {
@@ -26,24 +26,24 @@ const validators: Record<string, (record: object) => Validation> = {
 
 type Items = Record<string, Record<string, object>>;
 
+/** The problems without pred, which is the failed predicate as text. */
+const reported = (v: Validation) => v.problems.map(({ path, reason }) => ({ path, reason }));
+
 /** Each item in the packs that fail validation: "<type> <key>" → problems without pred. */
 function failures(data: Record<string, Items>): Record<string, Omit<ValidationProblem, "pred">[]> {
   const failed: Record<string, Omit<ValidationProblem, "pred">[]> = {};
   for (const plugin of Object.values(data)) {
     for (const [type, items] of Object.entries(plugin)) {
-      const check = validators[type.replace(/^~:/, "")];
+      const check = validators[unkw(type)];
       if (!check || typeof items !== "object") continue;
       for (const [key, item] of Object.entries(items)) {
-        const { ok, problems } = check(item);
-        if (!ok) failed[`${type.replace(/^~:orcpub\.dnd\.e5\//, "")} ${key.replace(/^~:/, "")}`] = problems.map(({ path, reason }) => ({ path, reason }));
+        const validation = check(item);
+        if (!validation.ok) failed[`${unkw(type).replace(/^orcpub\.dnd\.e5\//, "")} ${unkw(key)}`] = reported(validation);
       }
     }
   }
   return failed;
 }
-
-/** The problems without pred, which is the failed predicate as text. */
-const reported = (v: Validation) => v.problems.map(({ path, reason }) => ({ path, reason }));
 
 describe("validate", () => {
   it("has a validator for each type the old builders save", () => {
@@ -119,6 +119,16 @@ describe("validate", () => {
     ).toEqual([{ path: ["hit-points", "die-count"], reason: "missing" }]);
     expect(reported(validate.magicItem({ [kw("orcpub.dnd.e5.magic-items/type")]: kw("weapon") }))).toEqual([
       { path: ["orcpub.dnd.e5.magic-items/name"], reason: "missing" },
+    ]);
+  });
+
+  it("reports a blank name as missing, and every part of the spell spec", () => {
+    expect(reported(validate.spell({ [kw("name")]: "", [kw("level")]: 1 }))).toEqual([
+      { path: ["key"], reason: "missing" },
+      { path: ["school"], reason: "missing" },
+      { path: ["name"], reason: "missing" },
+      { path: ["option-pack"], reason: "missing" },
+      { path: ["spell-lists"], reason: "missing" },
     ]);
   });
 

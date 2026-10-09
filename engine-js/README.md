@@ -183,16 +183,21 @@ character that carries a custom item builds without it, and
 `race`, `subrace`, `class`, `subclass`, `background`, `feat`, `spell`,
 `language`, `invocation`, `boon`, `selection`, `monster`, `encounter`, and
 `magicItem`. Each takes one item, as Transit-JSON text or its parsed value,
-and checks it with the spec that the old save used. It does not fill
-placeholders for missing fields, so a missing name is reported.
+and checks it with the spec that the old save used. It reports every
+problem, also when the old spec stopped at the first. It does not fill
+placeholders for missing fields, so a missing name is reported, and a
+spell needs a `level` and a `school`.
 
 The result is `{ ok, problems, item }`. Each problem is `{ path, reason,
 pred }`. `path` is the field's path, such as `["options", 0, "name"]`.
-`reason` is `"missing"`, `"invalid"`, or `"duplicate"`; a selection reports
-`"duplicate"` for two options whose names have the same key. `item` is the
-item as the old save stored it: its text normalized and, except for a magic
-item, its key set from the name when it has no key. A builder can show each
-problem next to its field and save `item` when `ok` is true.
+`reason` is `"missing"` (also for a blank string), `"invalid"`, or
+`"duplicate"`; a selection reports `"duplicate"` for two options whose
+names have the same key. `item` is the item to store. Its text is
+normalized and, when it has no key, its key is set from the name, as the
+old save did. An existing key is kept, so a save does not undo
+`renameKey`. A magic item is returned as it is, because the old server
+stored it so. A builder can show each problem next to its field and save
+`item` when `ok` is true.
 
 ## Versions
 

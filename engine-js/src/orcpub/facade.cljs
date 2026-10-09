@@ -27,7 +27,7 @@
             [orcpub.dnd.e5.template :as t5e]
             [orcpub.facade.plain :refer [kw->str ->plain]]
             [orcpub.facade.template :as template]
-            [orcpub.facade.validate :as validation]))
+            [orcpub.facade.validators :as validators]))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Built-character values (character-subs, subs.cljs:628-736)
@@ -1016,13 +1016,13 @@
 ;;; ---------------------------------------------------------------------------
 
 (defn- validator
-  "The exported validator for type, a key of validation/types."
+  "The exported validator for type, a key of validators/types."
   [type]
   (fn [record]
     (let [item (read-entity record)]
       (when-not (map? item)
         (fail! "The " type " record is not a map."))
-      (let [{:keys [ok problems item]} (validation/check type item)]
+      (let [{:keys [ok problems item]} (validators/check type item)]
         #js {"ok" ok
              "problems" (clj->js problems)
              "item" (write-entity item)}))))
@@ -1032,19 +1032,20 @@
   race, subrace, class, subclass, background, feat, spell, language,
   invocation, boon, selection, monster, encounter, and magicItem. Each
   takes one item as verbose Transit-JSON, as a pack stores it, and checks
-  it as the old save does (orcpub.facade.validate). It returns {ok,
+  it as the old save does (orcpub.facade.validators). It returns {ok,
   problems, item}:
     problems each {path, reason, pred}: path is the field's path of keys
              and indices, such as [\"hit-points\", \"die\"]; reason is
              \"missing\", \"invalid\" or \"duplicate\"
     item     the item as the old save would store it, as verbose
-             Transit-JSON: text normalized and, for a pack type, :key set
-             from the name when it has none
+             Transit-JSON: text normalized and :key set from the name
+             when it has none, except for a magic item, which is
+             returned as it is
   Throws if the record is not a map."
-  (let [validators #js {}]
-    (doseq [type (keys validation/types)]
-      (gobj/set validators type (validator type)))
-    validators))
+  (let [fns #js {}]
+    (doseq [type (cljs.core/keys validators/types)]
+      (gobj/set fns type (validator type)))
+    fns))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)
