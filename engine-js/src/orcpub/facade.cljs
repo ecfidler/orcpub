@@ -1028,16 +1028,14 @@
              "item" (write-entity item)}))))
 
 (def validate
-  "The homebrew validators, one for each type that the old builders save:
-  race, subrace, class, subclass, background, feat, spell, language,
-  invocation, boon, selection, monster, encounter, and magicItem. Each
-  takes one item as verbose Transit-JSON, as a pack stores it, and checks
-  it as the old save does (orcpub.facade.validators). It returns {ok,
-  problems, item}:
+  "The homebrew validators, one for each key of validators/types, the
+  types that the old builders save. Each takes one record, as verbose
+  Transit-JSON text or its parsed value, and checks it as the old save
+  does (orcpub.facade.validators). It returns {ok, problems, item}:
     problems each {path, reason, pred}: path is the field's path of keys
              and indices, such as [\"hit-points\", \"die\"]; reason is
              \"missing\", \"invalid\" or \"duplicate\"
-    item     the item as the old save would store it, as verbose
+    item     the record as the old save would store it, as verbose
              Transit-JSON: text normalized and :key set from the name
              when it has none, except for a magic item, which is
              returned as it is

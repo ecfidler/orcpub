@@ -56,27 +56,16 @@
                       :orcpub.dnd.e5.monsters/option-pack
                       :orcpub.dnd.e5.monsters/hit-points]))
 
-(def types
-  "Each validator's name, as the facade exports it, and the spec the old
-  save checks. :as-is? is true for a magic item: the old server checked
-  it as it was, with no text normalization and no :key."
-  {"race" {:spec ::races5e/homebrew-race}
-   "subrace" {:spec ::races5e/homebrew-subrace}
-   "class" {:spec ::class5e/homebrew-class}
-   "subclass" {:spec ::class5e/homebrew-subclass}
-   "background" {:spec ::bg5e/homebrew-background}
-   "feat" {:spec ::feats5e/homebrew-feat}
-   "spell" {:spec ::spells5e/homebrew-spell}
-   "language" {:spec ::langs5e/homebrew-language}
-   "invocation" {:spec ::class5e/homebrew-invocation}
-   "boon" {:spec ::class5e/homebrew-boon}
-   "selection" {:spec ::selections5e/homebrew-selection}
-   "monster" {:spec :orcpub.dnd.e5.monsters/homebrew-monster}
-   "encounter" {:spec ::encounters5e/encounter}
-   "magicItem" {:spec ::mi5e/magic-item :as-is? true}})
-
 (defn- path-part [x]
   (if (keyword? x) (kw->str x) x))
+
+(defn- call-to?
+  "true when form is a call to a function or macro named fn-name, in any
+  namespace."
+  [fn-name form]
+  (and (seq? form)
+       (symbol? (first form))
+       (= fn-name (name (first form)))))
 
 (defn- missing-key
   "The key that pred requires, when pred is a spec/keys presence check:
@@ -84,11 +73,7 @@
   (516-530), which reads the key from a pred that starts with contains?.
   This one also finds the contains? inside the fn form, by its name."
   [pred]
-  (some (fn [form]
-          (when (and (seq? form)
-                     (symbol? (first form))
-                     (= "contains?" (name (first form))))
-            (last form)))
+  (some #(when (call-to? "contains?" %) (last %))
         (tree-seq seq? seq pred)))
 
 (defn- problem
@@ -107,10 +92,7 @@
   "The parts of spec when its form is (spec/and spec ...), else [spec]."
   [spec]
   (let [form (spec/form spec)]
-    (if (and (seq? form)
-             (symbol? (first form))
-             (= "and" (name (first form)))
-             (every? keyword? (rest form)))
+    (if (and (call-to? "and" form) (every? keyword? (rest form)))
       (rest form)
       [spec])))
 
@@ -135,17 +117,49 @@
     item
     (assoc item :key (common/name-to-kw name))))
 
+(defn- without-key-problem
+  "problems without a :key problem when there is a :name problem. The key
+  comes from the name, so a form has no field for it."
+  [problems]
+  (if (some #(= ["name"] (get % "path")) problems)
+    (remove #(= ["key"] (get % "path")) problems)
+    problems))
+
+(def types
+  "Each validator's name, as the facade exports it, and the spec the old
+  save checks. :as-is? is true for a magic item: the old server checked
+  it as it was, with no text normalization and no :key. :more-problems
+  is the type's check beyond its spec."
+  {"race" {:spec ::races5e/homebrew-race}
+   "subrace" {:spec ::races5e/homebrew-subrace}
+   "class" {:spec ::class5e/homebrew-class}
+   "subclass" {:spec ::class5e/homebrew-subclass}
+   "background" {:spec ::bg5e/homebrew-background}
+   "feat" {:spec ::feats5e/homebrew-feat}
+   "spell" {:spec ::spells5e/homebrew-spell}
+   "language" {:spec ::langs5e/homebrew-language}
+   "invocation" {:spec ::class5e/homebrew-invocation}
+   "boon" {:spec ::class5e/homebrew-boon}
+   "selection" {:spec ::selections5e/homebrew-selection :more-problems duplicate-options}
+   "monster" {:spec :orcpub.dnd.e5.monsters/homebrew-monster}
+   "encounter" {:spec ::encounters5e/encounter}
+   "magicItem" {:spec ::mi5e/magic-item :as-is? true}})
+
 (defn check
-  "Checks item, a map, as the old save of type does. Returns {:ok
+  "Checks raw, an item map, as the old save of type does. Returns {:ok
   :problems :item}: problems as `problem` gives them, and item as the old
   save would store it: except for a magic item, its text normalized and
   its :key set."
-  [type item]
-  (let [{:keys [spec as-is?]} (types type)
-        item (cond-> item
-               (not as-is?) (-> import-val/normalize-text-in-data with-key))
-        problems (vec (distinct
-                       (concat (mapcat #(map problem (::spec/problems (spec/explain-data % item)))
-                                       (spec-parts spec))
-                               (when (= "selection" type) (duplicate-options item)))))]
+  [type raw]
+  (let [{:keys [spec as-is? more-problems]} (types type)
+        ;; The old save took :key from the raw name, then normalized the
+        ;; text, and checked option names raw. A curly quote changes the key.
+        item (cond-> raw
+               (not as-is?) (-> with-key import-val/normalize-text-in-data))
+        problems (->> (concat (mapcat #(map problem (::spec/problems (spec/explain-data % item)))
+                                      (spec-parts spec))
+                              (when more-problems (more-problems raw)))
+                      distinct
+                      without-key-problem
+                      vec)]
     {:ok (empty? problems) :problems problems :item item}))

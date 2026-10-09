@@ -37,6 +37,9 @@ export function fixtureNames(dir: string, suffix: string): string[] {
 // Transit-JSON verbose: a keyword is "~:name", and a map's keyword keys are too.
 
 /** The Transit-JSON form of a keyword: "spark" is "~:spark". */
+/** A real export, git-ignored, for the tests that run only when it is present. */
+export const privateExport = new URL("orcbrew/private/all-content3.orcbrew", fixtures);
+
 export const kw = (k: string): string => `~:${k}`;
 
 /** The keyword's name without the "~:" prefix. */

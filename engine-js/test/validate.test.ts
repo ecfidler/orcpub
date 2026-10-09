@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseOrcbrew, validate, type Validation, type ValidationProblem } from "@pubdoor/dmv";
-import { fixtureNames, fixtures, kw, readFixtureText, unkw } from "./support.js";
+import { fixtureNames, kw, privateExport, readFixtureText, unkw, type Plugin } from "./support.js";
 
 /** The validator for each pack content type. */
 const validators: Record<string, (record: object) => Validation> = {
@@ -24,13 +24,11 @@ const validators: Record<string, (record: object) => Validation> = {
   "orcpub.dnd.e5/encounters": validate.encounter,
 };
 
-type Items = Record<string, Record<string, object>>;
-
 /** The problems without pred, which is the failed predicate as text. */
 const reported = (v: Validation) => v.problems.map(({ path, reason }) => ({ path, reason }));
 
 /** Each item in the packs that fail validation: "<type> <key>" → problems without pred. */
-function failures(data: Record<string, Items>): Record<string, Omit<ValidationProblem, "pred">[]> {
+function failures(data: Record<string, Plugin>): Record<string, Omit<ValidationProblem, "pred">[]> {
   const failed: Record<string, Omit<ValidationProblem, "pred">[]> = {};
   for (const plugin of Object.values(data)) {
     for (const [type, items] of Object.entries(plugin)) {
@@ -69,7 +67,7 @@ describe("validate", () => {
     const failed = {};
     for (const pack of fixtureNames("orcbrew", ".orcbrew")) {
       const parsed = parseOrcbrew(readFixtureText(`orcbrew/${pack}.orcbrew`), { name: pack });
-      Object.assign(failed, failures(parsed.data as Record<string, Items>));
+      Object.assign(failed, failures(parsed.data as Record<string, Plugin>));
     }
 
     // The importer names a nameless item "[Missing ... Name]" and a
@@ -87,20 +85,16 @@ describe("validate", () => {
     });
   });
 
-  const exportFile = new URL("orcbrew/private/all-content3.orcbrew", fixtures);
-  it.skipIf(!existsSync(exportFile))("passes every item in the private export", () => {
-    const parsed = parseOrcbrew(readFileSync(exportFile, "utf8"), { name: "all-content3" });
+  it.skipIf(!existsSync(privateExport))("passes every item in the private export", () => {
+    const parsed = parseOrcbrew(readFileSync(privateExport, "utf8"), { name: "all-content3" });
 
-    expect(failures(parsed.data as Record<string, Items>)).toEqual({});
+    expect(failures(parsed.data as Record<string, Plugin>)).toEqual({});
   });
 
   it("reports each missing required field by its path", () => {
     const pack = { [kw("option-pack")]: "Test" };
 
-    expect(reported(validate.race({ ...pack }))).toEqual([
-      { path: ["name"], reason: "missing" },
-      { path: ["key"], reason: "missing" },
-    ]);
+    expect(reported(validate.race({ ...pack }))).toEqual([{ path: ["name"], reason: "missing" }]);
     expect(reported(validate.background({ [kw("name")]: "Sailor" }))).toEqual([
       { path: ["option-pack"], reason: "missing" },
     ]);
@@ -124,7 +118,6 @@ describe("validate", () => {
 
   it("reports a blank name as missing, and every part of the spell spec", () => {
     expect(reported(validate.spell({ [kw("name")]: "", [kw("level")]: 1 }))).toEqual([
-      { path: ["key"], reason: "missing" },
       { path: ["school"], reason: "missing" },
       { path: ["name"], reason: "missing" },
       { path: ["option-pack"], reason: "missing" },
@@ -162,6 +155,12 @@ describe("validate", () => {
 
     expect(ok).toBe(true);
     expect(item).toEqual({ [kw("option-pack")]: "Test", [kw("name")]: "Iron Will", [kw("key")]: kw("iron-will") });
+  });
+
+  it("sets the key from the name before it normalizes the text, as the old save did", () => {
+    const { item } = validate.spell({ [kw("option-pack")]: "Test", [kw("name")]: "Hunter\u2019s Mark" });
+
+    expect(item).toMatchObject({ [kw("name")]: "Hunter's Mark", [kw("key")]: kw("hunter-s-mark") });
   });
 
   it("keeps a key the item already has", () => {
