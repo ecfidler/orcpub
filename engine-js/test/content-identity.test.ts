@@ -4,9 +4,17 @@
 // explicit spell keys, subclass selection keys) must never change. This
 // suite fails when it does: every fixture's option keys must still resolve.
 import { describe, expect, it } from "vitest";
-import { buildTemplate, importCharacter, keys, parseOrcbrew, readServerEdn, reconcileMissingContent } from "@pubdoor/dmv";
+import { buildTemplate, importCharacter, keys, parseOrcbrew, reconcileMissingContent } from "@pubdoor/dmv";
 import type { Homebrew, MissingContent, ReconcileReport, UnresolvedOption } from "@pubdoor/dmv";
-import { baselineKeySets, builtInKeys, danglingReferences, fixtureNames, readFixture, readFixtureText } from "./support.js";
+import {
+  baselineKeySets,
+  builtInKeys,
+  danglingReferences,
+  fixtureMagicItems,
+  fixtureNames,
+  readFixture,
+  readFixtureText,
+} from "./support.js";
 
 /** A missing-content item as .meta.json records it: without suggestions. */
 type ReconcileItem = Pick<MissingContent, "contentType" | "key" | "path">;
@@ -55,8 +63,7 @@ describe("C3: every fixture character's keys resolve", () => {
           items: byPath(meta.unresolved?.items ?? []),
           unresolvedOptions: byPath(meta.unresolved?.unresolvedOptions ?? []),
         };
-        const magicItems = meta.magicItems ? readServerEdn(readFixtureText(`magic-items/${meta.magicItems}`)) : undefined;
-        const report = reconcileMissingContent(entity, homebrew(meta.orcbrew), { magicItems });
+        const report = reconcileMissingContent(entity, homebrew(meta.orcbrew), { magicItems: fixtureMagicItems(meta) });
 
         expect(reported(report)).toStrictEqual(expected);
         expect(report.hasMissing).toBe(meta.unresolved !== undefined);

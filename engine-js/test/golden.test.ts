@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { evaluate, importCharacter, parseOrcbrew, readServerEdn, type Homebrew, type MagicItems } from "@pubdoor/dmv";
+import { evaluate, importCharacter, parseOrcbrew, type Homebrew } from "@pubdoor/dmv";
+import { fixtureMagicItems } from "./support.js";
 
 // The M0 fixtures: fixtures/README.md describes the layout and how
 // expected.json and selections.json were generated.
@@ -47,12 +48,6 @@ function homebrew(dir: string, name: string): Homebrew | undefined {
   }, {});
 }
 
-/** The character's custom magic items, read as the app reads the server's response. */
-function magicItems(dir: string, name: string): MagicItems | undefined {
-  const file = meta(dir, name).magicItems;
-  return file ? readServerEdn(readFileSync(new URL(`magic-items/${file}`, fixtures), "utf8")) : undefined;
-}
-
 for (const dir of ["characters", "legacy"]) {
   describe(`golden ${dir}`, () => {
     for (const name of fixtureNames(dir)) {
@@ -60,7 +55,7 @@ for (const dir of ["characters", "legacy"]) {
         const strict = read(dir, `${name}.strict.json`) as object;
         const { built, selections } = evaluate(
           needsImport(dir, name) ? importCharacter(strict).entity : strict,
-          { homebrew: homebrew(dir, name), magicItems: magicItems(dir, name) },
+          { homebrew: homebrew(dir, name), magicItems: fixtureMagicItems(meta(dir, name)) },
         );
 
         expect(built).toStrictEqual(read(dir, `${name}.expected.json`));

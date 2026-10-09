@@ -314,7 +314,7 @@
                              "readServerEdn returns for GET /dnd/5e/items."))))))
 
 (def ^:private template-content
-  "The template content for a template-key: [homebrew items], each the
+  "The template content for a memo-key: [homebrew items], each the
   Transit-JSON text or nil. Both nil gives the SRD's."
   (memo-previous
    (fn [[homebrew items]]
@@ -326,16 +326,16 @@
 (defn- magic-items-text [options]
   (some-> options (gobj/get "magicItems") entity-text))
 
-(defn- template-key
+(defn- memo-key
   "The template-content key for homebrew, as for evaluate's
   options.homebrew, and options {magicItems?}."
   [homebrew options]
   [(some-> homebrew entity-text) (magic-items-text options)])
 
-(defn- content-key
+(defn- options-memo-key
   "The template-content key for options {homebrew?, magicItems?}."
   [options]
-  (template-key (some-> options (gobj/get "homebrew")) options))
+  (memo-key (some-> options (gobj/get "homebrew")) options))
 
 (defn- evaluate* [text content]
   (let [{:keys [template]} content
@@ -384,7 +384,7 @@
   ([entity options]
    ;; Not (content options): the memo key is the content's text.
    (check-rules! options)
-   (evaluate-previous [(entity-text entity) (content-key options)])))
+   (evaluate-previous [(entity-text entity) (options-memo-key options)])))
 
 ;;; ---------------------------------------------------------------------------
 ;;; importCharacter, exportCharacter (orc-alchemy docs/plan/03-character-import-and-storage.md)
@@ -675,7 +675,7 @@
   ([] (buildTemplate nil))
   ([homebrew] (buildTemplate homebrew nil))
   ([homebrew options]
-   (let [{:keys [template content]} (template-content (template-key homebrew options))]
+   (let [{:keys [template content]} (template-content (memo-key homebrew options))]
      (clj->js {"summary" (template-summary template)
                "shape" (mapv selection-shape (::t/selections template))
                "content" (into {}
@@ -704,11 +704,11 @@
        :option-keys (persistent! option-keys)})))
 
 (def ^:private template-keys
-  "template-key-sets for a template-content key."
+  "template-key-sets for a memo-key."
   (memo-previous #(template-key-sets (:template (template-content %)))))
 
 (defn- sorted-keys [homebrew options which]
-  (->> (template-keys (template-key homebrew options))
+  (->> (template-keys (memo-key homebrew options))
        which
        (map kw->str)
        sort
@@ -825,7 +825,7 @@
   ([entity] (reconcileMissingContent entity nil))
   ([entity homebrew] (reconcileMissingContent entity homebrew nil))
   ([entity homebrew options]
-   (let [{:keys [template available-content]} (template-content (template-key homebrew options))
+   (let [{:keys [template available-content]} (template-content (memo-key homebrew options))
          raw (char5e/from-strict (read-entity entity))
          selections (entity/get-all-selections-aux-2 template (entity/make-path-map raw))
          resolved (entity/make-template-option-map selections)
@@ -1022,7 +1022,7 @@
   "The template content for options {rules?, homebrew?, magicItems?}."
   [options]
   (check-rules! options)
-  (template-content (content-key options)))
+  (template-content (options-memo-key options)))
 
 (defn- read-raw [entity]
   (char5e/from-strict (read-entity entity)))
@@ -1694,10 +1694,10 @@
   default the old button's behaviour: the result keeps only the options at
   the keep paths (the builder's locked components, such as [\"race\"]) and
   the enabled plugins (:optional-content). It fills the rest, including the
-  class and level, and drops the values such as the name. With keepAll, it keeps
-  every option and value and fills only the selections with picks
-  remaining. seed is a 32-bit integer; the same seed
-  and entity give the same result. Without one, it uses Math.random.
+  class and level, and drops the values such as the name. With keepAll, it
+  keeps every option and value and fills only the selections with picks
+  remaining. seed is a 32-bit integer; the same seed and entity give the
+  same result. Without one, it uses Math.random.
 
   Names are not generated: character/random.cljc is not in the package."
   ([entity] (autofill entity nil))
