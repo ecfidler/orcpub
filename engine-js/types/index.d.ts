@@ -287,11 +287,24 @@ export interface ImportedCharacter {
 }
 
 /**
- * Imports a character saved by the old app. Applies the from-strict
- * normalizations (R1 to R3, R6, R9), the legacy key migration (R7), and the
- * xps fix (R5), and removes the old :db/id values and the owner.
+ * Imports a character saved by the old app: Transit-JSON as for evaluate, or
+ * the EDN text that the old server's GET /dnd/5e/characters/<id> returns.
+ * Applies the from-strict normalizations (R1 to R3, R6, R9), the legacy key
+ * migration (R7), and the xps fix (R5), and removes the old :db/id values
+ * and the owner. Throws if a string is not Transit-JSON or an EDN map.
  */
 export function importCharacter(entity: StrictEntity): ImportedCharacter;
+
+/**
+ * Reads the EDN text of an old server response into an array of values,
+ * each in evaluate's input format (parsed verbose Transit-JSON). The old
+ * server sends EDN, not Transit. A list or vector, as GET
+ * /dnd/5e/characters and GET /dnd/5e/items return, gives one value for each
+ * item. A map gives an array of one. Pass each character to
+ * importCharacter. Throws if the text is not EDN, or is not a list, vector
+ * or map.
+ */
+export function readServerEdn(text: string): object[];
 
 /**
  * Normalizes an entity with char5e/from-strict and serializes it with

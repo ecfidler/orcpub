@@ -7,6 +7,7 @@
   orcpub.facade.plain."
   (:refer-clojure :exclude [keys])
   (:require [cljs.pprint :as pprint]
+            [cljs.reader :as reader]
             [cljs.spec.alpha :as spec]
             [clojure.string :as str]
             [clojure.walk :as walk]
@@ -354,6 +355,14 @@
 ;;; importCharacter, exportCharacter (orc-alchemy docs/plan/03-character-import-and-storage.md)
 ;;; ---------------------------------------------------------------------------
 
+(defn- read-edn
+  "The value of EDN text, as the old server writes it: GET /dnd/5e/characters
+  and /dnd/5e/items send the Datomic pull as EDN, not Transit
+  (fixtures/README.md finding 10). cljs.reader reads it, as the old client's
+  cljs-http did."
+  [text]
+  (reader/read-string text))
+
 (defn- read-entity [entity]
   (read-strict (entity-text entity)))
 
@@ -385,16 +394,36 @@
       (assoc-in raw [::entity/values ::char5e/xps] (char5e/parse-int (str/trim xps)))
       raw)))
 
+(defn- read-transit-or-edn
+  "A strict entity from Transit-JSON, as for evaluate, or from the old
+  server's EDN text. Throws if text is neither, or is EDN but not a map."
+  [entity]
+  (if-not (string? entity)
+    (read-entity entity)
+    (try
+      (read-strict entity)
+      (catch :default json-error
+        (let [message (str "The character is not Transit-JSON or EDN. As Transit-JSON: "
+                         (.-message json-error) ". As EDN, ")
+              value (try
+                      (read-edn entity)
+                      (catch :default edn-error
+                        (throw (js/Error. (str message (.-message edn-error))))))]
+          (if (map? value)
+            value
+            (throw (js/Error. (str message "it is not a map.")))))))))
+
 (defn ^:export importCharacter
   "Imports a character saved by the old app: the strict entity as
-  Transit-JSON text or its parsed value. Applies the from-strict
+  Transit-JSON text or its parsed value, or as the EDN text that the old
+  server's GET /dnd/5e/characters/<id> returns. Applies the from-strict
   normalizations (R1 to R3, R6, R9), the legacy key migration (R7), and the
   xps fix (R5), and removes the old ids and owner.
 
   Returns {entity, legacyId}: entity in evaluate's input format, and
   legacyId the old top-level :db/id as a string, or null."
   [entity]
-  (let [strict (read-entity entity)
+  (let [strict (read-transit-or-edn entity)
         legacy-id (:db/id strict)
         raw (-> strict
                 strip-ownership
@@ -403,6 +432,20 @@
                 parse-xps)]
     #js {"entity" (write-entity (char5e/to-strict raw))
          "legacyId" (some-> legacy-id str)}))
+
+(defn ^:export readServerEdn
+  "Reads the EDN text of an old server response into an array of values,
+  each in evaluate's input format (parsed verbose Transit-JSON). A list or
+  vector, as GET /dnd/5e/characters and /dnd/5e/items return, gives one
+  value for each item. A map gives an array of one. Pass each character to
+  importCharacter. Throws if the text is not EDN, or is not a list, vector
+  or map."
+  [text]
+  (let [value (read-edn text)]
+    (cond
+      (sequential? value) (into-array (map write-entity value))
+      (map? value) (array (write-entity value))
+      :else (throw (js/Error. "The server response is not an EDN list, vector or map.")))))
 
 (defn ^:export exportCharacter
   "Normalizes an entity with char5e/from-strict and serializes it with

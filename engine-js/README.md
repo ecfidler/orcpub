@@ -43,7 +43,8 @@ The package exports the functions below. `types/index.d.ts` holds their
 full signatures and the types.
 
 - `evaluate(entity, options?)` builds a character and returns `{ built, selections }`.
-- `importCharacter(entity)` migrates a character saved by the old app and returns `{ entity, legacyId }`. Pass `.entity` to the other functions.
+- `importCharacter(entity)` migrates a character saved by the old app, as Transit-JSON or as the old server's EDN, and returns `{ entity, legacyId }`. Pass `.entity` to the other functions.
+- `readServerEdn(text)` reads an old server response, which is EDN, into an array of values. Use it for the character list and the custom magic items.
 - `exportCharacter(entity)` serializes a character as the old app saves it.
 - `emptyCharacter()` returns the builder's new character, a level 1 barbarian.
 - `select(entity, path, optionKey, options?)` selects an option.
