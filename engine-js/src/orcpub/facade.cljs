@@ -26,7 +26,8 @@
             [orcpub.dnd.e5.import-validation :as import-val]
             [orcpub.dnd.e5.template :as t5e]
             [orcpub.facade.plain :refer [kw->str ->plain]]
-            [orcpub.facade.template :as template]))
+            [orcpub.facade.template :as template]
+            [orcpub.facade.validate :as validation]))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Built-character values (character-subs, subs.cljs:628-736)
@@ -1009,6 +1010,41 @@
           (and (not= from to) (contains? items to))
           (fail! "Pack " (pr-str pack) " already has the key " (pr-str (kw->str to)) " in " (kw->str content-type)))
     (write-entity (update plugins pack import-val/rename-key-in-plugin content-type from to))))
+
+;;; ---------------------------------------------------------------------------
+;;; validate (ORC-41; orc-alchemy docs/plan/04-homebrew.md)
+;;; ---------------------------------------------------------------------------
+
+(defn- validator
+  "The exported validator for type, a key of validation/types."
+  [type]
+  (fn [record]
+    (let [item (read-entity record)]
+      (when-not (map? item)
+        (fail! "The " type " record is not a map."))
+      (let [{:keys [ok problems item]} (validation/check type item)]
+        #js {"ok" ok
+             "problems" (clj->js problems)
+             "item" (write-entity item)}))))
+
+(def validate
+  "The homebrew validators, one for each type that the old builders save:
+  race, subrace, class, subclass, background, feat, spell, language,
+  invocation, boon, selection, monster, encounter, and magicItem. Each
+  takes one item as verbose Transit-JSON, as a pack stores it, and checks
+  it as the old save does (orcpub.facade.validate). It returns {ok,
+  problems, item}:
+    problems each {path, reason, pred}: path is the field's path of keys
+             and indices, such as [\"hit-points\", \"die\"]; reason is
+             \"missing\", \"invalid\" or \"duplicate\"
+    item     the item as the old save would store it, as verbose
+             Transit-JSON: text normalized and, for a pack type, :key set
+             from the name when it has none
+  Throws if the record is not a map."
+  (let [validators #js {}]
+    (doseq [type (keys validation/types)]
+      (gobj/set validators type (validator type)))
+    validators))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Mutations (event_handlers.cljc and the builder's handlers in events.cljs)

@@ -51,7 +51,8 @@
                                          orcbrewToEdn orcpub.facade/orcbrewToEdn
                                          reconcileMissingContent orcpub.facade/reconcileMissingContent
                                          renameKey orcpub.facade/renameKey
-                                         keys orcpub.facade/keys}}}
+                                         keys orcpub.facade/keys
+                                         validate orcpub.facade/validate}}}
    :build-options {:ns-aliases {orcpub.dnd.e5.monsters orcpub.facade.no-monsters}}
    :compiler-options {:optimizations :advanced}}
 
