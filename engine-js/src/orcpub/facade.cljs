@@ -314,7 +314,7 @@
                              "readServerEdn returns for GET /dnd/5e/items."))))))
 
 (def ^:private template-content
-  "The template content for [homebrew-text magic-items-text], each the
+  "The template content for a template-key: [homebrew items], each the
   Transit-JSON text or nil. Both nil gives the SRD's."
   (memo-previous
    (fn [[homebrew items]]
