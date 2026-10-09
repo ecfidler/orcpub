@@ -7,6 +7,7 @@
   orcpub.facade.plain."
   (:refer-clojure :exclude [keys])
   (:require [cljs.pprint :as pprint]
+            [cljs.reader :as reader]
             [cljs.spec.alpha :as spec]
             [clojure.string :as str]
             [clojure.walk :as walk]
@@ -354,8 +355,28 @@
 ;;; importCharacter, exportCharacter (orc-alchemy docs/plan/03-character-import-and-storage.md)
 ;;; ---------------------------------------------------------------------------
 
-(defn- read-entity [entity]
-  (read-strict (entity-text entity)))
+(defn- read-edn
+  "The value of EDN text, as the old server writes it: GET /dnd/5e/characters
+  and /dnd/5e/items send the Datomic pull as EDN, not Transit
+  (fixtures/README.md finding 10). cljs.reader reads it, as the old client's
+  cljs-http did."
+  [text]
+  (reader/read-string text))
+
+(defn- read-entity
+  "A strict entity from Transit-JSON (the text, or the value JSON.parse
+  returns for it) or from EDN text."
+  [entity]
+  (if (string? entity)
+    (try
+      (read-strict entity)
+      (catch :default json-error
+        (try
+          (read-edn entity)
+          (catch :default _
+            (throw (js/Error. (str "The character is not Transit-JSON or EDN: "
+                                   (.-message json-error))))))))
+    (read-strict (entity-text entity))))
 
 (defn- write-entity
   "A strict entity or homebrew as verbose Transit-JSON, parsed: the format
@@ -387,7 +408,8 @@
 
 (defn ^:export importCharacter
   "Imports a character saved by the old app: the strict entity as
-  Transit-JSON text or its parsed value. Applies the from-strict
+  Transit-JSON text or its parsed value, or as the EDN text that the old
+  server's GET /dnd/5e/characters/<id> returns. Applies the from-strict
   normalizations (R1 to R3, R6, R9), the legacy key migration (R7), and the
   xps fix (R5), and removes the old ids and owner.
 
@@ -403,6 +425,16 @@
                 parse-xps)]
     #js {"entity" (write-entity (char5e/to-strict raw))
          "legacyId" (some-> legacy-id str)}))
+
+(defn ^:export readServerEdn
+  "The EDN text of an old server response as an array of values in
+  evaluate's input format, verbose Transit-JSON parsed. A list or vector,
+  such as GET /dnd/5e/characters or /dnd/5e/items returns, gives one value
+  per item; any other value gives a one-item array. Pass a character to
+  importCharacter. Throws if the text is not EDN."
+  [text]
+  (let [value (read-edn text)]
+    (into-array (map write-entity (if (sequential? value) value [value])))))
 
 (defn ^:export exportCharacter
   "Normalizes an entity with char5e/from-strict and serializes it with

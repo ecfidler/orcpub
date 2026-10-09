@@ -28,6 +28,7 @@
    :modules {:pubdoor {:exports {evaluate orcpub.facade/evaluate
                                          importCharacter orcpub.facade/importCharacter
                                          exportCharacter orcpub.facade/exportCharacter
+                                         readServerEdn orcpub.facade/readServerEdn
                                          emptyCharacter orcpub.facade/emptyCharacter
                                          select orcpub.facade/select
                                          deselect orcpub.facade/deselect
