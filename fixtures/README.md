@@ -640,3 +640,15 @@ Line numbers are for commit `bcd9d68`.
     keys under `unresolved` in its `.meta.json`. Plan doc 01 §C3 asks for
     zero unresolved keys across every golden character, which these
     fixtures cannot give without changing what they test.
+18. **Three goldens hold a value that the old server cannot store.**
+    `fighter-20`, `wizard-11`, and `fighter-5-custom-magic-items` hold
+    `:orcpub.dnd.e5.character/attuned-magic-items`. The old Datomic schema
+    has no such attribute, so the old server refuses to save them
+    (`:db.error/not-an-entity`). The old UI never sets the value, because
+    the `::char5e/attune-magic-item` event in `events.cljs` is commented
+    out. The engine reads the value (`character.cljc`,
+    `attuned-magic-items`), and Alchemy 5e sets it, so the goldens stay as
+    they are. They are code-only cases: a test that saves goldens to a real
+    old server, such as the orc-alchemy Docker test of the exporter
+    bookmarklet, must leave them out. ORC-67 found this, and ORC-127
+    records the choice.
