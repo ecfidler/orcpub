@@ -3,7 +3,7 @@
 // import_validation.cljs key-reference-map lists, so content renamed to
 // resolve a key conflict keeps working.
 import { describe, expect, it } from "vitest";
-import { parseOrcbrew, reconcileMissingContent, renameKey, type KeyRename } from "@pubdoor/dmv";
+import { evaluate, parseOrcbrew, reconcileMissingContent, renameKey, type KeyRename } from "@pubdoor/dmv";
 import { builtInKeys, contentOf as packContent, danglingReferences, kw, type ContentMap, type Plugin } from "./support.js";
 
 // A spellcasting class with a subclass, a plugin selection used through
@@ -121,6 +121,29 @@ describe("renameKey", () => {
     ]);
     expect(danglingReferences(renamed, builtInKeys())).toStrictEqual([]);
     expect(reconcileMissingContent(tinkerCharacter("tinker", "gizmos"), renamed).hasMissing).toBe(false);
+  });
+
+  // ORC-132: a subclass option takes its key from the name, so a character
+  // keeps its pick when the subclass's key is renamed. The built subclass
+  // value came from :key, so it named the renamed key, not the pick.
+  it("builds the subclass value a character picked after a subclass rename", () => {
+    const subclasses = "orcpub.dnd.e5/subclasses";
+    const subclassOf = (homebrew: Record<string, object>) =>
+      evaluate(tinkerCharacter("tinker"), { homebrew }).built.levels["tinker"]!.subclass;
+
+    // The key is also in use elsewhere, so the pack's only copy is renamed.
+    const alone = renameKey(tinker(), { pack: PACK, contentType: subclasses, from: "gearwright", to: "gearwright-rt" });
+    expect(subclassOf(alone)).toBe("gearwright");
+    expect(reconcileMissingContent(tinkerCharacter("tinker"), alone).hasMissing).toBe(false);
+
+    // A second live pack has a subclass with the same name for the same
+    // class. The template keeps one of the two, here the renamed copy.
+    const both = parseOrcbrew(
+      `{:orcpub.dnd.e5/subclasses {:gearwright {:key :gearwright :name "Gearwright" :class :tinker :option-pack "Other"}}}`,
+      { name: "other", existing: tinker() },
+    ).data!;
+    const renamed = renameKey(both, { pack: "other", contentType: subclasses, from: "gearwright", to: "gearwright-other" });
+    expect(subclassOf(renamed)).toBe("gearwright");
   });
 
   it("changes nothing in other packs", () => {

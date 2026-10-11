@@ -2616,7 +2616,10 @@
       :modifiers (concat
                   modifiers
                   level-modifiers
-                  [(modifiers/subclass (:key cls) kw)
+                  ;; The subclass value is the option's key, which comes from
+                  ;; the name. A renamed :key does not change what a
+                  ;; character picked (ORC-132).
+                  [(modifiers/subclass (:key cls) (common/name-to-kw name))
                    (modifiers/subclass-name (:key cls) name)]
                   (when (:known-mode spellcasting)
                     [(modifiers/spells-known-mode name (:known-mode spellcasting))])
