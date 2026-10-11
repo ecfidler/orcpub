@@ -62,7 +62,7 @@ export interface ClassLevels {
   "class-level": number;
   "class-name": string;
   "hit-die": number;
-  /** The subclass key, once one is chosen. */
+  /** The key of the chosen subclass option. It comes from the subclass name, so renameKey does not change it. */
   subclass?: string;
   "subclass-name"?: string;
 }

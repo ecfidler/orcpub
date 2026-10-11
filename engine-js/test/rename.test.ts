@@ -131,7 +131,7 @@ describe("renameKey", () => {
     const subclassOf = (homebrew: Record<string, object>) =>
       evaluate(tinkerCharacter("tinker"), { homebrew }).built.levels["tinker"]!.subclass;
 
-    // The key is also in use elsewhere, so the pack's only copy is renamed.
+    // Only this pack has the subclass, and its key is renamed.
     const alone = renameKey(tinker(), { pack: PACK, contentType: subclasses, from: "gearwright", to: "gearwright-rt" });
     expect(subclassOf(alone)).toBe("gearwright");
     expect(reconcileMissingContent(tinkerCharacter("tinker"), alone).hasMissing).toBe(false);
