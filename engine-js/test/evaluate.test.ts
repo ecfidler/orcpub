@@ -103,7 +103,8 @@ describe("evaluate: the hand slots Dueling reads", () => {
 
 describe("evaluate: the Hunter Ranger's Evasion", () => {
   // ORC-178: a level 20 Hunter Ranger who takes Evasion for Superior Hunter's
-  // Defense. Before the fix, the Evasion trait had no name.
+  // Defense. Before the fix, the Evasion trait had no name. The character
+  // comes from the Alchemy 5e level 20 sheet audit (ORC-176, ORC-177).
   const ranger = JSON.parse(
     readFileSync(new URL("fixtures/ranger-20-evasion.strict.json", import.meta.url), "utf8"),
   ) as object;
