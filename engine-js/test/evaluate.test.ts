@@ -100,3 +100,25 @@ describe("evaluate: the hand slots Dueling reads", () => {
     expect(longswordDamage("~:handaxe")).toBe(4);
   });
 });
+
+describe("evaluate: the Hunter Ranger's Evasion", () => {
+  // ORC-178: a level 20 Hunter Ranger who takes Evasion for Superior Hunter's
+  // Defense. Before the fix, the Evasion trait had no name. The character
+  // comes from the Alchemy 5e level 20 sheet audit (ORC-176, ORC-177).
+  const ranger = JSON.parse(
+    readFileSync(new URL("fixtures/ranger-20-evasion.strict.json", import.meta.url), "utf8"),
+  ) as object;
+  const { traits } = evaluate(ranger).built;
+
+  it("gives the Evasion trait its name", () => {
+    const evasion = traits.filter((trait) => trait.name === "Evasion");
+
+    expect(evasion).toHaveLength(1);
+    expect(evasion[0]!.page).toBe(93);
+    expect(evasion[0]!.summary).toMatch(/^When you are subjected to an effect/);
+  });
+
+  it("gives every trait a name", () => {
+    expect(traits.filter((trait) => !trait.name)).toEqual([]);
+  });
+});
