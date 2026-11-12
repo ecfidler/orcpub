@@ -1945,9 +1945,9 @@
 (defn traits-modifiers [traits & [class-key source]]
   (map
    (fn [trait]
-     (modifiers/trait-cfg (merge {:source source
-                                  :class-key class-key}
-                                 trait)))
+     (modifiers/plugin-trait-cfg (merge {:source source
+                                         :class-key class-key}
+                                        trait)))
    traits))
 
 (defn armor-prof-modifiers [armor-proficiencies & [cls-kw]]
@@ -3345,7 +3345,7 @@
    []
    props))
 
-(defn feat-modifiers [key name description props ability-increases]
+(defn feat-modifiers [key name description props ability-increases frequency type traits]
   (let [without-saves (sets/intersection ability-increases
                                          (into #{} character/ability-keys))]
     (concat
@@ -3358,9 +3358,14 @@
             (modifiers/saving-throws nil ability-kw)]
            [ability-mod]))
        [])
-     [(modifiers/trait-cfg
-       {:name name
-        :description description})])))
+     ;; patch D8: the feat's own trait takes the feat's :frequency and
+     ;; :type, and the feat's :traits go through the same path as a race's
+     [(modifiers/plugin-trait-cfg
+       (cond-> {:name name
+                :description description}
+         frequency (assoc :frequency frequency)
+         type (assoc :type type)))]
+     (traits-modifiers traits))))
 
 (defn feat-selections [language-map spells-map spell-lists proficiency-weapons props ability-increases]
   (let [without-saves (sets/intersection ability-increases
@@ -3401,12 +3406,18 @@
            path-prereqs
            props
            ability-increases
+           frequency
+           type
+           traits
            edit-event]}]
   (let [feat-mods (feat-modifiers key
                                   name
                                   description
                                   props
-                                  ability-increases)
+                                  ability-increases
+                                  frequency
+                                  type
+                                  traits)
         feat-selections (feat-selections language-map
                                          spells-map
                                          spell-lists

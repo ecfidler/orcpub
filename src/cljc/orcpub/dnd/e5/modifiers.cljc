@@ -293,6 +293,55 @@
                       cfg)
                      ?traits))))
 
+;; Patch D8 (docs/pubdoor/patch-d8-scaled-uses.md): a homebrew feature can
+;; have a scaled :frequency :amount, a map in place of a number.
+
+(defn scaled-amount
+  "The number that a scaled amount map gives. The map has one base:
+   :ability (an ability key, with or without its namespace), :prof-bonus, or
+   :level with an optional :times. :plus adds to the base. :min is the lowest
+   result, and applies only when the map has it. `level` is the class level
+   for a class or subclass feature, and the character level for any other."
+  [{:keys [ability prof-bonus times plus] scales-with-level :level minimum :min}
+   ability-bonuses prof-bonus-value level]
+  (let [base (cond
+               ;; any other value, such as a number, would make name throw
+               (or (keyword? ability) (string? ability))
+               (get ability-bonuses
+                    (keyword "orcpub.dnd.e5.character" (name ability))
+                    0)
+               prof-bonus prof-bonus-value
+               scales-with-level (* (or level 0) (or times 1))
+               :else 0)
+        amount (+ base (or plus 0))]
+    (if minimum
+      (max minimum amount)
+      amount)))
+
+(defn scaled-trait-cfg
+  "trait-cfg for a trait with a scaled amount. It gives the trait a number.
+   The body names each ?-var that it reads, because a modifier gets its
+   dependencies from the symbols in its body."
+  [{:keys [class-key level] :as cfg}]
+  (mods/modifier ?traits
+                 (let [current-level (if (nil? class-key)
+                                       ?total-levels
+                                       (?class-level class-key))]
+                   (if (or (nil? level)
+                           (>= current-level level))
+                     (conj
+                      ?traits
+                      (update-in cfg [:frequency :amount] scaled-amount ?ability-bonuses ?prof-bonus current-level))
+                     ?traits))))
+
+(defn plugin-trait-cfg
+  "The trait modifier for a homebrew trait. A trait with a number amount, or
+   with no amount, gets the same modifier as before."
+  [cfg]
+  (if (map? (get-in cfg [:frequency :amount]))
+    (scaled-trait-cfg cfg)
+    (trait-cfg cfg)))
+
 (defn trait [name & [description level summary conditions]]
   (trait-cfg {:name name :description description :level level :summary summary :conditions conditions}))
 
