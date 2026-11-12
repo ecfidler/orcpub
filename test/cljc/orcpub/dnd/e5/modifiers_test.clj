@@ -16,6 +16,8 @@
       (is (= 0 (amount {:ability :cha})))
       (is (= 1 (amount {:ability :int :min 1})))
       (is (= 3 (amount {:ability :wis :min 1}))))
+    (testing "an ability that is not a key is not a base"
+      (is (= 2 (amount {:ability 3 :plus 2}))))
     (testing "the proficiency bonus"
       (is (= 4 (amount {:prof-bonus true})))
       (is (= 6 (amount {:prof-bonus true :plus 2}))))

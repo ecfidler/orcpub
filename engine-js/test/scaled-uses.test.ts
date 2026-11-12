@@ -44,7 +44,7 @@ describe("scaled uses", () => {
     expect(uses("Rolling Gait")?.amount).toBe(7);
   });
 
-  it("applies a feature's level to a scaled feature", () => {
+  it("leaves out a scaled feature above the class level", () => {
     expect(named("Tsunami")).toHaveLength(0);
   });
 

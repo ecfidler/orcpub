@@ -24,6 +24,9 @@ it.[^forms-spec]
   `:amount` of its `:frequency` is then a map, not a number.
 - A homebrew feat can have `:frequency`, `:type` and `:traits`.
 
+In this document, a feature is an entry in `:traits`. The engine code calls
+it a trait.
+
 Content of the SRD does not change. All fixtures that existed before the
 patch are the same after it.
 

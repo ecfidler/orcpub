@@ -305,9 +305,11 @@
   [{:keys [ability prof-bonus times plus] scales-with-level :level minimum :min}
    ability-bonuses prof-bonus-value level]
   (let [base (cond
-               ability (get ability-bonuses
-                            (keyword "orcpub.dnd.e5.character" (name ability))
-                            0)
+               ;; any other value, such as a number, would make name throw
+               (or (keyword? ability) (string? ability))
+               (get ability-bonuses
+                    (keyword "orcpub.dnd.e5.character" (name ability))
+                    0)
                prof-bonus prof-bonus-value
                scales-with-level (* (or level 0) (or times 1))
                :else 0)

@@ -3345,7 +3345,7 @@
    []
    props))
 
-(defn feat-modifiers [key name description props ability-increases & [frequency type traits]]
+(defn feat-modifiers [key name description props ability-increases frequency type traits]
   (let [without-saves (sets/intersection ability-increases
                                          (into #{} character/ability-keys))]
     (concat
