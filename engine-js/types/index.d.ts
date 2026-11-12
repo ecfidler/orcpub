@@ -124,6 +124,16 @@ export interface Feature {
   "class-key"?: string | null;
   /** The level the feature starts at. */
   level?: number;
+  /**
+   * The action type of a homebrew feature: "action", "b-action" (a bonus
+   * action), "reaction" or "other". Homebrew features of every type are in
+   * `traits`.
+   */
+  type?: string;
+  /**
+   * The uses. The amount is a number here: the engine resolves a pack's
+   * ScaledAmount when it evaluates the character.
+   */
   frequency?: Amount;
   duration?: Amount;
 }
@@ -460,6 +470,39 @@ export function autofill(entity: StrictEntity, options?: AutofillOptions): objec
  * is, and remove an item by deleting its entry.
  */
 export type Homebrew = string | Record<string, object>;
+
+/**
+ * A scaled amount of uses in a pack (0.4.0), as Transit-JSON. It has one
+ * base: "~:ability", "~:prof-bonus" or "~:level". evaluate gives the number
+ * in Feature.frequency.amount.
+ */
+export interface ScaledAmount {
+  /** The ability modifier, such as "~:wis" or "~:orcpub.dnd.e5.character/wis". */
+  "~:ability"?: string;
+  /** The proficiency bonus. */
+  "~:prof-bonus"?: true;
+  /**
+   * The level of the class, for a class or subclass feature. The character
+   * level, for any other feature.
+   */
+  "~:level"?: true;
+  /** Multiplies the level. Defaults to 1. */
+  "~:times"?: number;
+  /** Added to the base. Defaults to 0. */
+  "~:plus"?: number;
+  /** The lowest result. Without it, the result can be 0 or less. */
+  "~:min"?: number;
+}
+
+/**
+ * The "~:frequency" of a feature in a pack, as Transit-JSON. A feat can
+ * have one too (0.4.0), for the feat's own entry in traits.
+ */
+export interface PackFrequency {
+  /** The unit, such as "~:orcpub.dnd.e5.units/long-rest". */
+  "~:units": string;
+  "~:amount"?: number | ScaledAmount;
+}
 
 export interface ParseOrcbrewOptions {
   /**

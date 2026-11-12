@@ -23,7 +23,10 @@ normalizations (findings 4 and 9), with `scripts/golden-characters.clj` and
 `import` of `duplicate-external-b` changed, and `drift-11` and `drift-12`
 are new. The SRD
 baseline was not regenerated then. ORC-178 changed it in one place
-(finding 19). Regenerate whenever
+(finding 19). ORC-192 added `scaled-uses.orcbrew` and
+`scaled-uses-fighter-6-barbarian-1` for engine patch D8, and a regeneration
+of every character and of the baseline then gave no other change.
+Regenerate whenever
 `src/cljc` or one of the files the engine reads from `src/cljs` changes (see
 *Regenerating*): `orcpub/dnd/e5.cljc`, `spell_subs.cljs`,
 `equipment_subs.cljs` (copied into `engine-js/src/orcpub/facade/template.cljs`),
@@ -44,7 +47,7 @@ fixtures/
     character-test-{1,2,3}.*  the three real Datomic entities from character_test.clj
     r{3..9}-*.*               one synthetic strict entity per import quirk (doc 01 §C2)
   orcbrew/
-    <pack>.orcbrew            2 real packs, 1 ported test pack, 12 drift-form packs, 3 community packs
+    <pack>.orcbrew            2 real packs, 1 ported test pack, 12 drift-form packs, 3 community packs, 1 scaled-uses pack
     <pack>.template.json      the old template chain's output for that pack alone
     _srd-baseline.template.json.gz  the SRD-only template shape (gzipped, ~6 MB raw)
   README.md
@@ -52,9 +55,9 @@ fixtures/
 
 | Set | Count |
 |---|---|
-| Golden characters | 13 (`characters/`) |
+| Golden characters | 14 (`characters/`) |
 | Legacy entities | 3 real + 8 synthetic (`legacy/`) |
-| `.orcbrew` packs | 18, each with a `.template.json`, plus the baseline |
+| `.orcbrew` packs | 19, each with a `.template.json`, plus the baseline |
 
 ## Formats
 
@@ -194,7 +197,7 @@ lines in `scripts/orcpub/oracle.clj`.
 
 All SRD except where a pack is listed. Ability scores, hit points (average
 per level) and every required selection are filled the way the old builder
-would; `unfilledSelections` is empty for all thirteen.
+would; `unfilledSelections` is empty for all fourteen.
 
 | Name | What it covers | Packs |
 |---|---|---|
@@ -211,6 +214,7 @@ would; `unfilledSelections` is empty for all thirteen.
 | `fighter-3-wizard-2` | Half-elf multiclass; wizard as the second class (no wizard skill pick, hit points at wizard level 1), combined-level spell slots | none |
 | `warlock-10-drow` | The `warlock_test.clj` entity verbatim: Drow warlock 10 of the Archfey, Spy, Keen Mind, Pact of the Tome, five invocations. Its nine assertions are re-run as `checks` | `warlock-test-content.orcbrew` |
 | `ironwrought-artificer-3` | Homebrew-only race/subrace/class/subclass | `duplicate-external-b.orcbrew` |
+| `scaled-uses-fighter-6-barbarian-1` | Scaled uses and feat uses (engine patch D8, ORC-192): Tidecaller fighter 6 (Wave Guard) / barbarian 1 with the Stormcaller and Sea Legs feats. The fighter level (6) and the character level (7) differ, so a level amount shows which level it counts. CHA 10 gives 0, which a minimum of 1 replaces, and INT 8 gives -1 with no minimum. Its amounts are re-run as `checks` | `scaled-uses.orcbrew` |
 
 Spell picks are deterministic: 6 first-level spells at level 1, then two
 spells of the highest castable level per level, walking the SRD wizard list
@@ -275,6 +279,7 @@ behaviour; every other fixture is built exactly as `char5e/from-strict` +
 | `drift-10-ability-key-forms` | synthetic | EPL-2.0 | `:abilities {:con 2}` vs `{:orcpub.dnd.e5.character/con 2}`; feats with `#{:con}` vs namespaced |
 | `drift-11-skill-options-without-choose` | synthetic | EPL-2.0 | a subclass with `:profs {:skill-options {:options {...}}}` and no `:choose`, as in the owner's export (finding 9), and one with `:choose 2` |
 | `drift-12-ability-key-places` | synthetic | EPL-2.0 | bare ability keys in a class's `[:profs :save]` and `[:spellcasting :ability]`, a subclass's `:spell` level-modifier, and a feat's `:prereqs` and `:ability-increases`; a race and a feat with both the bare and the qualified key; `:multiclass-skill-options` without `:choose` |
+| `scaled-uses.orcbrew` | synthetic (this repo), for ORC-192 | EPL-2.0 | engine patch D8 (`docs/pubdoor/patch-d8-scaled-uses.md`): a race with features of each `:type` and a fixed amount, an ability amount with `:min`, an ability amount with no minimum and a qualified key, a level amount with `:times` and `:plus`, and a proficiency bonus amount; a fighter subclass with a class-level amount and a feature above the character's class level; a feat with `:type` and `:frequency`; a feat with `:traits` |
 | `community-mezzoloth-race.orcbrew` | the repo owner's own homebrew, taken verbatim (pack `"me"`) from their old-app `all-content` export | EPL-2.0 (author's own work, contributed here) | a race authored in the old UI: racial spells with `:value`/`:level`, `:languages` as a set, pack-level `:disabled? false` |
 | `community-dandwiki-star-elf.orcbrew` | D&D Wiki (dandwiki.com), as recorded in the pack name; transcribed into the old app by the repo owner | GNU FDL 1.3 (D&D Wiki's license). **Verify the page before relying on it** | a subrace attached to the built-in Elf with `:props` weapon/skill proficiencies and level-gated racial spells |
 | `community-gmbinder-homebrew.orcbrew` | the repo owner's own homebrew, published as four GM Binder documents (Divine Domain: Waves, Sorcerous Origin: Divergent Soul, Sorcerous Origin: Ethereal Soul, and a spell compendium), converted to the old builder's save format for ORC-12 | EPL-2.0 (author's own work, contributed here) | 7 homebrew spells with `:spell-lists` in the builder's all-classes form (unticked classes are `false`), `:attack-roll?`, and material components; a cleric subclass with `:cleric-spells`; two sorcerer subclasses with `:spell` level-modifiers; a `:swimming-speed` level-modifier; level-gated traits with `:type`; two plugin selections used through `:level-selections`; 9 spell keys that are not in the SRD (finding 12) |

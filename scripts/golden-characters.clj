@@ -474,7 +474,43 @@
                      ;; form 10). The importer rewrites it as ::char5e/con (ORC-40),
                      ;; so the +2 applies and CON is 15 + 2
                      [{:orcpub.dnd.e5.character/con 2} (char5e/race-ability-increases b)]
-                     [17 (:orcpub.dnd.e5.character/con (char5e/ability-values b))]])}])
+                     [17 (:orcpub.dnd.e5.character/con (char5e/ability-values b))]])}
+
+   {:name "scaled-uses-fighter-6-barbarian-1"
+    :description "Scaled uses (ORC-192, patch D8): Tidecaller fighter 6 (Wave Guard) / barbarian 1 with the Stormcaller and Sea Legs feats, all from scaled-uses.orcbrew. The fighter level (6) and the character level (7) differ, so a level amount shows which level it counts. INT 8 gives an ability amount of -1 with no minimum, and CHA 10 gives 0, which the minimum of 1 replaces."
+    :orcbrew ["scaled-uses.orcbrew"]
+    :raw {::entity/options
+          (merge {:ability-scores (val-opt :standard-scores (abilities 15 13 14 8 12 10))
+                  :alignment (opt :neutral)
+                  :race (opt :tidecaller)
+                  :languages [(opt :common) (opt :dwarvish)]
+                  :background acolyte
+                  :class [(fighter-base 6 {3 {:martial-archetype (opt :wave-guard)}
+                                           4 {:asi-or-feat feat-instead}
+                                           6 {:asi-or-feat feat-instead}})
+                          (opt :barbarian {:levels (class-levels 1 12 nil true)})]
+                  :feats [(opt :stormcaller) (opt :sea-legs)]}
+                 fighter-items)
+          ::entity/values {::char5e/character-name "Maren Saltblood"
+                           ::char5e/xps 23000
+                           ::char5e/worn-armor :chain-mail
+                           ::char5e/wielded-shield :shield
+                           ::char5e/main-hand-weapon :longsword}}
+    :checks (fn [b] (let [amounts (into {} (map (juxt :name #(get-in % [:frequency :amount]))) (char5e/traits b))]
+                      [[7 (char5e/total-levels b)] [3 (char5e/proficiency-bonus b)]
+                       [{:fighter 6 :barbarian 1} (into {} (map (fn [[k v]] [k (:class-level v)])) (char5e/levels b))]
+                       ;; race: fixed; CHA 0 with a minimum of 1; INT -1 with no
+                       ;; minimum; 2 x character level + 1; proficiency bonus
+                       [2 (amounts "Tide Step")] [1 (amounts "Brine Ward")] [-1 (amounts "Undertow")]
+                       [15 (amounts "Deep Lungs")] [3 (amounts "Salt Sense")]
+                       ;; subclass: 5 x fighter level; STR 2 - 1; proficiency bonus + 2;
+                       ;; the level 7 feature is absent at fighter level 6
+                       [30 (amounts "Crashing Wave")] [1 (amounts "Riptide")] [5 (amounts "Ebb and Flow")]
+                       [false (contains? amounts "Tsunami")]
+                       ;; feats: the feat's own uses; a feature list, where a level
+                       ;; amount counts the character level
+                       [3 (amounts "Stormcaller")] [true (contains? amounts "Steady Footing")]
+                       [7 (amounts "Rolling Gait")]]))}])
 
 ;;; ---------------------------------------------------------------------------
 ;;; Legacy fixtures

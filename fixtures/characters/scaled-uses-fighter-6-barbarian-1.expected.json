@@ -1,0 +1,529 @@
+{
+  "abilities": {
+    "orcpub.dnd.e5.character/cha": 10,
+    "orcpub.dnd.e5.character/con": 14,
+    "orcpub.dnd.e5.character/dex": 13,
+    "orcpub.dnd.e5.character/int": 8,
+    "orcpub.dnd.e5.character/str": 15,
+    "orcpub.dnd.e5.character/wis": 12
+  },
+  "ability-bonuses": {
+    "orcpub.dnd.e5.character/cha": 0,
+    "orcpub.dnd.e5.character/con": 2,
+    "orcpub.dnd.e5.character/dex": 1,
+    "orcpub.dnd.e5.character/int": -1,
+    "orcpub.dnd.e5.character/str": 2,
+    "orcpub.dnd.e5.character/wis": 1
+  },
+  "ability-increases": null,
+  "actions": [
+    {
+      "frequency": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/rest"
+      },
+      "level": 2,
+      "name": "Action Surge",
+      "page": 72,
+      "summary": "take an extra action"
+    }
+  ],
+  "age": null,
+  "al-illegal-reasons": null,
+  "alignment": "Neutral",
+  "all-armor-inventory": {
+    "chain-mail": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "shield": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor": {
+    "chain-mail": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "shield": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "armor-class": 11,
+  "armor-class-with-armor": [
+    {
+      "ac": 19,
+      "armor": "chain-mail",
+      "shield": "shield"
+    },
+    {
+      "ac": 17,
+      "armor": "chain-mail",
+      "shield": null
+    },
+    {
+      "ac": 15,
+      "armor": null,
+      "shield": "shield"
+    },
+    {
+      "ac": 13,
+      "armor": null,
+      "shield": null
+    }
+  ],
+  "armor-profs": [
+    "heavy",
+    "light",
+    "medium",
+    "shields"
+  ],
+  "attacks": null,
+  "attuned-magic-items": null,
+  "background": "Acolyte",
+  "base-flying-speed": 0,
+  "base-land-speed": 30,
+  "base-swimming-speed": 0,
+  "bonds": null,
+  "bonus-actions": [
+    {
+      "frequency": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/rest"
+      },
+      "name": "Second Wind",
+      "page": 72,
+      "summary": "regain 1d10 +6 HPs"
+    },
+    {
+      "duration": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/minute"
+      },
+      "frequency": {
+        "amount": 2,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "name": "Rage",
+      "page": 48,
+      "summary": "Advantage on Strength checks and saves; melee damage bonus +2; resistance to bludgeoning, piercing, and slashing damage"
+    }
+  ],
+  "character-name": "Maren Saltblood",
+  "class-hit-point-level-bonus": {},
+  "class-level": {
+    "barbarian": 1,
+    "fighter": 6
+  },
+  "classes": [
+    "fighter",
+    "barbarian"
+  ],
+  "condition-immunities": [],
+  "crit-values-str": 20,
+  "critical-hit-values": [
+    20
+  ],
+  "current-hit-points": null,
+  "custom-equipment": null,
+  "custom-treasure": null,
+  "damage-immunities": [],
+  "damage-vulnerabilities": null,
+  "darkvision": 0,
+  "description": null,
+  "equipment": {
+    "amulet": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "backpack": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "clothes-common": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "crowbar": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "hammer": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "incense": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 5
+    },
+    "piton": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 10
+    },
+    "pouch": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "prayer-book": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "rations-1-day-": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 10
+    },
+    "rope-hempen": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "tinderbox": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "torch": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 10
+    },
+    "vestements": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    },
+    "waterskin": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "eyes": null,
+  "faction-image-url": null,
+  "faction-image-url-failed": null,
+  "faction-name": null,
+  "feats": null,
+  "features-used": {},
+  "flaws": null,
+  "hair": null,
+  "height": null,
+  "hit-point-level-bonus": 2,
+  "ideals": null,
+  "image-url": null,
+  "image-url-failed": null,
+  "immunities": [],
+  "initiative": 1,
+  "languages": [
+    "common",
+    "dwarvish"
+  ],
+  "levels": {
+    "barbarian": {
+      "class-level": 1,
+      "class-name": "Barbarian",
+      "hit-die": 12
+    },
+    "fighter": {
+      "class-level": 6,
+      "class-name": "Fighter",
+      "hit-die": 10,
+      "subclass": "wave-guard",
+      "subclass-name": "Wave Guard"
+    }
+  },
+  "magic-armor": null,
+  "magic-items": null,
+  "magic-weapons": null,
+  "main-hand-weapon": "longsword",
+  "max-hit-points": 61,
+  "notes": null,
+  "number-of-attacks": 2,
+  "off-hand-weapon": null,
+  "option-sources": null,
+  "pact-magic?": null,
+  "passive-perception": 14,
+  "personality-trait-1": null,
+  "personality-trait-2": null,
+  "player-name": null,
+  "prepare-spell-count": {},
+  "prepares-spells": null,
+  "proficiency-bonus": 3,
+  "public?": null,
+  "race": "Tidecaller",
+  "race-ability-increases": null,
+  "reactions": [],
+  "resistances": [],
+  "save-bonuses": {
+    "orcpub.dnd.e5.character/cha": 0,
+    "orcpub.dnd.e5.character/con": 5,
+    "orcpub.dnd.e5.character/dex": 1,
+    "orcpub.dnd.e5.character/int": -1,
+    "orcpub.dnd.e5.character/str": 5,
+    "orcpub.dnd.e5.character/wis": 1
+  },
+  "saving-throws": [
+    "orcpub.dnd.e5.character/con",
+    "orcpub.dnd.e5.character/str"
+  ],
+  "sex": null,
+  "skill-bonuses": {
+    "acrobatics": 1,
+    "animal-handling": 1,
+    "arcana": -1,
+    "athletics": 5,
+    "deception": 0,
+    "history": -1,
+    "insight": 4,
+    "intimidation": 0,
+    "investigation": -1,
+    "medicine": 1,
+    "nature": -1,
+    "perception": 4,
+    "performance": 0,
+    "persuasion": 0,
+    "religion": 2,
+    "sleight-of-hand": 1,
+    "stealth": 1,
+    "survival": 1
+  },
+  "skill-expertise": null,
+  "skill-profs": {
+    "athletics": {
+      "nil": true
+    },
+    "insight": {
+      "Acolyte": true
+    },
+    "perception": {
+      "nil": true
+    },
+    "religion": {
+      "Acolyte": true
+    }
+  },
+  "skin": null,
+  "speed-with-armor": null,
+  "spell-attack-modifier": {
+    "orcpub.dnd.e5.character/cha": 3,
+    "orcpub.dnd.e5.character/con": 5,
+    "orcpub.dnd.e5.character/dex": 4,
+    "orcpub.dnd.e5.character/int": 2,
+    "orcpub.dnd.e5.character/str": 5,
+    "orcpub.dnd.e5.character/wis": 4
+  },
+  "spell-modifiers": {},
+  "spell-save-dc": {
+    "orcpub.dnd.e5.character/cha": 11,
+    "orcpub.dnd.e5.character/con": 13,
+    "orcpub.dnd.e5.character/dex": 12,
+    "orcpub.dnd.e5.character/int": 10,
+    "orcpub.dnd.e5.character/str": 13,
+    "orcpub.dnd.e5.character/wis": 12
+  },
+  "spell-slot-factors": null,
+  "spell-slots": {},
+  "spells-known": {},
+  "spells-known-modes": null,
+  "subrace": null,
+  "subrace-ability-increases": null,
+  "tool-bonus": {},
+  "tool-expertise": [],
+  "tool-profs": {},
+  "total-levels": 7,
+  "total-spellcaster-levels": 0,
+  "traits": [
+    {
+      "class-key": null,
+      "description": "You move up to 10 feet through water or over wet ground.",
+      "frequency": {
+        "amount": 2,
+        "units": "orcpub.dnd.e5.units/short-rest"
+      },
+      "name": "Tide Step",
+      "source": null,
+      "type": "b-action"
+    },
+    {
+      "class-key": null,
+      "description": "You reduce cold damage that you take by 5.",
+      "frequency": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "name": "Brine Ward",
+      "source": null,
+      "type": "reaction"
+    },
+    {
+      "class-key": null,
+      "description": "You pull one creature within 30 feet 10 feet toward you.",
+      "frequency": {
+        "amount": -1,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "name": "Undertow",
+      "source": null,
+      "type": "action"
+    },
+    {
+      "class-key": null,
+      "description": "You hold your breath for 1 hour.",
+      "frequency": {
+        "amount": 15,
+        "units": "orcpub.dnd.e5.units/day"
+      },
+      "name": "Deep Lungs",
+      "source": null,
+      "type": "other"
+    },
+    {
+      "class-key": null,
+      "description": "You know the direction of the nearest body of salt water.",
+      "frequency": {
+        "amount": 3,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "name": "Salt Sense",
+      "source": null
+    },
+    {
+      "class-key": null,
+      "name": "Shelter the Faithful",
+      "page": 127,
+      "source": null,
+      "summary": "You and your companions can expect free healing at an establishment of your faith."
+    },
+    {
+      "description": "You call a gust of wind that pushes one creature 10 feet.",
+      "frequency": {
+        "amount": 3,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "name": "Stormcaller",
+      "type": "action"
+    },
+    {
+      "description": "You are at home on a ship.",
+      "name": "Sea Legs"
+    },
+    {
+      "class-key": null,
+      "description": "You have advantage on saving throws against being knocked prone.",
+      "name": "Steady Footing",
+      "source": null
+    },
+    {
+      "class-key": null,
+      "description": "You take the Dash action.",
+      "frequency": {
+        "amount": 7,
+        "units": "orcpub.dnd.e5.units/short-rest"
+      },
+      "name": "Rolling Gait",
+      "source": null,
+      "type": "b-action"
+    },
+    {
+      "description": "While you are wearing armor, you gain a +1 bonus to AC.",
+      "name": "Defense Fighting Style",
+      "page": 72
+    },
+    {
+      "class-key": "fighter",
+      "description": "You have a pool of force points. You spend them to push creatures that you hit.",
+      "frequency": {
+        "amount": 30,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "level": 3,
+      "name": "Crashing Wave",
+      "source": null,
+      "type": "action"
+    },
+    {
+      "class-key": "fighter",
+      "description": "A creature that you hit cannot make opportunity attacks until your next turn.",
+      "frequency": {
+        "amount": 1,
+        "units": "orcpub.dnd.e5.units/short-rest"
+      },
+      "level": 3,
+      "name": "Riptide",
+      "source": null
+    },
+    {
+      "class-key": "fighter",
+      "description": "You change places with a willing creature within 15 feet.",
+      "frequency": {
+        "amount": 5,
+        "units": "orcpub.dnd.e5.units/long-rest"
+      },
+      "level": 3,
+      "name": "Ebb and Flow",
+      "source": null,
+      "type": "b-action"
+    }
+  ],
+  "treasure": {
+    "gp": {
+      "orcpub.dnd.e5.character.equipment/background-starting-equipment?": true,
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 15
+    }
+  },
+  "unarmored-speed-bonus": null,
+  "used-resources": null,
+  "weapon-modifiers": {
+    "handaxe": {
+      "attack": {
+        "finesse": 5,
+        "standard": 5
+      },
+      "best-attack": 5,
+      "best-damage": 2,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 2,
+        "off-hand": 0,
+        "standard": 2
+      },
+      "dual-wield?": true,
+      "has-prof?": true
+    },
+    "longsword": {
+      "attack": {
+        "finesse": 5,
+        "standard": 5
+      },
+      "best-attack": 5,
+      "best-damage": 2,
+      "best-damage-off-hand": 0,
+      "damage": {
+        "finesse": 2,
+        "off-hand": 0,
+        "standard": 2
+      },
+      "dual-wield?": false,
+      "has-prof?": true
+    }
+  },
+  "weapon-profs": [
+    "simple",
+    "martial"
+  ],
+  "weapons": {
+    "handaxe": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 2
+    },
+    "longsword": {
+      "orcpub.dnd.e5.character.equipment/equipped?": true,
+      "orcpub.dnd.e5.character.equipment/quantity": 1
+    }
+  },
+  "weight": null,
+  "wielded-shield": "shield",
+  "worn-armor": "chain-mail",
+  "xps": 23000
+}

@@ -1,0 +1,92 @@
+{
+  "checks": [
+    {
+      "actual": 7,
+      "expected": 7,
+      "pass": true
+    },
+    {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "actual": {
+        "barbarian": 1,
+        "fighter": 6
+      },
+      "expected": {
+        "barbarian": 1,
+        "fighter": 6
+      },
+      "pass": true
+    },
+    {
+      "actual": 2,
+      "expected": 2,
+      "pass": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "actual": -1,
+      "expected": -1,
+      "pass": true
+    },
+    {
+      "actual": 15,
+      "expected": 15,
+      "pass": true
+    },
+    {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "actual": 30,
+      "expected": 30,
+      "pass": true
+    },
+    {
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "actual": 5,
+      "expected": 5,
+      "pass": true
+    },
+    {
+      "actual": false,
+      "expected": false,
+      "pass": true
+    },
+    {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "actual": 7,
+      "expected": 7,
+      "pass": true
+    }
+  ],
+  "description": "Scaled uses (ORC-192, patch D8): Tidecaller fighter 6 (Wave Guard) / barbarian 1 with the Stormcaller and Sea Legs feats, all from scaled-uses.orcbrew. The fighter level (6) and the character level (7) differ, so a level amount shows which level it counts. INT 8 gives an ability amount of -1 with no minimum, and CHA 10 gives 0, which the minimum of 1 replaces.",
+  "name": "scaled-uses-fighter-6-barbarian-1",
+  "orcbrew": [
+    "scaled-uses.orcbrew"
+  ],
+  "strictRoundTrip": true,
+  "unfilledSelections": []
+}

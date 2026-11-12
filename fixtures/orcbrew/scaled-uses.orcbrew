@@ -1,0 +1,70 @@
+{:orcpub.dnd.e5/races
+ {:tidecaller
+  {:key :tidecaller
+   :name "Tidecaller"
+   :option-pack "Scaled Uses"
+   :speed 30
+   :size "Medium"
+   :traits [{:name "Tide Step"
+             :type :b-action
+             :description "You move up to 10 feet through water or over wet ground."
+             :frequency {:units :orcpub.dnd.e5.units/short-rest :amount 2}}
+            {:name "Brine Ward"
+             :type :reaction
+             :description "You reduce cold damage that you take by 5."
+             :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:ability :cha :min 1}}}
+            {:name "Undertow"
+             :type :action
+             :description "You pull one creature within 30 feet 10 feet toward you."
+             :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:ability :orcpub.dnd.e5.character/int}}}
+            {:name "Deep Lungs"
+             :type :other
+             :description "You hold your breath for 1 hour."
+             :frequency {:units :orcpub.dnd.e5.units/day :amount {:level true :times 2 :plus 1}}}
+            {:name "Salt Sense"
+             :description "You know the direction of the nearest body of salt water."
+             :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:prof-bonus true}}}]}}
+ :orcpub.dnd.e5/subclasses
+ {:wave-guard
+  {:key :wave-guard
+   :name "Wave Guard"
+   :class :fighter
+   :option-pack "Scaled Uses"
+   :traits [{:name "Crashing Wave"
+             :level 3
+             :type :action
+             :description "You have a pool of force points. You spend them to push creatures that you hit."
+             :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:level true :times 5}}}
+            {:name "Riptide"
+             :level 3
+             :description "A creature that you hit cannot make opportunity attacks until your next turn."
+             :frequency {:units :orcpub.dnd.e5.units/short-rest :amount {:ability :str :plus -1 :min 0}}}
+            {:name "Ebb and Flow"
+             :level 3
+             :type :b-action
+             :description "You change places with a willing creature within 15 feet."
+             :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:prof-bonus true :plus 2}}}
+            {:name "Tsunami"
+             :level 7
+             :type :action
+             :description "You make a wave of water in a 30-foot cone."
+             :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:level true}}}]}}
+ :orcpub.dnd.e5/feats
+ {:stormcaller
+  {:key :stormcaller
+   :name "Stormcaller"
+   :option-pack "Scaled Uses"
+   :description "You call a gust of wind that pushes one creature 10 feet."
+   :type :action
+   :frequency {:units :orcpub.dnd.e5.units/long-rest :amount {:prof-bonus true}}}
+  :sea-legs
+  {:key :sea-legs
+   :name "Sea Legs"
+   :option-pack "Scaled Uses"
+   :description "You are at home on a ship."
+   :traits [{:name "Steady Footing"
+             :description "You have advantage on saving throws against being knocked prone."}
+            {:name "Rolling Gait"
+             :type :b-action
+             :description "You take the Dash action."
+             :frequency {:units :orcpub.dnd.e5.units/short-rest :amount {:level true}}}]}}}
