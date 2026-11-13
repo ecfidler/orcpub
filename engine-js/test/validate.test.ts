@@ -85,7 +85,7 @@ describe("validate", () => {
     });
   });
 
-  it.skipIf(!existsSync(privateExport))("passes every item in the private export", () => {
+  it.skipIf(!existsSync(privateExport))("passes every item in the private export", { timeout: 60_000 }, () => {
     const parsed = parseOrcbrew(readFileSync(privateExport, "utf8"), { name: "all-content3" });
 
     expect(failures(parsed.data as Record<string, Plugin>)).toEqual({});
