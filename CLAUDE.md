@@ -133,6 +133,6 @@ workspace labels with the same names. See `docs/agents/triage-labels.md`.
 
 ### Domain docs
 
-This repo is single-context: one `CONTEXT.md` and one `docs/adr/` at the
+This repo is single-context: one `GLOSSARY.md` and one `docs/adr/` at the
 repo root. `/domain-modeling` creates both when first needed. See
 `docs/agents/domain.md`.

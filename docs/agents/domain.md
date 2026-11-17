@@ -4,8 +4,8 @@ How the engineering skills use this repo's domain documentation when they explor
 
 ## Read these first
 
-- `CONTEXT.md` at the repo root.
-- `CONTEXT-MAP.md` at the repo root, if it exists. It points at one `CONTEXT.md` per context. Read each one relevant to your topic.
+- `GLOSSARY.md` at the repo root.
+- `GLOSSARY-MAP.md` at the repo root, if it exists. It points at one `GLOSSARY.md` per context. Read each one relevant to your topic.
 - `docs/adr/`, the architecture decision records (ADRs). Read the ADRs that touch the area you are about to work in. In a multi-context repo, also check `src/<context>/docs/adr/` for context-scoped decisions.
 
 If any of these files is missing, proceed. Do not mention the absence, and do not suggest creating the files up front. The `/domain-modeling` skill, which `/grill-with-docs` and `/improve-codebase-architecture` invoke, creates them when a term or decision is resolved.
@@ -16,31 +16,31 @@ A single-context repo, the common case:
 
 ```
 /
-├── CONTEXT.md
+├── GLOSSARY.md
 ├── docs/adr/
 │   ├── 0001-event-sourced-orders.md
 │   └── 0002-postgres-for-write-model.md
 └── src/
 ```
 
-A multi-context repo, marked by a `CONTEXT-MAP.md` at the root:
+A multi-context repo, marked by a `GLOSSARY-MAP.md` at the root:
 
 ```
 /
-├── CONTEXT-MAP.md
+├── GLOSSARY-MAP.md
 ├── docs/adr/                          ← system-wide decisions
 └── src/
     ├── ordering/
-    │   ├── CONTEXT.md
+    │   ├── GLOSSARY.md
     │   └── docs/adr/                  ← context-specific decisions
     └── billing/
-        ├── CONTEXT.md
+        ├── GLOSSARY.md
         └── docs/adr/
 ```
 
 ## Use the glossary's vocabulary
 
-When your output names a domain concept, in an issue title, a refactor proposal, a hypothesis, or a test name, use the term as `CONTEXT.md` defines it. Do not use a synonym the glossary lists under _Avoid_.
+When your output names a domain concept, in an issue title, a refactor proposal, a hypothesis, or a test name, use the term as `GLOSSARY.md` defines it. Do not use a synonym the glossary lists under _Avoid_.
 
 If the glossary does not have the concept you need, one of two things is true. Either you are inventing language the project does not use, so reconsider, or the glossary has a gap, so note it for `/domain-modeling`.
 
@@ -52,7 +52,7 @@ If your output contradicts an existing ADR, say so rather than overriding the AD
 
 ## This repo
 
-This repo uses the single-context layout. `CONTEXT.md` and `docs/adr/` do
+This repo uses the single-context layout. `GLOSSARY.md` and `docs/adr/` do
 not exist yet. `/domain-modeling` creates them when first needed. Until
 then, the working vocabulary is in `CLAUDE.md` and in the plan documents
 under `docs/plan/` in `ecfidler/orc-alchemy`: strict entity, engine facade, Phase A and
