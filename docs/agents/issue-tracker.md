@@ -51,8 +51,9 @@ you start it and to `Done` when its acceptance criteria hold.
   saying why.
 - **Make a sub-issue.** Call `save_issue` with `parentId` set to the
   identifier of the parent issue.
-- **How work closes.** A merged PR does not close an issue. Move the
-  issue to `Done` yourself.
+- **How work closes.** Work closes through PRs. Linear moves an issue
+  to `Done` when a PR that names the issue merges. If Linear does not
+  move it, set `state` to `Done`.
 - **Reference an issue from git.** Put the identifier (`ORC-nn`) in commit
   messages and in PR titles or bodies. Linear links the commit or PR to
   the issue.
