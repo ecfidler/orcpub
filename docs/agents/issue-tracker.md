@@ -49,6 +49,10 @@ you start it and to `Done` when its acceptance criteria hold.
 - **Close an issue.** Set `state` to `Done` when the work is finished,
   `Canceled` when it will not be done, or `Duplicate`. Add a comment
   saying why.
+- **Make a sub-issue.** Call `save_issue` with `parentId` set to the
+  identifier of the parent issue.
+- **How work closes.** A merged PR does not close an issue. Move the
+  issue to `Done` yourself.
 - **Reference an issue from git.** Put the identifier (`ORC-nn`) in commit
   messages and in PR titles or bodies. Linear links the commit or PR to
   the issue.
