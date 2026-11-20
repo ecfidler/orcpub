@@ -25,6 +25,11 @@ it is not part of a feature, it goes in the upkeep project of PubDoor for
 the current quarter, for example "PubDoor upkeep 2026 Q4". If the target
 project is unclear, ask.
 
+When you create a project, put it in its initiative: `save_project` with
+`addInitiatives: ["PubDoor"]`. The Linear tools cannot create an
+initiative. If `addInitiatives` fails, create the project without it and
+tell the owner.
+
 The area labels are `Engine`, `Engine patch`, `Fixtures`, `Homebrew`,
 `Import/Export`, `App UI`, `Backend`, `CI`, `Docs`, and `Decision`. The
 type labels are `Bug`, `Feature`, and `Improvement`. Apply the area label
