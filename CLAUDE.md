@@ -26,15 +26,17 @@ cite file and line numbers. Prefer them to re-deriving the architecture.
 Issue tracking is in Linear, workspace *Orc Alchemy*
 (https://linear.app/orc-alchemy):
 
-- PubDoor tracks Phase A, the engine package built in this fork:
-  https://linear.app/orc-alchemy/project/pubdoor-13db9e66264b
-- Alchemy 5e tracks Phase B, the new app in its own repository:
-  https://linear.app/orc-alchemy/project/alchemy-5e-9db66f3ef51e
+- The initiative PubDoor tracks Phase A, the engine package built in this
+  fork.
+- The initiative Alchemy 5e tracks Phase B, the new app in its own
+  repository.
+- Each feature is a project in its initiative. `docs/agents/issue-tracker.md`
+  says where an issue goes.
 - The plan overview is a team document that links the compatibility
   contract and the risk register:
   https://linear.app/orc-alchemy/document/plan-overview-typescript-rewrite-on-the-compiled-engine-1afe72ecb90d
 
-Milestones, issue status, and sequencing are in Linear. The documents
+Projects, issue status, and sequencing are in Linear. The documents
 below are the technical reference. When the two disagree about what is
 built, the docs win. When they disagree about status, Linear wins.
 Reference the issue identifier (`ORC-nn`) in commits and PRs.
@@ -58,7 +60,7 @@ plan" without qualification, they mean Plan Set 2. Plan Set 1,
   whose Findings section corrects the plan in a few places.
 - orc-alchemy `docs/reports/2024-rules-support.md` §Decision records how
   2024 rules (SRD 5.2) arrive: option E. `@pubdoor/dmv` serves 2014 only,
-  and a later TypeScript engine, tracked in Linear project *2024 engine*,
+  and a later TypeScript engine, tracked in Linear initiative *2024 engine*,
   adds 2024. Read it before any work on rules editions, the `rules` tag,
   or 2024 content.
 
@@ -122,7 +124,7 @@ Use the `opus` model for `Explore` subagents in this repo. Pass
 ### Issue tracker
 
 The issue tracker is Linear: workspace *Orc Alchemy*, team key `ORC`,
-projects PubDoor (this repo) and Alchemy 5e. Use the Linear MCP tools, not
+initiatives PubDoor (this repo) and Alchemy 5e. Use the Linear MCP tools, not
 `gh` or GitHub Issues. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
