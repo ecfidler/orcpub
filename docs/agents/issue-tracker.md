@@ -9,16 +9,26 @@ Issues for tracking.
 
 ## Where work goes
 
-There are two projects, one per phase of the TypeScript rewrite described
-in `CLAUDE.md`:
+A product is a Linear initiative. A project is one feature or deliverable
+of a product, and it ends with the status Completed. A milestone is a
+stage inside one project. orc-alchemy `docs/agents/issue-tracker.md`,
+section "Products, projects and milestones", gives the full rules and the
+steps to create and close a project (ORC-279).
 
-| Project | What it tracks | Repo |
+| Initiative | What it tracks | Repo |
 | --- | --- | --- |
 | PubDoor | Phase A: the compiled engine package `@pubdoor/dmv` | this repo |
 | Alchemy 5e | Phase B: the new TypeScript and React app | `ecfidler/orc-alchemy` |
 
-New issues for work in this repo go in PubDoor unless the user says
-otherwise. If the target project is unclear, ask.
+A new issue for work in this repo goes in the project of its feature. If
+it is not part of a feature, it goes in the upkeep project of PubDoor for
+the current quarter, for example "PubDoor upkeep 2026 Q4". If the target
+project is unclear, ask.
+
+When you create a project, put it in its initiative: `save_project` with
+`addInitiatives: ["PubDoor"]`. The Linear tools cannot create an
+initiative. If `addInitiatives` fails, create the project without it and
+tell the owner.
 
 The area labels are `Engine`, `Engine patch`, `Fixtures`, `Homebrew`,
 `Import/Export`, `App UI`, `Backend`, `CI`, `Docs`, and `Decision`. The
