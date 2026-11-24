@@ -780,25 +780,30 @@
                      :tags #{:spells}
                      :options options})]})))
 
-(defn weapon-proficiency-selection-2 [weapon-map weapon-proficiency-options]
+(defn weapon-proficiency-selection-2
+  "The weapon proficiency choice of a homebrew race, or nil when it names no
+  known weapon. A key that names no weapon, such as :thunder-cannon from the
+  old app's UA Artificer, is skipped, and the choice asks for no more weapons
+  than it has (ORC-310)."
+  [weapon-map weapon-proficiency-options]
   (let [{num :choose options :options} weapon-proficiency-options
-        ;; ORC-310: skip a key that names no weapon, such as :thunder-cannon
-        ;; from the old app's UA Artificer, so the template still builds.
         weapons (if (:any options)
                   (vals weapon-map)
-                  (keep weapon-map (keys options)))]
-    (t/selection-cfg
-     {:name "Weapon Proficiency"
-      :options (map
-                (fn [{:keys [name key :db/id] :as item}]
-                  (t/option-cfg
-                   {:name (or name (::mi/name item))
-                    :key key}))
-                weapons)
-      :multiselect? true
-      :tags #{:profs}
-      :min (or num 1)
-      :max (or num 1)})))
+                  (keep weapon-map (keys options)))
+        n (min (or num 1) (count weapons))]
+    (when (pos? n)
+      (t/selection-cfg
+       {:name "Weapon Proficiency"
+        :options (map
+                  (fn [{:keys [name key :db/id] :as item}]
+                    (t/option-cfg
+                     {:name (or name (::mi/name item))
+                      :key key}))
+                  weapons)
+        :multiselect? true
+        :tags #{:profs}
+        :min n
+        :max n}))))
 
 (defn language-selection-aux [languages num]
   (t/selection-cfg
@@ -2246,8 +2251,9 @@
                    (when (seq subraces)
                      [(subrace-selection race spell-lists spells-map language-map weapon-map plugin? source subraces [:race key])])
                    (when (seq language-options) [(language-selection language-map language-options)])
-                   (when (seq weapon-proficiency-options)
-                     [(weapon-proficiency-selection-2 weapon-map weapon-proficiency-options)])
+                   (when-let [selection (and (seq weapon-proficiency-options)
+                                             (weapon-proficiency-selection-2 weapon-map weapon-proficiency-options))]
+                     [selection])
                    selections)
       :modifiers (concat
                   (when (not plugin?)
