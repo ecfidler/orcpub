@@ -152,3 +152,34 @@ describe("buildTemplate", () => {
     });
   }
 });
+
+// ORC-310: old packs can name a weapon that this build does not have, such
+// as :thunder-cannon from the UA Artificer. The choice skips it.
+describe("buildTemplate: a weapon proficiency choice with an unknown weapon (ORC-310)", () => {
+  /** The weapon proficiency choice of the race Gearwright, with these :choose and :options. */
+  function weaponChoice(choose: number, options: string): TemplateSelection | undefined {
+    const edn = `{:orcpub.dnd.e5/races
+  {:gearwright {:key :gearwright :name "Gearwright" :option-pack "Weapon Test" :speed 30 :size :medium
+                :profs {:weapon-proficiency-options {:choose ${choose} :options {${options}}}}}}}`;
+    const { data } = parseOrcbrew(edn, { name: "Weapon Test" });
+    const { shape } = buildTemplate(data!);
+    const race = shape.find((s) => s.key === "race")!.options.find((o) => o.key === "gearwright")!;
+    return race.selections?.find((s) => s.key === "weapon-proficiency");
+  }
+
+  it("builds, and offers only the known weapons", () => {
+    const choice = weaponChoice(1, ":longsword true :thunder-cannon true");
+
+    expect(choice!.options.map((o) => o.key)).toStrictEqual(["longsword"]);
+  });
+
+  it("asks for no more weapons than it offers", () => {
+    const choice = weaponChoice(2, ":longsword true :thunder-cannon true");
+
+    expect([choice!.min, choice!.max]).toStrictEqual([1, 1]);
+  });
+
+  it("leaves the choice out when it names no known weapon", () => {
+    expect(weaponChoice(1, ":thunder-cannon true")).toBeUndefined();
+  });
+});
