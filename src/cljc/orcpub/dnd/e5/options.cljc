@@ -782,9 +782,11 @@
 
 (defn weapon-proficiency-selection-2 [weapon-map weapon-proficiency-options]
   (let [{num :choose options :options} weapon-proficiency-options
+        ;; ORC-310: skip a key that names no weapon, such as :thunder-cannon
+        ;; from the old app's UA Artificer, so the template still builds.
         weapons (if (:any options)
                   (vals weapon-map)
-                  (map weapon-map (keys options)))]
+                  (keep weapon-map (keys options)))]
     (t/selection-cfg
      {:name "Weapon Proficiency"
       :options (map

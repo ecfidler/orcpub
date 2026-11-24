@@ -152,3 +152,20 @@ describe("buildTemplate", () => {
     });
   }
 });
+
+// ORC-310: old packs can name a weapon that this build does not have, such
+// as :thunder-cannon from the UA Artificer. The choice skips it.
+describe("buildTemplate: a weapon proficiency choice with an unknown weapon (ORC-310)", () => {
+  const edn = `{:orcpub.dnd.e5/races
+  {:gearwright {:key :gearwright :name "Gearwright" :option-pack "Weapon Test" :speed 30 :size :medium
+                :profs {:weapon-proficiency-options {:choose 1 :options {:longsword true :thunder-cannon true}}}}}}`;
+  const { data } = parseOrcbrew(edn, { name: "Weapon Test" });
+
+  it("builds, and offers only the known weapons", () => {
+    const { shape } = buildTemplate(data!);
+    const race = shape.find((s) => s.key === "race")!.options.find((o) => o.key === "gearwright")!;
+    const choice = race.selections!.find((s) => s.key === "weapon-proficiency")!;
+
+    expect(choice.options.map((o) => o.key)).toStrictEqual(["longsword"]);
+  });
+});
